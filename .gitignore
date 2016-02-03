@@ -1,0 +1,6 @@
+# Software files
+*.o
+*.elf
+*.map
+libhal_bsp.a
+*.objdump
