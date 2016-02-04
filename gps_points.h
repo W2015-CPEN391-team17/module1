@@ -2,8 +2,10 @@
 #define GPS_POINTS_H_
 
 struct points {
-	char latitude[];
-	char longitude[];
+	char latitude[10];
+	char longitude[10];
+	int lat_swapped;
+	int long_swapped;
 };
 
 int swapEndian(char *s);

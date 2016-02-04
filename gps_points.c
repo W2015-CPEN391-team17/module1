@@ -69,22 +69,30 @@ int swapEndian(char *s){
 }
 
 void FloatToLatitudeConversion(int x, char *latitude){
-	//static char buff[100];
+	static char buff[100];
+	int done;
+	int i = 0;
 
 	float *ptr = (float *)(&x); // cast int to float
 	float f = *ptr; // get the float
 
-	sprintf(latitude, "%2.4f", f); // write in string to an array
+	sprintf(buff, "%2.4f", f); // write in string to an array
+
+	while(buff[i] != '\0'){
+		latitude[i] = buff[i];
+	}
+
 	return;
 }
 
 void FloatToLongitudeConversion(int x, char *longitude){
-	static char buff[100];
+	//static char buff[100];
+	memset(&longitude[0], 0, sizeof(longitude));
 
 	float *ptr = (float *)(&x);
 	float f = *ptr;
 
-	sprintf(longitude, "%3.4f", f);
+	sprintf(longitude, "%f", f);
 	return;
 }
 
@@ -134,9 +142,9 @@ void config_log(void){
 void dump_log(void){
 
 	int i, lat_count, long_count, save_count;
-	int latitude, longitude;
+	//int latitude, longitude;
 	int count = 0;
-	int end_of_log = 0;
+	//int end_of_log = 0;
 	const char command[] = "$PMTK622,1*29\r\n";
 	int length = strlen(command);
 	char string[100] = {0};
@@ -160,6 +168,7 @@ void dump_log(void){
 
 	while(count <= 10){
 		read_string(string);
+		//printf("%s\n", string);
 		if(string[11] != '0'){
 			lat_count = 24;
 			long_count = 33;
@@ -183,8 +192,10 @@ void dump_log(void){
 				else
 					long_count++;
 			}
-			printf("lat %d: %s  ", count, gps_points[count].latitude);
-			printf("long %d: %s\n", count, gps_points[count].longitude);
+			gps_points[count].long_swapped = swapEndian(gps_points[count].longitude);
+			gps_points[count].lat_swapped = swapEndian(gps_points[count].latitude);
+			printf("lat %d: %d  ", count, gps_points[count].lat_swapped);
+			printf("long %d: %d\n", count, gps_points[count].long_swapped);
 			count++;
 
 			lat_count = 60;
@@ -209,8 +220,10 @@ void dump_log(void){
 				else
 					long_count++;
 			}
-			printf("lat %d: %s  ", count, gps_points[count].latitude);
-			printf("long %d: %s\n", count, gps_points[count].longitude);
+			gps_points[count].long_swapped = swapEndian(gps_points[count].longitude);
+			gps_points[count].lat_swapped = swapEndian(gps_points[count].latitude);
+			printf("lat %d: %d  ", count, gps_points[count].lat_swapped);
+			printf("long %d: %d\n", count, gps_points[count].long_swapped);
 			count++;
 
 			lat_count = 96;
@@ -235,8 +248,10 @@ void dump_log(void){
 				else
 					long_count++;
 			}
-			printf("lat %d: %s  ", count, gps_points[count].latitude);
-			printf("long %d: %s\n", count, gps_points[count].longitude);
+			gps_points[count].long_swapped = swapEndian(gps_points[count].longitude);
+			gps_points[count].lat_swapped = swapEndian(gps_points[count].latitude);
+			printf("lat %d: %d  ", count, gps_points[count].lat_swapped);
+			printf("long %d: %d\n", count, gps_points[count].long_swapped);
 			count++;
 
 			lat_count = 132;
@@ -261,8 +276,10 @@ void dump_log(void){
 				else
 					long_count++;
 			}
-			printf("lat %d: %s  ", count, gps_points[count].latitude);
-			printf("long %d: %s\n", count, gps_points[count].longitude);
+			gps_points[count].long_swapped = swapEndian(gps_points[count].longitude);
+			gps_points[count].lat_swapped = swapEndian(gps_points[count].latitude);
+			printf("lat %d: %d  ", count, gps_points[count].lat_swapped);
+			printf("long %d: %d\n", count, gps_points[count].long_swapped);
 			count++;
 
 			lat_count = 168;
@@ -287,23 +304,12 @@ void dump_log(void){
 				else
 					long_count++;
 			}
-			printf("lat %d: %s  ", count, gps_points[count].latitude);
-			printf("long %d: %s\n", count, gps_points[count].longitude);
+			gps_points[count].long_swapped = swapEndian(gps_points[count].longitude);
+			gps_points[count].lat_swapped = swapEndian(gps_points[count].latitude);
+			printf("lat %d: %d  ", count, gps_points[count].lat_swapped);
+			printf("long %d: %d\n", count, gps_points[count].long_swapped);
 			count++;
 		}
-	}
-
-	printf("what the\n");
-
-	for(i=0; i < 10; i++){
-		latitude = swapEndian(gps_points[i].latitude);
-		longitude = swapEndian(gps_points[i].longitude);
-
-		FloatToLatitudeConversion(latitude, gps_points[i].latitude);
-		FloatToLongitudeConversion(longitude, gps_points[i].longitude);
-
-		printf("lat %d: %s  ", i, gps_points[i].latitude);
-		printf("long %d: %s\n", i, gps_points[i].longitude);
 	}
 }
 
@@ -379,14 +385,13 @@ void query_log(void){
 int main()
 {
 	printf("Initializing GPS...\n");
-
+	int i;
 	init_gps();
-
 	//erase_log();
 
 	//start_log();
 
-	//usleep(600000000);
+	//usleep(300000000);
 
 	//stop_log();
 
