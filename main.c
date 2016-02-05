@@ -17,6 +17,7 @@ void initialize(void);
 void clear_screen(void); // TODO overload this function to clear a box, for better looking menus
 void draw_field(void);
 void draw_data(void);
+void draw_menu(void);
 
 // Main menu function, should return struct point eventually, but void for now
 void main_menu(void);
@@ -53,7 +54,6 @@ void clear_screen(void)
 
 void draw_field(void)
 {
-	clear_screen();
 	//Draw middle line
 	WriteVLine(XRES/2, 0, YRES, BLACK);
 	//TODO Draw circle
@@ -62,12 +62,19 @@ void draw_field(void)
 
 void draw_data(void)
 {
-	//TODO
+	//TODO draw points and lines
 }
 
+void draw_menu(void)
+{
+	//TODO draw menu bar on the bottom
+}
 void main_menu(void)
 {
+	clear_screen();
 	draw_field();
+	draw_data();
+	draw_menu();
 	while(1)
 	{
 		//Wait for touch
@@ -81,6 +88,7 @@ void sub_menu(void)
 {
 	clear_screen();
 	//TODO draw submenu stuff here
+	draw_menu();
 	while(1)
 	{
 		//Wait for touch
