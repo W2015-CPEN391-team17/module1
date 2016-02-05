@@ -13,8 +13,16 @@
 // Screen divisions.
 #define MENU_TOP 400
 
-// Initialize all components.
+// Meta stuff.
 void initialize(void);
+void cleanup(void);
+
+// Save and load.
+// void save(<array of points>);
+// <array of points> load();
+
+// Conversion functions.
+// <array of points> gps_to_points(array of points); // Mutates the gps data to the screen.
 
 // Drawing functions.
 void clear_box(int x1, int y1, int x2, int y2);
@@ -36,6 +44,7 @@ int main()
   main_menu();
 
   // Should never reach this point, but here in case we implement an exit button.
+  cleanup();
   printf("Program terminated.\n");
 
   return 0;
@@ -45,6 +54,11 @@ void initialize(void)
 {
 	init_gps();
 	init_btport();
+}
+
+void cleanup(void)
+{
+	//Nothing yet
 }
 
 void clear_box(int x1, int y1, int x2, int y2)
@@ -69,9 +83,9 @@ void draw_field(void)
 	//TODO Draw goal boxes
 }
 
-void draw_data(void)
+void draw_data(void) // TODO take whatever data structure Tim decides to use (array of ints)
 {
-	//TODO draw points and lines
+	//TODO draw heatmap
 }
 
 void draw_menu(void)
