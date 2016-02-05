@@ -152,6 +152,8 @@ C_SRCS += Reference/test_gps_control.c
 C_SRCS += Reference/test_graphics.c
 C_SRCS += Reference/test_sdcard.c
 C_SRCS += gps.c
+C_SRCS += gps_points.c
+C_SRCS += gps_points_demo.c
 CXX_SRCS :=
 ASM_SRCS :=
 
