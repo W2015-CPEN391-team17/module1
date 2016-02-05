@@ -87,7 +87,6 @@ void FloatToLatitudeConversion(int x, char *latitude){
 
 void FloatToLongitudeConversion(int x, char *longitude){
 	//static char buff[100];
-	memset(&longitude[0], 0, sizeof(longitude));
 
 	float *ptr = (float *)(&x);
 	float f = *ptr;
@@ -98,7 +97,8 @@ void FloatToLongitudeConversion(int x, char *longitude){
 
 void read_string(char *output){
 
-	memset(&output[0], 0, sizeof(output));
+//	printf("Reading string\n");
+	memset(output, 0, 256);
 
 	int i = 0;
 	char c;
@@ -139,43 +139,40 @@ void config_log(void){
 	}
 }
 
-void dump_log(void){
+void save_points(void){
 
-	int i, lat_count, long_count, save_count;
-	//int latitude, longitude;
+	printf("starting dump\n");
+	int i, lat_count, lat_end, long_count, long_end, save_count;
 	int count = 0;
-	//int end_of_log = 0;
+	int place = 0;
 	const char command[] = "$PMTK622,1*29\r\n";
 	int length = strlen(command);
-	char string[100] = {0};
+	char string[256] = {0};
 
 	// here we send the command to the gps
 	for(i = 0; i < length; i++){
 		putchar_gps(command[i]);
 	}
 
-	/*while(end_of_log == 0){
-		read_string(string);
-		printf("%s\n", string);
-		if(string[7] == 'X' && string[9] == '2'){
-			end_of_log = 1;
-		}
-	}*/
-
 	while(string[7] != 'X'){
 		read_string(string);
+		printf("string: %s\n", string);
 	}
 
-	while(count <= 10){
-		read_string(string);
-		//printf("%s\n", string);
+	lat_count = 24;
+	long_count = 33;
+	lat_end = 32;
+	long_end = 41;
+
+	read_string(string);
+	printf("string2: %s\n", string);
+
+	for(count = 0; count <= 5; count++){
 		if(string[11] != '0'){
-			lat_count = 24;
-			long_count = 33;
 			save_count = 0;
-			while(lat_count <= 32){
+			while(lat_count <= lat_end){
 				if(string[lat_count] != ','){
-					gps_points[count].latitude[save_count] = string[lat_count];
+					gps_points[place].latitude[save_count] = string[lat_count];
 					lat_count++;
 					save_count++;
 				}
@@ -183,134 +180,33 @@ void dump_log(void){
 					lat_count++;
 			}
 			save_count = 0;
-			while(long_count <= 41){
+			while(long_count <= long_end){
 				if(string[long_count] != ','){
-					gps_points[count].longitude[save_count] = string[long_count];
+					gps_points[place].longitude[save_count] = string[long_count];
 					long_count++;
 					save_count++;
 				}
 				else
 					long_count++;
 			}
-			gps_points[count].long_swapped = swapEndian(gps_points[count].longitude);
-			gps_points[count].lat_swapped = swapEndian(gps_points[count].latitude);
-			printf("lat %d: %d  ", count, gps_points[count].lat_swapped);
-			printf("long %d: %d\n", count, gps_points[count].long_swapped);
-			count++;
+			gps_points[place].long_swapped = swapEndian(gps_points[place].longitude);
+			gps_points[place].lat_swapped = swapEndian(gps_points[place].latitude);
 
-			lat_count = 60;
-			long_count = 69;
-			save_count = 0;
-			while(lat_count <= 68){
-				if(string[lat_count] != ','){
-					gps_points[count].latitude[save_count] = string[lat_count];
-					lat_count++;
-					save_count++;
-				}
-				else
-					lat_count++;
-			}
-			save_count = 0;
-			while(long_count <= 77){
-				if(string[long_count] != ','){
-					gps_points[count].longitude[save_count] = string[long_count];
-					long_count++;
-					save_count++;
-				}
-				else
-					long_count++;
-			}
-			gps_points[count].long_swapped = swapEndian(gps_points[count].longitude);
-			gps_points[count].lat_swapped = swapEndian(gps_points[count].latitude);
-			printf("lat %d: %d  ", count, gps_points[count].lat_swapped);
-			printf("long %d: %d\n", count, gps_points[count].long_swapped);
-			count++;
+			printf("lat %d: %d  long %d: %d\n", place, gps_points[place].lat_swapped,
+											  place, gps_points[place].long_swapped);
 
-			lat_count = 96;
-			long_count = 105;
-			save_count = 0;
-			while(lat_count <= 104){
-				if(string[lat_count] != ','){
-					gps_points[count].latitude[save_count] = string[lat_count];
-					lat_count++;
-					save_count++;
-				}
-				else
-					lat_count++;
-			}
-			save_count = 0;
-			while(long_count <= 113){
-				if(string[long_count] != ','){
-					gps_points[count].longitude[save_count] = string[long_count];
-					long_count++;
-					save_count++;
-				}
-				else
-					long_count++;
-			}
-			gps_points[count].long_swapped = swapEndian(gps_points[count].longitude);
-			gps_points[count].lat_swapped = swapEndian(gps_points[count].latitude);
-			printf("lat %d: %d  ", count, gps_points[count].lat_swapped);
-			printf("long %d: %d\n", count, gps_points[count].long_swapped);
-			count++;
-
-			lat_count = 132;
-			long_count = 141;
-			save_count = 0;
-			while(lat_count <= 140){
-				if(string[lat_count] != ','){
-					gps_points[count].latitude[save_count] = string[lat_count];
-					lat_count++;
-					save_count++;
-				}
-				else
-					lat_count++;
-			}
-			save_count = 0;
-			while(long_count <= 149){
-				if(string[long_count] != ','){
-					gps_points[count].longitude[save_count] = string[long_count];
-					long_count++;
-					save_count++;
-				}
-				else
-					long_count++;
-			}
-			gps_points[count].long_swapped = swapEndian(gps_points[count].longitude);
-			gps_points[count].lat_swapped = swapEndian(gps_points[count].latitude);
-			printf("lat %d: %d  ", count, gps_points[count].lat_swapped);
-			printf("long %d: %d\n", count, gps_points[count].long_swapped);
-			count++;
-
-			lat_count = 168;
-			long_count = 177;
-			save_count = 0;
-			while(lat_count <= 176){
-				if(string[lat_count] != ','){
-					gps_points[count].latitude[save_count] = string[lat_count];
-					lat_count++;
-					save_count++;
-				}
-				else
-					lat_count++;
-			}
-			save_count = 0;
-			while(long_count <= 185){
-				if(string[long_count] != ','){
-					gps_points[count].longitude[save_count] = string[long_count];
-					long_count++;
-					save_count++;
-				}
-				else
-					long_count++;
-			}
-			gps_points[count].long_swapped = swapEndian(gps_points[count].longitude);
-			gps_points[count].lat_swapped = swapEndian(gps_points[count].latitude);
-			printf("lat %d: %d  ", count, gps_points[count].lat_swapped);
-			printf("long %d: %d\n", count, gps_points[count].long_swapped);
-			count++;
+			place++;
+			lat_count += 27;
+			long_count += 27;
+			lat_end += 36;
+			long_end += 36;
+		}
+		else{
+			read_string(string);
+			printf("string2: %s\n", string);
 		}
 	}
+	return;
 }
 
 void log_now(void){
@@ -351,7 +247,6 @@ void stop_log(void){
 
 void erase_log(void){
 	int i;
-	char out[100];
 	const char command[] = "$PMTK184,1*22\r\n";
 	int length = strlen(command);
 
@@ -385,7 +280,6 @@ void query_log(void){
 int main()
 {
 	printf("Initializing GPS...\n");
-	int i;
 	init_gps();
 	//erase_log();
 
@@ -395,7 +289,9 @@ int main()
 
 	//stop_log();
 
-	dump_log();
+	save_points();
+
+	printf("done.");
 
 	return 0;
 }
