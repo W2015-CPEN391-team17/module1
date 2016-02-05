@@ -14,7 +14,7 @@
 void initialize(void);
 
 // Drawing functions.
-void clear_screen(void);
+void clear_screen(void); // TODO overload this function to clear a box
 void draw_field(void);
 void draw_data(void);
 
@@ -25,7 +25,7 @@ void sub_menu(void);
 
 int main()
 {
-  printf("Initializing module 1 code.\n");
+  printf("Starting module 1 code.\n");
 
   initialize();
   main_menu();
