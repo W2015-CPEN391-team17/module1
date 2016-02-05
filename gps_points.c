@@ -167,44 +167,43 @@ void save_points(void){
 	read_string(string);
 	printf("string2: %s\n", string);
 
-	for(count = 0; count <= 5; count++){
-		if(string[11] != '0'){
-			save_count = 0;
-			while(lat_count <= lat_end){
-				if(string[lat_count] != ','){
-					gps_points[place].latitude[save_count] = string[lat_count];
-					lat_count++;
-					save_count++;
-				}
-				else
-					lat_count++;
-			}
-			save_count = 0;
-			while(long_count <= long_end){
-				if(string[long_count] != ','){
-					gps_points[place].longitude[save_count] = string[long_count];
-					long_count++;
-					save_count++;
-				}
-				else
-					long_count++;
-			}
-			gps_points[place].long_swapped = swapEndian(gps_points[place].longitude);
-			gps_points[place].lat_swapped = swapEndian(gps_points[place].latitude);
+	while(string[11] == '0'){
+		read_string(string);
+		printf("%s\n", string);
+	}
 
-			printf("lat %d: %d  long %d: %d\n", place, gps_points[place].lat_swapped,
-											  place, gps_points[place].long_swapped);
+	for(count = 0; count < 6; count++){
+		save_count = 0;
+		while(lat_count <= lat_end){
+			if(string[lat_count] != ','){
+				gps_points[place].latitude[save_count] = string[lat_count];
+				lat_count++;
+				save_count++;
+			}
+			else
+				lat_count++;
+		}
+		save_count = 0;
+		while(long_count <= long_end){
+			if(string[long_count] != ','){
+				gps_points[place].longitude[save_count] = string[long_count];
+				long_count++;
+				save_count++;
+			}
+			else
+				long_count++;
+		}
+		gps_points[place].long_swapped = swapEndian(gps_points[place].longitude);
+		gps_points[place].lat_swapped = swapEndian(gps_points[place].latitude);
 
-			place++;
-			lat_count += 27;
-			long_count += 27;
-			lat_end += 36;
-			long_end += 36;
-		}
-		else{
-			read_string(string);
-			printf("string2: %s\n", string);
-		}
+		printf("lat %d: %d  long %d: %d\n", place, gps_points[place].lat_swapped,
+										  place, gps_points[place].long_swapped);
+
+		place++;
+		lat_count += 27;
+		long_count += 27;
+		lat_end += 36;
+		long_end += 36;
 	}
 	return;
 }
@@ -281,13 +280,13 @@ int main()
 {
 	printf("Initializing GPS...\n");
 	init_gps();
-	//erase_log();
+	erase_log();
 
-	//start_log();
+	start_log();
 
-	//usleep(300000000);
+	usleep(180000000);
 
-	//stop_log();
+	stop_log();
 
 	save_points();
 
