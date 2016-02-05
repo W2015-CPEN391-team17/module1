@@ -10,11 +10,15 @@
 #include "gps.h"
 #include "gps_points.h"
 
+// Screen divisions.
+#define MENU_TOP 400
+
 // Initialize all components.
 void initialize(void);
 
 // Drawing functions.
-void clear_screen(void); // TODO overload this function to clear a box, for better looking menus
+void clear_box(int x1, int y1, int x2, int y2);
+void clear_screen(void);
 void draw_field(void);
 void draw_data(void);
 void draw_menu(void);
@@ -43,13 +47,18 @@ void initialize(void)
 	init_btport();
 }
 
-void clear_screen(void)
+void clear_box(int x1, int y1, int x2, int y2)
 {
 	int i;
-	for (i = 0; i<YRES; i++)
+	for (i = y1; i<y2; i++)
 	{
-		WriteHLine(0, i, XRES, WHITE);
+		WriteHLine(x1, i, x2, WHITE);
 	}
+}
+
+void clear_screen(void)
+{
+	clear_box(0, 0, XRES, YRES);
 }
 
 void draw_field(void)
@@ -67,7 +76,9 @@ void draw_data(void)
 
 void draw_menu(void)
 {
-	//TODO draw menu bar on the bottom
+	clear_box(0, MENU_TOP, XRES, YRES);
+	WriteHLine(0, MENU_TOP, YRES, BLACK);
+	//TODO draw text here
 }
 void main_menu(void)
 {
