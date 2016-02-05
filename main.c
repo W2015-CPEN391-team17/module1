@@ -14,7 +14,7 @@
 void initialize(void);
 
 // Drawing functions.
-void clear_screen(void); // TODO overload this function to clear a box
+void clear_screen(void); // TODO overload this function to clear a box, for better looking menus
 void draw_field(void);
 void draw_data(void);
 
@@ -44,13 +44,20 @@ void initialize(void)
 
 void clear_screen(void)
 {
-	//TODO
+	int i;
+	for (i = 0; i<YRES; i++)
+	{
+		WriteHLine(0, i, XRES, WHITE);
+	}
 }
 
 void draw_field(void)
 {
 	clear_screen();
-	//TODO
+	//Draw middle line
+	WriteVLine(XRES/2, 0, YRES, BLACK);
+	//TODO Draw circle
+	//TODO Draw goal boxes
 }
 
 void draw_data(void)
