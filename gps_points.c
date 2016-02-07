@@ -58,6 +58,7 @@ char getchar_gps(void){
 	return '\0';
 }
 
+// swaps from little endian to big endian format
 int swapEndian(char *s){
 	register int val;
 
@@ -68,6 +69,8 @@ int swapEndian(char *s){
 	return val;
 }
 
+// converts a 4 byte IEEE-754 format float (passed as an int representing longitude and latitude)
+// to an ASCII string as a decimal representation of longitude/latitude
 char *FloatToLatitudeConversion(int x){
 	static char buff[100];
 
@@ -79,6 +82,8 @@ char *FloatToLatitudeConversion(int x){
 	return buff;
 }
 
+// converts a 4 byte IEEE-754 format float (passed as an int representing longitude and latitude)
+// to an ASCII string as a decimal representation of longitude/latitude
 char *FloatToLongitudeConversion(int x){
 	static char buff[64];
 
@@ -89,6 +94,7 @@ char *FloatToLongitudeConversion(int x){
 	return buff;
 }
 
+// reads one full string from the GPS between $ and an end line character.
 void read_string(char *output){
 
 //	printf("Reading string\n");
@@ -115,6 +121,7 @@ void read_string(char *output){
 	return;
 }
 
+// configures log settings (i.e. interval on/off, rate of interval, etc.)
 void config_log(void){
 	int i;
 	char out[20];
@@ -133,6 +140,8 @@ void config_log(void){
 	}
 }
 
+// reads data from the log, and parses the first useable log to obtain longitude and latitude values.
+// values are saved into an array of structs to use as x,y coordinates for mapping
 void save_points(void){
 
 	printf("starting dump\n");
@@ -206,6 +215,7 @@ void save_points(void){
 	return;
 }
 
+// immediately snapshots one log
 void log_now(void){
 	int i;
 	const char command[] = "$PMTK186,1*20\r\n";
@@ -218,6 +228,7 @@ void log_now(void){
 	}
 }
 
+// begin logging
 void start_log(void){
 	int i;
 	const char command[] = "$PMTK185,0*22\r\n";
@@ -230,6 +241,7 @@ void start_log(void){
 	}
 }
 
+// end logging
 void stop_log(void){
 	int i;
 	const char command[] = "$PMTK185,1*23\r\n";
@@ -242,6 +254,7 @@ void stop_log(void){
 	}
 }
 
+// erase the log
 void erase_log(void){
 	int i;
 	const char command[] = "$PMTK184,1*22\r\n";
@@ -254,6 +267,7 @@ void erase_log(void){
 	}
 }
 
+// returns a string denoting settings of the log (i.e. interval, interval rate, etc.)
 void query_log(void){
 	int i;
 	const char command[] = "$PMTK183*38\r\n";
