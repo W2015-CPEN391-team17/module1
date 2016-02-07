@@ -2,15 +2,15 @@
 #define GPS_POINTS_H_
 
 struct points {
-	char latitude[10];
-	char longitude[10];
+	char latitude[16];
+	char longitude[16];
 	int lat_swapped;
 	int long_swapped;
 };
 
 int swapEndian(char *s);
-void FloatToLatitudeConversion(int x, char *latitude);
-void FloatToLongitudeConversion(int x, char *longitude);
+char *FloatToLatitudeConversion(int x);
+char *FloatToLongitudeConversion(int x);
 void read_string(char *output);
 void config_log(void);
 void save_points(void);

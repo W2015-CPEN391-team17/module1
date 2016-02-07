@@ -68,31 +68,25 @@ int swapEndian(char *s){
 	return val;
 }
 
-void FloatToLatitudeConversion(int x, char *latitude){
+char *FloatToLatitudeConversion(int x){
 	static char buff[100];
-	int done;
-	int i = 0;
 
 	float *ptr = (float *)(&x); // cast int to float
 	float f = *ptr; // get the float
 
 	sprintf(buff, "%2.4f", f); // write in string to an array
 
-	while(buff[i] != '\0'){
-		latitude[i] = buff[i];
-	}
-
-	return;
+	return buff;
 }
 
-void FloatToLongitudeConversion(int x, char *longitude){
-	//static char buff[100];
+char *FloatToLongitudeConversion(int x){
+	static char buff[64];
 
 	float *ptr = (float *)(&x);
 	float f = *ptr;
 
-	sprintf(longitude, "%f", f);
-	return;
+	sprintf(buff, "%3.4f", f);
+	return buff;
 }
 
 void read_string(char *output){
@@ -196,8 +190,11 @@ void save_points(void){
 		gps_points[place].long_swapped = swapEndian(gps_points[place].longitude);
 		gps_points[place].lat_swapped = swapEndian(gps_points[place].latitude);
 
-		printf("lat %d: %d  long %d: %d\n", place, gps_points[place].lat_swapped,
-										  place, gps_points[place].long_swapped);
+		strcpy(gps_points[place].latitude, FloatToLatitudeConversion(gps_points[place].lat_swapped));
+		strcpy(gps_points[place].longitude, FloatToLongitudeConversion(gps_points[place].long_swapped));
+
+		printf("latitude %d: %s  longitude %d: %s\n", place, gps_points[place].latitude,
+										          	  place, gps_points[place].longitude);
 
 		place++;
 		lat_count += 27;
@@ -205,6 +202,7 @@ void save_points(void){
 		lat_end += 36;
 		long_end += 36;
 	}
+
 	return;
 }
 
@@ -280,13 +278,14 @@ int main()
 {
 	printf("Initializing GPS...\n");
 	init_gps();
-	erase_log();
 
-	start_log();
+	//erase_log();
 
-	usleep(180000000);
+	//start_log();
 
-	stop_log();
+	//usleep(180000000);
+
+	//stop_log();
 
 	save_points();
 
