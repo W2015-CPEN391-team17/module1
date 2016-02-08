@@ -1,6 +1,25 @@
+# Ignore db and generated files
+db/
+incremental_db/
+nios_system/synthesis/
+.qsys_edit/
+*.cproject
+*.rpt
+*.done
+*.smsg
+*.pof
+*.sof
+*.qws
+*.summary
+*.jdi
+*.pin
+*.bsf
+*.cmp
+*.html
+*.sopcinfo
+
 # Software files
 *.o
-*.d
 *.elf
 *.map
 libhal_bsp.a
