@@ -1,3 +1,5 @@
+#include "altera_up_avalon_character_lcd.h"
+
 #ifndef GPS_H_
 #define GPS_H_
 

@@ -147,14 +147,9 @@ C_SRCS += OutGraphicsCharFont2.c
 C_SRCS += bluetooth.c
 C_SRCS += fill.c
 C_SRCS += fonts.c
-C_SRCS += gps.c
 C_SRCS += gps_points.c
 C_SRCS += graphics.c
 C_SRCS += main.c
-C_SRCS += test_bluetooth.c
-C_SRCS += test_gps_control.c
-C_SRCS += test_graphics.c
-C_SRCS += test_sdcard.c
 CXX_SRCS :=
 ASM_SRCS :=
 

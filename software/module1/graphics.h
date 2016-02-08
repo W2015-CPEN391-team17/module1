@@ -55,7 +55,6 @@
 #define	CYAN			6
 #define	MAGENTA			7
 
-// single-command (faster)
 void WriteAPixel(int x, int y, int Colour);
 void WriteHLine(int x1, int y1, int length, int Colour);
 void WriteVLine(int x1, int y1, int length, int Colour);
@@ -63,13 +62,13 @@ void WriteLine(int x1, int y1, int x2, int y2, int Colour);
 int ReadAPixel(int x, int y);
 void ProgramPalette(int PaletteNumber, int RGB);
 void WriteFilledRectangle(int x1, int y1, int x2, int y2, int color);
-
-// multiple-command
 void Rectangle(int x1, int y1, int x2, int y2, int color);
 void Circle(int x0, int y0, int radius, int color);
 void Text(int x, int y, int font_color, int background_color, char *text, int erase);
 void Button(int x1, int y1, int x2, int y2, int outline_color, int font_color,
 				int fill_color, char *text);
+void clear_screen(int colour);
+
 
 // use these only for testing single-command functions
 void HLine(int x1, int y1, int length, int Colour);

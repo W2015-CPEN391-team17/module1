@@ -4,7 +4,7 @@
  */
 
 #include <stdio.h>
-#include <altera_up_sd_card_avalon_interface.h>
+#include <Altera_UP_SD_Card_Avalon_Interface.h>
 #include "graphics.h"
 #include "bluetooth.h"
 #include "gps.h"
@@ -62,7 +62,7 @@ void cleanup(void)
 void draw_field(void)
 {
 	//Draw middle line
-	WriteVLine(XRES/2, 0, YRES, BLACK);
+	WriteVLine(XRES/2, 0, YRES-1, BLACK);
 	//TODO Draw circle
 	//TODO Draw goal boxes
 }
@@ -74,7 +74,7 @@ void draw_data(void) // TODO take whatever data structure Tim decides to use (ar
 
 void draw_menu(void)
 {
-	clear_box(0, MENU_TOP, XRES, YRES);
+	WriteFilledRectangle(0, MENU_TOP, XRES-1, YRES-1, WHITE);
 	WriteHLine(0, MENU_TOP, YRES, BLACK);
 	//TODO draw text here
 }

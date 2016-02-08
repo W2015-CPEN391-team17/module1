@@ -287,23 +287,3 @@ void query_log(void){
 	}
 	printf("%s", out);
 }
-
-int main()
-{
-	printf("Initializing GPS...\n");
-	init_gps();
-
-	//erase_log();
-
-	//start_log();
-
-	//usleep(180000000);
-
-	//stop_log();
-
-	save_points();
-
-	printf("done.");
-
-	return 0;
-}

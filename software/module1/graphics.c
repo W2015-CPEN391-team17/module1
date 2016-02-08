@@ -197,10 +197,12 @@ void Rectangle(int x1, int y1, int x2, int y2, int color)
 {
 	if (ASSERT_POINTS_ARE_VALID && x1 > x2) {
 		printf("ERROR: DrawRectangle failed because x1 > x2 (x1 is %d, x2 is %d)\n", x1, x2);
+		return;
 	}
 
-	if (ASSERT_POINTS_ARE_VALID && x1 > x2) {
+	if (ASSERT_POINTS_ARE_VALID && y1 > y2) {
 		printf("ERROR: DrawRectangle failed because y1 > y2 (y1 is %d, y2 is %d)\n", y1, y2);
+		return;
 	}
 
 	if (ASSERT_POINTS_ARE_VALID && !check_if_point_is_on_screen(x1, y1)) {
@@ -220,18 +222,20 @@ void Rectangle(int x1, int y1, int x2, int y2, int color)
 }
 
 /*******************************************************************************************
-* Write a Bresenham line (hardware-accelerated) from x1,y1 to x2,y2
-* Will print an error and return without writing anything if the start/end points are off
-* of the screen
+* Write a filled rectangle (hardware-accelerated) to the screen
+* If x1 > x2 or y1 < y2 or if any corner does not fit on the screen, an error message
+* will be printed and the function will return without drawing anything
 ********************************************************************************************/
 void WriteFilledRectangle(int x1, int y1, int x2, int y2, int Colour)
 {
 	if (ASSERT_POINTS_ARE_VALID && x1 > x2) {
 		printf("ERROR: WriteFilledRectangle failed because x1 > x2 (x1 is %d, x2 is %d)\n", x1, x2);
+		return;
 	}
 
-	if (ASSERT_POINTS_ARE_VALID && x1 > x2) {
+	if (ASSERT_POINTS_ARE_VALID && y1 > y2) {
 		printf("ERROR: WriteFilledRectangle failed because y1 > y2 (y1 is %d, y2 is %d)\n", y1, y2);
+		return;
 	}
 
 	if (ASSERT_POINTS_ARE_VALID && !check_if_point_is_on_screen(x1, y1)) {
@@ -350,7 +354,7 @@ void Circle(int x0, int y0, int radius, int color)
 void Text(int x, int y, int font_color, int background_color, char *text, int erase)
 {
 	const int text_char_x_size = 12;
-	if (text != NULL) {  // I don't know where NULL is defined; perhaps fix this later
+	if (text != NULL) {
 		int i;
 		for (i = 0; text[i] != '\0'; i++) {
 			  OutGraphicsCharFont2a(x+(text_char_x_size * i), y, font_color, background_color, (int) text[i], erase);
@@ -481,6 +485,8 @@ void Line(int x1, int y1, int x2, int y2, int Colour)
 *******************************************************************************/
 void write_test_screen() {
 	// write RED lines (software) over the entire screen area
+	// if we do hardware-accelerated lines and they fail,
+	// the rest of the test will be harder to see
 	int i;
 	for(i = 0; i <= YRES-1; i++) {
 		HLine(0, i, XRES-1, RED);

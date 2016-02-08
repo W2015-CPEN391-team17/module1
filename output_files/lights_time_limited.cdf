@@ -4,7 +4,7 @@ JedecChain;
 	DefaultMfr(6E);
 
 	P ActionCode(Cfg)
-		Device PartName(EP2C35F672) Path("/home/nick/git/cpen391/exercises/exercise1_7/NIOS_II_System_391_For_Students/output_files/") File("lights_time_limited.sof") MfrSpec(OpMask(1));
+		Device PartName(EP2C35F672) Path("/home/nick/git/cpen391/module1/output_files/") File("lights_time_limited.sof") MfrSpec(OpMask(1));
 
 ChainEnd;
 
