@@ -5,13 +5,10 @@
  *      Author: Kyle
  */
 
-#include "touchscreen.h" //for definition of Point
 #include "conversion.h"
 #include "graphics.h" //for XRES/YRES
 
 #include <math.h>
-
-//#include <limits.h> //Couldn't get this include to work, idk why. Have used the min/max def'n's from it in conversion.h
 
 /*Mutates points. Assumes player has ran across the field during some point in the game, in both x and y direction.
  *Assumes field is in line with lat/long.
@@ -63,7 +60,7 @@ void convertGPSPointsToPoints( Point points[] ){
 }
 
 /*
- * Converts GPSpoints to Points (for graphics). Does NOT take care of points outside of range. Only works for topRight in quadrant 4
+ * Converts GPSpoints to points for graphics. Does NOT take care of ALL points outside of range. Only works for topRight in quadrant 4
  * relative to topLeft. Needs to be tested.
  */
 void convertGPSReal( GPSPoint topLeft, GPSPoint topRight, GPSPoint points[], GPSPoint bottomRight, int nPoints ){
