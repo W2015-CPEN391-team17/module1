@@ -9,6 +9,7 @@
 #include "bluetooth.h"
 #include "gps.h"
 #include "gps_points.h"
+#include "sd_card.h"
 
 // Screen divisions.
 #define MENU_TOP 400
