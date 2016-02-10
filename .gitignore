@@ -24,3 +24,9 @@ nios_system/synthesis/
 *.map
 libhal_bsp.a
 *.objdump
+module1_bsp/alt_sys_init.c
+module1_bsp/linker.h
+module1_bsp/linker.x
+module1_bsp/memory.gdb
+module1_bsp/settings.bsp
+module1_bsp/system.h
