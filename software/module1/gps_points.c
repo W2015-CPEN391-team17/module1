@@ -8,11 +8,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "altera_up_avalon_character_lcd.h"
 #include "gps_points.h"
-#include "gps.h"
-
-struct points gps_points[10];
 
 //call this function at the start of the program before
 //attempting to read or write
@@ -58,7 +54,6 @@ char getchar_gps(void){
 	return '\0';
 }
 
-// swaps from little endian to big endian format
 int swapEndian(char *s){
 	register int val;
 
@@ -69,32 +64,22 @@ int swapEndian(char *s){
 	return val;
 }
 
-// converts a 4 byte IEEE-754 format float (passed as an int representing longitude and latitude)
-// to an ASCII string as a decimal representation of longitude/latitude
-char *FloatToLatitudeConversion(int x){
-	static char buff[100];
+float FloatToLatitudeConversion(int x){
 
 	float *ptr = (float *)(&x); // cast int to float
 	float f = *ptr; // get the float
 
-	sprintf(buff, "%2.4f", f); // write in string to an array
-
-	return buff;
+	return f;
 }
 
-// converts a 4 byte IEEE-754 format float (passed as an int representing longitude and latitude)
-// to an ASCII string as a decimal representation of longitude/latitude
-char *FloatToLongitudeConversion(int x){
-	static char buff[64];
+float FloatToLongitudeConversion(int x){
 
 	float *ptr = (float *)(&x);
 	float f = *ptr;
 
-	sprintf(buff, "%3.4f", f);
-	return buff;
+	return f;
 }
 
-// reads one full string from the GPS between $ and an end line character.
 void read_string(char *output){
 
 //	printf("Reading string\n");
@@ -121,7 +106,6 @@ void read_string(char *output){
 	return;
 }
 
-// configures log settings (i.e. interval on/off, rate of interval, etc.)
 void config_log(void){
 	int i;
 	char out[20];
@@ -140,8 +124,7 @@ void config_log(void){
 	}
 }
 
-// reads data from the log, and parses the first useable log to obtain longitude and latitude values.
-// values are saved into an array of structs to use as x,y coordinates for mapping
+// saves points as type float to an array of structs.
 void save_points(void){
 
 	printf("starting dump\n");
@@ -199,11 +182,14 @@ void save_points(void){
 		gps_points[place].long_swapped = swapEndian(gps_points[place].longitude);
 		gps_points[place].lat_swapped = swapEndian(gps_points[place].latitude);
 
-		strcpy(gps_points[place].latitude, FloatToLatitudeConversion(gps_points[place].lat_swapped));
-		strcpy(gps_points[place].longitude, FloatToLongitudeConversion(gps_points[place].long_swapped));
+		gps_points[place].long_float = FloatToLongitudeConversion(gps_points[place].long_swapped);
+		gps_points[place].lat_float = FloatToLatitudeConversion(gps_points[place].lat_swapped);
 
-		printf("latitude %d: %s  longitude %d: %s\n", place, gps_points[place].latitude,
-										          	  place, gps_points[place].longitude);
+		//strcpy(gps_points[place].latitude, FloatToLatitudeConversion(gps_points[place].lat_swapped));
+		//strcpy(gps_points[place].longitude, FloatToLongitudeConversion(gps_points[place].long_swapped));
+
+		printf("latitude %d: %f  longitude %d: %f\n", place, gps_points[place].lat_float,
+										          	  place, gps_points[place].long_float);
 
 		place++;
 		lat_count += 27;
@@ -215,20 +201,26 @@ void save_points(void){
 	return;
 }
 
-// immediately snapshots one log
+// log_now will log a point at that instant. Ensure you sleep 3 seconds before
+// calling log_now another time.
 void log_now(void){
 	int i;
 	const char command[] = "$PMTK186,1*20\r\n";
 	int length = strlen(command);
+	char string[256] = {0};
 
 	printf("Logging...\n");
 	// here we send the command to the gps
 	for(i = 0; i < length; i++){
 		putchar_gps(command[i]);
 	}
+	while(string[4] != 'K'){
+		read_string(string);
+	}
+	printf("%s\n", string);
 }
 
-// begin logging
+// starts the log.
 void start_log(void){
 	int i;
 	const char command[] = "$PMTK185,0*22\r\n";
@@ -241,7 +233,7 @@ void start_log(void){
 	}
 }
 
-// end logging
+// stops the log.
 void stop_log(void){
 	int i;
 	const char command[] = "$PMTK185,1*23\r\n";
@@ -254,7 +246,7 @@ void stop_log(void){
 	}
 }
 
-// erase the log
+// erases the log.
 void erase_log(void){
 	int i;
 	const char command[] = "$PMTK184,1*22\r\n";
@@ -267,7 +259,6 @@ void erase_log(void){
 	}
 }
 
-// returns a string denoting settings of the log (i.e. interval, interval rate, etc.)
 void query_log(void){
 	int i;
 	const char command[] = "$PMTK183*38\r\n";
@@ -287,3 +278,30 @@ void query_log(void){
 	}
 	printf("%s", out);
 }
+/* Testing function
+int main()
+{
+	printf("Initializing GPS...\n");
+	int i = 0;
+	init_gps();
+
+	erase_log();
+
+	start_log();
+
+	for(i = 0; i < 10; i++){
+		log_now();
+		usleep(3000000);
+	}
+
+	//usleep(180000000);
+
+	stop_log();
+
+	save_points();
+
+	printf("done.");
+
+	return 0;
+}
+*/
