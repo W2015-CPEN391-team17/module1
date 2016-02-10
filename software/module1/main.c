@@ -11,6 +11,7 @@
 
 // Screen divisions.
 #define MENU_TOP 400
+#define GOAL_WIDTH 320
 
 // Meta stuff.
 void initialize(void);
@@ -64,10 +65,16 @@ void cleanup(void)
 
 void draw_field(void)
 {
-	//Draw middle line
+	//Centre circle
+	Circle(XRES/2, YRES/2, YRES/8, BLACK);
+	Circle(XRES/2, YRES/2, YRES/8 - 1, WHITE);
+	//Middle line
 	WriteVLine(XRES/2, 0, YRES-1, BLACK);
-	//TODO Draw circle
-	//TODO Draw goal boxes
+	//Goals
+	WriteFilledRectangle(0, YRES/4, GOAL_WIDTH, 3*YRES/4, BLACK);
+	WriteFilledRectangle(0, YRES/4 + 1, GOAL_WIDTH - 1, 3*YRES/4 - 1, WHITE);
+	WriteFilledRectangle(XRES - GOAL_WIDTH, YRES/4, XRES, 3*YRES/4, BLACK);
+	WriteFilledRectangle(XRES - GOAL_WIDTH + 1, YRES/4 + 1, XRES, 3*YRES/4 - 1, WHITE);
 }
 
 void draw_data(void) // TODO take whatever data structure Tim decides to use (array of ints)
@@ -86,9 +93,10 @@ void draw_menu(void)
 void main_menu(void)
 {
 	clear_screen(WHITE);
-	draw_field();
 	draw_data();
+	draw_field();
 	draw_menu();
+	Text(0, 0, BLACK, WHITE, "Main Menu", 0);
 	while(1)
 	{
 		//Wait for touch
@@ -103,6 +111,7 @@ void sub_menu(void)
 	clear_screen(WHITE);
 	//TODO draw submenu stuff here
 	draw_menu();
+	Text(0, 0, BLACK, WHITE, "Additional Info", 0);
 	while(1)
 	{
 		//Wait for touch
