@@ -8,7 +8,6 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "altera_up_avalon_character_lcd.h"
 #include "gps_points.h"
 
 //call this function at the start of the program before
@@ -279,7 +278,7 @@ void query_log(void){
 	}
 	printf("%s", out);
 }
-
+/* Testing function
 int main()
 {
 	printf("Initializing GPS...\n");
@@ -305,3 +304,4 @@ int main()
 
 	return 0;
 }
+*/
