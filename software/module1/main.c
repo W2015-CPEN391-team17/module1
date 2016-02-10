@@ -81,12 +81,12 @@ void draw_field(void)
 
 void draw_data(GPSPoint points[], int numPoints)
 {
-	//Initialize 2D array of colours
-	int colours[HEATMAP_H][HEATMAP_V];
+	//Initialize 2D array representing points
+	int count[HEATMAP_H][HEATMAP_V];
 	int x, y;
 	for (y = 0; y < HEATMAP_V; y++) {
 		for (x = 0; x < HEATMAP_H; x++) {
-			colours[x][y] = INIT_COLOUR;
+			count[x][y] = INIT_COLOUR;
 		}
 	}
 
@@ -102,13 +102,15 @@ void draw_data(GPSPoint points[], int numPoints)
 				}
 			}
 		}
-		colours[xi][yi]++;
+		count[xi][yi]++;
 	}
+
+	//TODO make colour drawing proportional rather than absolute
 
 	int h, v;
 	for (v = 0; v < HEATMAP_V; v++) {
 		for (h = 0; h < HEATMAP_H; h++) {
-			WriteFilledRectangle(h * XRES/HEATMAP_H, v * YRES/HEATMAP_V, (h + 1) * XRES/HEATMAP_H, (v + 1) * YRES/HEATMAP_V, colours[h][v]);
+			WriteFilledRectangle(h * XRES/HEATMAP_H, v * YRES/HEATMAP_V, (h + 1) * XRES/HEATMAP_H, (v + 1) * YRES/HEATMAP_V, count[h][v]);
 		}
 	}
 }
