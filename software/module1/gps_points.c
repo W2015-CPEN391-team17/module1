@@ -8,9 +8,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "altera_up_avalon_character_lcd.h"
 #include "gps_points.h"
-#include "gps.h"
 
 struct points gps_points[10];
 

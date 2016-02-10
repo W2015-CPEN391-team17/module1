@@ -7,7 +7,6 @@
 #include <Altera_UP_SD_Card_Avalon_Interface.h>
 #include "graphics.h"
 #include "bluetooth.h"
-#include "gps.h"
 #include "gps_points.h"
 
 // Screen divisions.
@@ -51,7 +50,11 @@ int main()
 void initialize(void)
 {
 	init_gps();
+	prinf("GPS initialized.\n");
 	init_btport();
+	prinf("Bluetooth port initialized.\n");
+	clear_screen();
+	prinf("Screen cleared.\n");
 }
 
 void cleanup(void)
@@ -70,6 +73,8 @@ void draw_field(void)
 void draw_data(void) // TODO take whatever data structure Tim decides to use (array of ints)
 {
 	//TODO draw heatmap
+	//Don't draw it too small
+	//Take advantage of hardware rectangles
 }
 
 void draw_menu(void)
