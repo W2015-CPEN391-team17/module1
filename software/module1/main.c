@@ -50,11 +50,11 @@ int main()
 void initialize(void)
 {
 	init_gps();
-	prinf("GPS initialized.\n");
+	printf("GPS initialized.\n");
 	init_btport();
-	prinf("Bluetooth port initialized.\n");
-	clear_screen();
-	prinf("Screen cleared.\n");
+	printf("Bluetooth port initialized.\n");
+	clear_screen(WHITE);
+	printf("Screen cleared.\n");
 }
 
 void cleanup(void)
