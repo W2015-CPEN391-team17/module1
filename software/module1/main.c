@@ -93,14 +93,22 @@ void draw_data(GPSPoint points[], int numPoints)
 	//Check where points land
 	int i;
 	for (i = 0; i < numPoints; i++) {
-		//TODO make this actually do something
-		colours[0][0]++;
+		int xi, yi;
+		for (yi = 0; yi < HEATMAP_V; yi++) {
+			for (xi = 0; xi < HEATMAP_H; xi++) {
+				if (points[i].x < ((xi+1) * XRES/HEATMAP_H) && points[i].x >= (xi * XRES/HEATMAP_H) &&
+				 	points[i].y < ((yi+1) * YRES/HEATMAP_V) && points[i].y >= (yi * YRES/HEATMAP_V)) {
+					break;
+				}
+			}
+		}
+		colours[xi][yi]++;
 	}
 
-	int xi, yi;
-	for (yi = 0; yi < HEATMAP_V; yi++) {
-		for (xi = 0; xi < HEATMAP_H; xi++) {
-			WriteFilledRectangle(0, 0, 0, 0, colours[xi][yi]);
+	int h, v;
+	for (v = 0; v < HEATMAP_V; v++) {
+		for (h = 0; h < HEATMAP_H; h++) {
+			WriteFilledRectangle(h * XRES/HEATMAP_H, v * YRES/HEATMAP_V, (h + 1) * XRES/HEATMAP_H, (v + 1) * YRES/HEATMAP_V, colours[h][v]);
 		}
 	}
 }
@@ -114,7 +122,7 @@ void draw_menu(void)
 void main_menu(void)
 {
 	clear_screen(WHITE);
-	//draw_data(<GPSPoint global array>, 10); TODO how did this get here i am not good with computer
+	//draw_data(<GPSPoint array or something>, 10); TODO how did this get here i am not good with computer
 	draw_field();
 	draw_menu();
 	Text(0, 0, BLACK, WHITE, "Main Menu", 0);
