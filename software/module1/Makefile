@@ -150,6 +150,8 @@ C_SRCS += fonts.c
 C_SRCS += gps_points.c
 C_SRCS += graphics.c
 C_SRCS += main.c
+C_SRCS += conversion.c
+C_SRCS += touchScreen.c
 CXX_SRCS :=
 ASM_SRCS :=
 

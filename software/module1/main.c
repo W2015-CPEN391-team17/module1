@@ -5,6 +5,8 @@
 
 #include <stdio.h>
 #include <Altera_UP_SD_Card_Avalon_Interface.h>
+#include "conversion.h"
+#include "touchScreen.h"
 #include "graphics.h"
 #include "bluetooth.h"
 #include "gps_points.h"
@@ -12,6 +14,11 @@
 // Screen divisions.
 #define MENU_TOP 400
 #define GOAL_WIDTH 320
+
+// Drawing heatmap
+#define HEATMAP_H 5
+#define HEATMAP_V 3
+#define INIT_COLOUR DARK_GREEN
 
 // Meta stuff.
 void initialize(void);
@@ -52,6 +59,8 @@ void initialize(void)
 {
 	init_gps();
 	printf("GPS initialized.\n");
+	Init_Touch();
+	printf("Touchscreen initialized.\n");
 	init_btport();
 	printf("Bluetooth port initialized.\n");
 	clear_screen(WHITE);
@@ -77,18 +86,30 @@ void draw_field(void)
 	WriteFilledRectangle(XRES - GOAL_WIDTH + 1, YRES/4 + 1, XRES, 3*YRES/4 - 1, WHITE);
 }
 
-void draw_data(void) // TODO take whatever data structure Tim decides to use (array of ints)
+void draw_data(Point points[], int numPoints)
 {
-	//TODO draw heatmap
-	//Don't draw it too small
-	//Take advantage of hardware rectangles
+	//Initialize 2D array of colours
+	int colours[HEATMAP_H][HEATMAP_V];
+	int x, y;
+	for (y = 0; y < HEATMAP_V; y++) {
+		for (x = 0; x < HEATMAP_H; x++) {
+			colours[x][y] = INIT_COLOUR;
+		}
+	}
+
+	//Check where points land
+	int i;
+	for (i = 0; i < numPoints; i++) {
+		//TODO make this actually do something
+		colours[0][0]++;
+	}
 }
 
 void draw_menu(void)
 {
 	WriteFilledRectangle(0, MENU_TOP, XRES-1, YRES-1, WHITE);
 	WriteHLine(0, MENU_TOP, YRES, BLACK);
-	//TODO draw text here
+	Text(0, MENU_TOP, BLACK, WHITE, "Tap for more information", 0);
 }
 void main_menu(void)
 {
