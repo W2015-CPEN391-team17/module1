@@ -18,22 +18,15 @@
 // Drawing heatmap
 #define HEATMAP_H 5
 #define HEATMAP_V 3
-#define INIT_COLOUR DARK_GREEN
+#define INIT_COLOUR 0x00006400
 
 // Meta stuff.
 void initialize(void);
 void cleanup(void);
 
-// Save and load.
-// void save(<array of points>);
-// <array of points> load();
-
-// Conversion functions.
-// <array of points> gps_to_points(array of points); // Mutates the gps data to the screen.
-
 // Drawing functions.
 void draw_field(void);
-void draw_data(void);
+void draw_data(GPSPoint points[], int numPoints);
 void draw_menu(void);
 
 // Main menu function, should return struct point eventually, but void for now
@@ -86,7 +79,7 @@ void draw_field(void)
 	WriteFilledRectangle(XRES - GOAL_WIDTH + 1, YRES/4 + 1, XRES, 3*YRES/4 - 1, WHITE);
 }
 
-void draw_data(Point points[], int numPoints)
+void draw_data(GPSPoint points[], int numPoints)
 {
 	//Initialize 2D array of colours
 	int colours[HEATMAP_H][HEATMAP_V];
@@ -103,6 +96,13 @@ void draw_data(Point points[], int numPoints)
 		//TODO make this actually do something
 		colours[0][0]++;
 	}
+
+	int xi, yi;
+	for (yi = 0; yi < HEATMAP_V; yi++) {
+		for (xi = 0; xi < HEATMAP_H; xi++) {
+			WriteFilledRectangle(0, 0, 0, 0, colours[xi][yi]);
+		}
+	}
 }
 
 void draw_menu(void)
@@ -114,7 +114,7 @@ void draw_menu(void)
 void main_menu(void)
 {
 	clear_screen(WHITE);
-	draw_data();
+	//draw_data(<GPSPoint global array>, 10); TODO how did this get here i am not good with computer
 	draw_field();
 	draw_menu();
 	Text(0, 0, BLACK, WHITE, "Main Menu", 0);
