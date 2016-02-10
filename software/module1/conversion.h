@@ -8,6 +8,8 @@
 #ifndef CONVERSION_H_
 #define CONVERSION_H_
 
+#include "touchScreen.h"
+
 typedef struct { float x, y; } GPSPoint;
 
 void convertGPSPointsToPoints( Point points[] );
