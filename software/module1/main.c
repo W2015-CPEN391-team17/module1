@@ -117,9 +117,13 @@ void draw_data(GPSPoint points[], int numPoints)
 
 void draw_menu(void)
 {
-	WriteFilledRectangle(0, MENU_TOP, XRES-1, YRES-1, WHITE);
-	WriteHLine(0, MENU_TOP, YRES, BLACK);
-	Text(0, MENU_TOP, BLACK, WHITE, "Tap for more information", 0);
+	WriteFilledRectangle(0, MENU_TOP, XRES-1, YRES-1, GREY);
+	WriteHLine(0, MENU_TOP, XRES, BLACK);
+	WriteVLine(XRES/3, MENU_TOP, YRES - MENU_TOP, BLACK);
+	WriteVLine(XRES*2/3, MENU_TOP, YRES - MENU_TOP, BLACK);
+	Text(10, MENU_TOP, BLACK, GREY, "Save", 0);
+	Text(XRES/3 + 10, MENU_TOP, BLACK, GREY, "Interpret", 0);
+	Text(XRES*2/3 + 10, MENU_TOP, BLACK, GREY, "Settings", 0);
 }
 void main_menu(void)
 {
