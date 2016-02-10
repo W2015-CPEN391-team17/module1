@@ -12,18 +12,27 @@
 #define GPS_STATUS_RX_MASK 0x01
 
 struct points {
+	//to parse from gps data
 	char latitude[16];
 	char longitude[16];
+
+	// to save as float value
+	float lat_float;
+	float long_float;
+
+	// to swap endianness
 	int lat_swapped;
 	int long_swapped;
 };
+
+struct points gps_points[10];
 
 void init_gps(void);
 char putchar_gps(char c);
 char getchar_gps(void);
 int swapEndian(char *s);
-char *FloatToLatitudeConversion(int x);
-char *FloatToLongitudeConversion(int x);
+float FloatToLatitudeConversion(int x);
+float FloatToLongitudeConversion(int x);
 void read_string(char *output);
 void config_log(void);
 void save_points(void);
