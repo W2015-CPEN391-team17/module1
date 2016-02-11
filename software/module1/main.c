@@ -18,22 +18,15 @@
 // Drawing heatmap
 #define HEATMAP_H 5
 #define HEATMAP_V 3
-#define INIT_COLOUR DARK_GREEN
+#define INIT_COLOUR 0x00006400
 
 // Meta stuff.
 void initialize(void);
 void cleanup(void);
 
-// Save and load.
-// void save(<array of points>);
-// <array of points> load();
-
-// Conversion functions.
-// <array of points> gps_to_points(array of points); // Mutates the gps data to the screen.
-
 // Drawing functions.
 void draw_field(void);
-void draw_data(void);
+void draw_data(GPSPoint points[], int numPoints);
 void draw_menu(void);
 
 // Main menu function, should return struct point eventually, but void for now
@@ -86,35 +79,56 @@ void draw_field(void)
 	WriteFilledRectangle(XRES - GOAL_WIDTH + 1, YRES/4 + 1, XRES, 3*YRES/4 - 1, WHITE);
 }
 
-void draw_data(Point points[], int numPoints)
+void draw_data(GPSPoint points[], int numPoints)
 {
-	//Initialize 2D array of colours
-	int colours[HEATMAP_H][HEATMAP_V];
+	//Initialize 2D array representing points
+	int count[HEATMAP_H][HEATMAP_V];
 	int x, y;
 	for (y = 0; y < HEATMAP_V; y++) {
 		for (x = 0; x < HEATMAP_H; x++) {
-			colours[x][y] = INIT_COLOUR;
+			count[x][y] = INIT_COLOUR;
 		}
 	}
 
 	//Check where points land
 	int i;
 	for (i = 0; i < numPoints; i++) {
-		//TODO make this actually do something
-		colours[0][0]++;
+		int xi, yi;
+		for (yi = 0; yi < HEATMAP_V; yi++) {
+			for (xi = 0; xi < HEATMAP_H; xi++) {
+				if (points[i].x < ((xi+1) * XRES/HEATMAP_H) && points[i].x >= (xi * XRES/HEATMAP_H) &&
+				 	points[i].y < ((yi+1) * YRES/HEATMAP_V) && points[i].y >= (yi * YRES/HEATMAP_V)) {
+					break;
+				}
+			}
+		}
+		count[xi][yi]++;
+	}
+
+	//TODO make colour drawing proportional rather than absolute
+
+	int h, v;
+	for (v = 0; v < HEATMAP_V; v++) {
+		for (h = 0; h < HEATMAP_H; h++) {
+			WriteFilledRectangle(h * XRES/HEATMAP_H, v * YRES/HEATMAP_V, (h + 1) * XRES/HEATMAP_H, (v + 1) * YRES/HEATMAP_V, count[h][v]);
+		}
 	}
 }
 
 void draw_menu(void)
 {
 	WriteFilledRectangle(0, MENU_TOP, XRES-1, YRES-1, WHITE);
-	WriteHLine(0, MENU_TOP, YRES, BLACK);
-	Text(0, MENU_TOP, BLACK, WHITE, "Tap for more information", 0);
+	WriteHLine(0, MENU_TOP, XRES - 1, LIME);
+	WriteVLine(XRES/3, MENU_TOP, YRES - MENU_TOP - 1, BLACK);
+	WriteVLine(XRES*2/3, MENU_TOP, YRES - MENU_TOP - 1, BLACK);
+	Text(10, (MENU_TOP + YRES)/2, BLACK, WHITE, "Save", 0);
+	Text(XRES/3 + 10, (MENU_TOP + YRES)/2, BLACK, WHITE, "Interpret", 0);
+	Text(XRES*2/3 + 10, (MENU_TOP + YRES)/2, BLACK, WHITE, "Settings", 0);
 }
 void main_menu(void)
 {
 	clear_screen(WHITE);
-	draw_data();
+	//draw_data(<GPSPoint array or something>, 10); TODO how did this get here i am not good with computer
 	draw_field();
 	draw_menu();
 	Text(0, 0, BLACK, WHITE, "Main Menu", 0);

@@ -860,7 +860,7 @@ end process;
 					-- write the left-side pixel
 					Sig_UDS_Out_L <= '0';
 					-- may also be able to draw the right-side pixel
-					if(signed(signed(X1) + 1) /= signed(X2)) then
+					if(signed(X1) + 1 /= signed(X2)) then
 						Sig_LDS_Out_L <= '0';
 					end if;
 					-- increment X1 by 2
@@ -875,7 +875,7 @@ end process;
 				end if;
 				
 				-- decide whether to write and choose the next state
-				if(signed(X1) >= signed(X2)) then
+				if(X1 >= X2) then
 					Sig_RW_Out <= '1'; -- do not draw a line with only one pixel
 					NextState <= IDLE;
 				else
@@ -900,7 +900,7 @@ end process;
 					Sig_LDS_Out_L 	<= '0';
 				end if;
 
-				if(signed(Y1) >= signed(Y2)) then
+				if(Y1 >= Y2) then
 					Sig_RW_Out <= '1'; -- do not draw a line with only one pixel
 					NextState <= IDLE;
 				else
@@ -953,7 +953,7 @@ end process;
 			s2_Load_H <= '1';
 			interchange_Load_H <= '1';
 			
-			if ((signed(x1) = signed(x2)) and (signed(y1) = signed(y2))) then
+			if ((x1 = x2) and (y1 = y2)) then
 				NextState <= IDLE; -- do not draw line of length 0
 			else
 				NextState <= DrawLine1;
@@ -1062,7 +1062,7 @@ end process;
 		elsif(CurrentState = DrawRectangle) then
 ------------------------------------------------------------------------------
 			--check if corner points are valid
-			if((signed(X2) >= signed(X1)) and (signed(Y2) >= signed(Y1))) then
+			if((X2 >= X1) and (Y2 >= Y1)) then
 				x_Data <= signed(X1);
 				x_Load_H <= '1';
 				NextState <= DrawRectangle1;
@@ -1119,7 +1119,7 @@ end process;
 			Y1_Increment_H <= '1';
 
 			-- move on to horizontal line drawing step unless we are done
-			if(signed(Y1) >= signed(Y2)) then
+			if(Y1 >= Y2) then
 				NextState <= IDLE;
 			else
 				NextState <= DrawRectangle1;

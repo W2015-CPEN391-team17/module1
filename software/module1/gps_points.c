@@ -284,7 +284,7 @@ void query_log(void){
 	}
 	printf("%s", out);
 }
-
+/* Testing function
 int main()
 {
 	printf("Initializing GPS...\n");
@@ -313,3 +313,4 @@ int main()
 
 	return 0;
 }
+*/
