@@ -1062,7 +1062,7 @@ end process;
 		elsif(CurrentState = DrawRectangle) then
 ------------------------------------------------------------------------------
 			--check if corner points are valid
-			if((X2 >= X1) and (X2 >= X1)) then
+			if((X2 >= X1) and (Y2 >= Y1)) then
 				x_Data <= signed(X1);
 				x_Load_H <= '1';
 				NextState <= DrawRectangle1;
