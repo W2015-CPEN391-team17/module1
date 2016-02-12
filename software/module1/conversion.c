@@ -23,7 +23,8 @@ void convertGPSPointsToPoints( GPSPoint points[], int nPoints ){
 	double mX = (double) XRES / (TOPRIGHTLONG - TOPLEFTLONG);
 	double mY = (double) (YRES - MENU_TOP) / (TOPLEFTLAT - BOTRIGHTLAT);
 
-	for(int i = 0; i < nPoints; i++){
+	int i;
+	for(i = 0; i < nPoints; i++){
 		points[i].x = mX * (points[i].x - TOPLEFTLONG);
 		points[i].y = mY * (points[i].y - BOTRIGHTLAT);
 
