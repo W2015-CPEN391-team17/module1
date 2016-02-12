@@ -145,7 +145,7 @@ void draw_menu(void)
 	WriteHLine(0, MENU_TOP, XRES - 1, LIME);
 	WriteVLine(XRES/3, MENU_TOP, YRES - MENU_TOP - 1, BLACK);
 	WriteVLine(XRES*2/3, MENU_TOP, YRES - MENU_TOP - 1, BLACK);
-	Text(10, (MENU_TOP + YRES)/2, BLACK, WHITE, "Save", 0);
+	Text(10, (MENU_TOP + YRES)/2, BLACK, WHITE, "Save/Load", 0);
 	Text(XRES/3 + 10, (MENU_TOP + YRES)/2, BLACK, WHITE, "Interpret", 0);
 	Text(XRES*2/3 + 10, (MENU_TOP + YRES)/2, BLACK, WHITE, "Settings", 0);
 	printf("Menu drawn.\n");
@@ -184,10 +184,18 @@ void main_menu(void)
 	Text(0, 0, BLACK, WHITE, "Main Menu", 0);
 	while(1)
 	{
-		//Wait for touch
-		//Based on touch coords:
-		//Open submenu
-		//On return from submenu, clear screen and redraw the field
+		Point p = GetPress();
+		if(p.y < MENU_TOP){
+			//Field touched. Switch to connect-the-dots?
+		}else{
+			if(p.x < XRES / 3){
+				//Save/Load touched
+			}else if(p.x < 2 * XRES / 3){
+				//Interpret touched
+			}else{
+				//Settings touched
+			}
+		}
 	}
 }
 
