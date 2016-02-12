@@ -291,7 +291,7 @@ int main()
 	int i = 0;
 	init_gps();
 
-	/*erase_log();
+	erase_log();
 
 	start_log();
 
@@ -302,7 +302,7 @@ int main()
 
 	//usleep(180000000);
 
-	stop_log();*/
+	stop_log();
 
 	save_points();
 
