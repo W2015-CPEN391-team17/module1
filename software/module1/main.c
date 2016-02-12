@@ -70,23 +70,29 @@ void draw_field(void)
 	//Middle line
 	WriteVLine(XRES/2, 0, MENU_TOP-YRES-1, BLACK);
 	//Goals
-	//WriteFilledRectangle(0, YRES/4, GOAL_WIDTH, 3*YRES/4, BLACK);
-	//WriteFilledRectangle(0, YRES/4 + 1, GOAL_WIDTH - 1, 3*YRES/4 - 1, WHITE);
-	//WriteFilledRectangle(XRES - GOAL_WIDTH, YRES/4, XRES - 1, 3*YRES/4, BLACK);
-	//WriteFilledRectangle(XRES - GOAL_WIDTH + 1, YRES/4 + 1, XRES - 1, 3*YRES/4 - 1, WHITE);
+	WriteVLine(GOAL_WIDTH, MENU_TOP/4, MENU_TOP/2, BLACK);
+	WriteVLine(XRES-GOAL_WIDTH, MENU_TOP/4, MENU_TOP/2, BLACK);
+	WriteHLine(0, MENU_TOP/4, GOAL_WIDTH, BLACK);
+	WriteHLine(0, 3*MENU_TOP/4, GOAL_WIDTH, BLACK);
+	WriteHLine(XRES-GOAL_WIDTH, MENU_TOP/4, GOAL_WIDTH-1, BLACK);
+	WriteHLine(XRES-GOAL_WIDTH, 3*MENU_TOP/4, GOAL_WIDTH-1, BLACK);
 	printf("Field drawn.\n");
 }
 
 void draw_data(GPSPoint points[], int numPoints)
 {
 	//Initialize 2D array representing points
-	int count[HEATMAP_H][HEATMAP_V];
-	int x, y;
-	for (y = 0; y < HEATMAP_V; y++) {
-		for (x = 0; x < HEATMAP_H; x++) {
-			count[x][y] = INIT_COLOUR;//0;
-		}
-	}
+	int count[HEATMAP_H][HEATMAP_V] = {0};
+	//TODO Initialize array of heatmap shades
+	int shades[HM_SHADES];
+	shades[0] = 0;
+	shades[1] = 1;
+	shades[2] = 2;
+	shades[3] = 3;
+	shades[4] = 4;
+	shades[5] = 5;
+	shades[6] = 6;
+	shades[7] = 7;
 
 	//Check where points land
 	int i;
@@ -95,24 +101,55 @@ void draw_data(GPSPoint points[], int numPoints)
 		for (yi = 0; yi < HEATMAP_V; yi++) {
 			for (xi = 0; xi < HEATMAP_H; xi++) {
 				if (points[i].x < ((xi+1) * XRES/HEATMAP_H) && points[i].x >= (xi * XRES/HEATMAP_H) &&
+<<<<<<< HEAD
 				 	points[i].y < ((yi+1) * (YRES - (YRES-MENU_TOP))/HEATMAP_V) && points[i].y >= (yi * (YRES - (YRES-MENU_TOP))/HEATMAP_V)) {
 					printf("Point landed in (%i, %i)\n", xi, yi);
+=======
+				 	points[i].y < ((yi+1) * MENU_TOP/HEATMAP_V) && points[i].y >= (yi * MENU_TOP/HEATMAP_V)) {
+					count[xi][yi]++;
+					printf("Point landed in (%d, %d), count now %d\n", xi, yi, count[xi][yi]);
+>>>>>>> origin/master
 					break;
 				}
 			}
 		}
-		count[xi][yi]++;
 	}
+
+	//Find max and min counts
+	int x, y;
+	int max_count = 0;
+	int min_count = numPoints;
+	for (y = 0; y < HEATMAP_V; y++) {
+		for (x = 0; x < HEATMAP_H; x++) {
+			if (count[x][y] > max_count) {
+				max_count = count[x][y];
+			}
+			if (count[x][y] < min_count) {
+				min_count = count[x][y];
+			}
+		}
+	}
+	printf("Minimum count is %d\n", min_count);
+	printf("Maximum count is %d\n", max_count);
 
 	//Make colours proportional to number of points
 	int colours[HEATMAP_H][HEATMAP_V];
-	//TODO actually do what the above comment says this does
+	for (y = 0; y < HEATMAP_V; y++) {
+		for (x = 0; x < HEATMAP_H; x++) {
+			colours[x][y] = shades[(count[x][y] - min_count)/(max_count - min_count) * HM_SHADES];
+		}
+	}
 
 	//Draw points
 	int h, v;
 	for (v = 0; v < HEATMAP_V; v++) {
 		for (h = 0; h < HEATMAP_H; h++) {
+<<<<<<< HEAD
 			WriteFilledRectangle(h * (XRES-1)/HEATMAP_H, v * (YRES - (YRES-MENU_TOP))/HEATMAP_V, (h + 1) * (XRES-1)/HEATMAP_H, (v + 1) * (YRES - (YRES-MENU_TOP))/HEATMAP_V, count[h][v]);
+=======
+			WriteFilledRectangle(h * (XRES-1)/HEATMAP_H, v * MENU_TOP/HEATMAP_V, (h + 1) * (XRES-1)/HEATMAP_H, (v + 1) * MENU_TOP/HEATMAP_V, count[h][v]);
+			printf("Drew (%i, %i) with colour %i\n", h, v, count[h][v]);
+>>>>>>> origin/master
 		}
 	}
 	printf("Heatmap drawn.\n");
@@ -157,7 +194,7 @@ void main_menu(void)
 	fake[8] = p8;
 	fake[9] = p9;
 
-	//draw_data(fake, 10);
+	draw_data(fake, 10);
 	draw_field();
 	draw_menu();
 	Text(0, 0, BLACK, WHITE, "Main Menu", 0);
