@@ -152,6 +152,7 @@ C_SRCS += graphics.c
 C_SRCS += main.c
 C_SRCS += conversion.c
 C_SRCS += touchScreen.c
+C_SRCS += sub_menus.c
 CXX_SRCS :=
 ASM_SRCS :=
 

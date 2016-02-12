@@ -10,6 +10,7 @@
 #include "graphics.h"
 #include "bluetooth.h"
 #include "gps_points.h"
+#include "sub_menus.h"
 
 // Meta stuff.
 void initialize(void);
@@ -24,6 +25,8 @@ void draw_menu(void);
 void main_menu(void);
 // Sub-menu function, should return struct point eventually, but void for now
 void sub_menu(void);
+
+Colours colorScheme;
 
 int main()
 {
@@ -41,6 +44,10 @@ int main()
 
 void initialize(void)
 {
+	colorScheme.menuBackground = WHITE;
+	colorScheme.text = BLACK;
+	colorScheme.connectTheDotsLine = WHITE;
+
 	init_gps();
 	printf("GPS initialized.\n");
 	Init_Touch();
@@ -185,19 +192,30 @@ void main_menu(void)
 	draw_field();
 	draw_menu();
 	Text(0, 0, BLACK, WHITE, "Main Menu", 0);
+	Point p;
+	int newP = 0; //Boolean
 	while(1)
 	{
-		Point p = GetPress();
+		if(!newP){
+			p = GetPress();
+		}else{
+			newP = 0;
+		}
 		if(p.y < MENU_TOP){
 			//Field touched. Switch to connect-the-dots?
 		}else{
 			if(p.x < XRES / 3){
 				//Save/Load touched
+				SaveLoadMenu(&p);
 			}else if(p.x < 2 * XRES / 3){
 				//Interpret touched
+				InterpretMenu(&p);
 			}else{
 				//Settings touched
+				SettingsMenu(&p, 0);
 			}
+
+			newP = 1;
 		}
 	}
 }
