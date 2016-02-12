@@ -7,26 +7,25 @@
 
 #include "conversion.h"
 #include "graphics.h" //for XRES/YRES and MENU_TOP
+#include "gps_points.h"
 
 #include <math.h>
 
-/*Mutates points. Assumes player has ran across the field during some point in the game, in both x and y direction.
- *Assumes field is in line with lat/long.
- *
- *Should really just have defined points of where the field is. Maybe use Google Maps/Earth?
- *Basically, this function is just for testing atm, need a new one once we know where our field is, but concept will be similar.
+/*
+ *Assumes field is in line with lat/long. Converts global array (ugh) of gps_points to array of GPSPoint scaled to screen pixels.
+ *CALLOCS points, CALLING FUNCTION MUST DEAL WITH free() IF NEEDED!!!!!
  *
  */
+GPSPoint* convertGPSPoints( int nPoints ){
+	GPSPoint* points = calloc(nPoints, sizeof(GPSPoint));
 
-//@deprecated
-void convertGPSPointsToPoints( GPSPoint points[], int nPoints ){
 	double mX = (double) XRES / (TOPRIGHTLONG - TOPLEFTLONG);
 	double mY = (double) MENU_TOP / (TOPLEFTLAT - BOTRIGHTLAT);
 
 	int i;
 	for(i = 0; i < nPoints; i++){
-		points[i].x = mX * (points[i].x - TOPLEFTLONG);
-		points[i].y = mY * (points[i].y - BOTRIGHTLAT);
+		points[i].x = mX * (gps_points[i].long_float - TOPLEFTLONG);
+		points[i].y = mY * (gps_points[i].lat_float - BOTRIGHTLAT);
 
 		if(points[i].x > XRES && points[i].x < XRES + 1){
 			points[i].x = XRES;
@@ -35,6 +34,8 @@ void convertGPSPointsToPoints( GPSPoint points[], int nPoints ){
 			points[i].y = MENU_TOP;
 		}
 	}
+
+	return points;
 }
 
 /*
