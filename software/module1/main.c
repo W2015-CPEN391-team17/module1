@@ -78,14 +78,14 @@ void draw_data(GPSPoint points[], int numPoints)
 	int count[HEATMAP_H][HEATMAP_V] = {0};
 	//TODO Initialize array of heatmap shades
 	int shades[HM_SHADES];
-	shades[0] = 0;
-	shades[1] = 1;
+	shades[0] = 1;
+	shades[1] = 0;
 	shades[2] = 2;
-	shades[3] = 3;
+	shades[3] = 7;
 	shades[4] = 4;
-	shades[5] = 5;
-	shades[6] = 6;
-	shades[7] = 7;
+	shades[5] = 6;
+	shades[6] = 3;
+	shades[7] = 5;
 
 	//Check where points land
 	int i;
@@ -121,10 +121,13 @@ void draw_data(GPSPoint points[], int numPoints)
 	printf("Maximum count is %d\n", max_count);
 
 	//Make colours proportional to number of points
+	int shade;
 	int colours[HEATMAP_H][HEATMAP_V];
 	for (y = 0; y < HEATMAP_V; y++) {
 		for (x = 0; x < HEATMAP_H; x++) {
-			colours[x][y] = shades[(count[x][y] - min_count)/(max_count - min_count) * HM_SHADES];
+			shade = ((count[x][y] - min_count) * (HM_SHADES - 1))/(max_count - min_count);
+			colours[x][y] = shades[shade];
+			printf("Block (%d, %d) set to shade %d.\n", x, y, shade);
 		}
 	}
 
@@ -132,8 +135,8 @@ void draw_data(GPSPoint points[], int numPoints)
 	int h, v;
 	for (v = 0; v < HEATMAP_V; v++) {
 		for (h = 0; h < HEATMAP_H; h++) {
-			WriteFilledRectangle(h * (XRES-1)/HEATMAP_H, v * MENU_TOP/HEATMAP_V, (h + 1) * (XRES-1)/HEATMAP_H, (v + 1) * MENU_TOP/HEATMAP_V, count[h][v]);
-			printf("Drew (%i, %i) with colour %i\n", h, v, count[h][v]);
+			WriteFilledRectangle(h * (XRES-1)/HEATMAP_H, v * MENU_TOP/HEATMAP_V, (h + 1) * (XRES-1)/HEATMAP_H, (v + 1) * MENU_TOP/HEATMAP_V, colours[h][v]);
+			printf("Drew (%i, %i) with colour %i\n", h, v, colours[h][v]);
 		}
 	}
 	printf("Heatmap drawn.\n");
