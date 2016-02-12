@@ -25,7 +25,12 @@ struct points {
 	int long_swapped;
 };
 
-struct points gps_points[10];
+struct logs {
+	char string[256];
+};
+
+struct logs gps_log[50];
+struct points gps_points[120];
 
 void init_gps(void);
 char putchar_gps(char c);
