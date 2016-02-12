@@ -21,7 +21,7 @@
 //@deprecated
 void convertGPSPointsToPoints( GPSPoint points[], int nPoints ){
 	double mX = (double) XRES / (TOPRIGHTLONG - TOPLEFTLONG);
-	double mY = (double) (YRES - MENU_TOP) / (TOPLEFTLAT - BOTRIGHTLAT);
+	double mY = (double) MENU_TOP / (TOPLEFTLAT - BOTRIGHTLAT);
 
 	int i;
 	for(i = 0; i < nPoints; i++){
@@ -31,8 +31,8 @@ void convertGPSPointsToPoints( GPSPoint points[], int nPoints ){
 		if(points[i].x > XRES && points[i].x < XRES + 1){
 			points[i].x = XRES;
 		}
-		if(points[i].y > (YRES - MENU_TOP) && points[i].y < (YRES - MENU_TOP) + 1){
-			points[i].y = (YRES - MENU_TOP);
+		if(points[i].y > MENU_TOP && points[i].y < MENU_TOP + 1){
+			points[i].y = MENU_TOP;
 		}
 	}
 }
