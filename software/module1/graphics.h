@@ -15,10 +15,10 @@
 #define MENU_TOP 440
 #define GOAL_WIDTH 60
 
-// Heatmap divisions
+// Heatmap properties
 #define HEATMAP_H 5
 #define HEATMAP_V 3
-#define INIT_COLOUR 0x00006400
+#define HM_SHADES 8
 
 #define ASSERT_POINTS_ARE_VALID TRUE
 
