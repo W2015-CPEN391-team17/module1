@@ -59,9 +59,9 @@ void cleanup(void)
 void draw_field(void)
 {
 	//Centre circle
-	Circle(XRES/2, (YRES - (YRES-MENU_TOP))/2, (YRES - (YRES-MENU_TOP))/8, BLACK);
+	Circle(XRES/2, MENU_TOP/2, MENU_TOP/8, BLACK);
 	//Middle line
-	WriteVLine(XRES/2, 0, MENU_TOP-YRES-1, BLACK);
+	WriteVLine(XRES/2, 0, MENU_TOP, BLACK);
 	//Goals
 	//WriteFilledRectangle(0, YRES/4, GOAL_WIDTH, 3*YRES/4, BLACK);
 	//WriteFilledRectangle(0, YRES/4 + 1, GOAL_WIDTH - 1, 3*YRES/4 - 1, WHITE);
@@ -88,7 +88,7 @@ void draw_data(GPSPoint points[], int numPoints)
 		for (yi = 0; yi < HEATMAP_V; yi++) {
 			for (xi = 0; xi < HEATMAP_H; xi++) {
 				if (points[i].x < ((xi+1) * XRES/HEATMAP_H) && points[i].x >= (xi * XRES/HEATMAP_H) &&
-				 	points[i].y < ((yi+1) * (YRES - (YRES-MENU_TOP))/HEATMAP_V) && points[i].y >= (yi * (YRES - (YRES-MENU_TOP))/HEATMAP_V)) {
+				 	points[i].y < ((yi+1) * MENU_TOP/HEATMAP_V) && points[i].y >= (yi * MENU_TOP/HEATMAP_V)) {
 					printf("Point landed in (%i, %i)\n", xi, yi);
 					break;
 				}
@@ -105,7 +105,7 @@ void draw_data(GPSPoint points[], int numPoints)
 	int h, v;
 	for (v = 0; v < HEATMAP_V; v++) {
 		for (h = 0; h < HEATMAP_H; h++) {
-			WriteFilledRectangle(h * (XRES-1)/HEATMAP_H, v * (YRES - (YRES-MENU_TOP))/HEATMAP_V, (h + 1) * (XRES-1)/HEATMAP_H, (v + 1) * (YRES - (YRES-MENU_TOP))/HEATMAP_V, count[h][v]);
+			WriteFilledRectangle(h * (XRES-1)/HEATMAP_H, v * MENU_TOP/HEATMAP_V, (h + 1) * (XRES-1)/HEATMAP_H, (v + 1) * MENU_TOP/HEATMAP_V, count[h][v]);
 		}
 	}
 	printf("Heatmap drawn.\n");
