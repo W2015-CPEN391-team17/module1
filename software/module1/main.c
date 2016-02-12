@@ -11,15 +11,6 @@
 #include "bluetooth.h"
 #include "gps_points.h"
 
-// Screen divisions.
-#define MENU_TOP 400
-#define GOAL_WIDTH 320
-
-// Drawing heatmap
-#define HEATMAP_H 5
-#define HEATMAP_V 3
-#define INIT_COLOUR 0x00006400
-
 // Meta stuff.
 void initialize(void);
 void cleanup(void);
@@ -68,15 +59,15 @@ void cleanup(void)
 void draw_field(void)
 {
 	//Centre circle
-	Circle(XRES/2, YRES/2, YRES/8, BLACK);
-	Circle(XRES/2, YRES/2, YRES/8 - 1, WHITE);
+	Circle(XRES/2, (YRES - (YRES-MENU_TOP))/2, (YRES - (YRES-MENU_TOP))/8, BLACK);
 	//Middle line
-	WriteVLine(XRES/2, 0, YRES-1, BLACK);
+	WriteVLine(XRES/2, 0, MENU_TOP-YRES-1, BLACK);
 	//Goals
-	WriteFilledRectangle(0, YRES/4, GOAL_WIDTH, 3*YRES/4, BLACK);
-	WriteFilledRectangle(0, YRES/4 + 1, GOAL_WIDTH - 1, 3*YRES/4 - 1, WHITE);
-	WriteFilledRectangle(XRES - GOAL_WIDTH, YRES/4, XRES, 3*YRES/4, BLACK);
-	WriteFilledRectangle(XRES - GOAL_WIDTH + 1, YRES/4 + 1, XRES, 3*YRES/4 - 1, WHITE);
+	//WriteFilledRectangle(0, YRES/4, GOAL_WIDTH, 3*YRES/4, BLACK);
+	//WriteFilledRectangle(0, YRES/4 + 1, GOAL_WIDTH - 1, 3*YRES/4 - 1, WHITE);
+	//WriteFilledRectangle(XRES - GOAL_WIDTH, YRES/4, XRES - 1, 3*YRES/4, BLACK);
+	//WriteFilledRectangle(XRES - GOAL_WIDTH + 1, YRES/4 + 1, XRES - 1, 3*YRES/4 - 1, WHITE);
+	printf("Field drawn.\n");
 }
 
 void draw_data(GPSPoint points[], int numPoints)
@@ -86,7 +77,7 @@ void draw_data(GPSPoint points[], int numPoints)
 	int x, y;
 	for (y = 0; y < HEATMAP_V; y++) {
 		for (x = 0; x < HEATMAP_H; x++) {
-			count[x][y] = INIT_COLOUR;
+			count[x][y] = INIT_COLOUR;//0;
 		}
 	}
 
@@ -97,7 +88,8 @@ void draw_data(GPSPoint points[], int numPoints)
 		for (yi = 0; yi < HEATMAP_V; yi++) {
 			for (xi = 0; xi < HEATMAP_H; xi++) {
 				if (points[i].x < ((xi+1) * XRES/HEATMAP_H) && points[i].x >= (xi * XRES/HEATMAP_H) &&
-				 	points[i].y < ((yi+1) * YRES/HEATMAP_V) && points[i].y >= (yi * YRES/HEATMAP_V)) {
+				 	points[i].y < ((yi+1) * (YRES - (YRES-MENU_TOP))/HEATMAP_V) && points[i].y >= (yi * (YRES - (YRES-MENU_TOP))/HEATMAP_V)) {
+					printf("Point landed in (%i, %i)\n", xi, yi);
 					break;
 				}
 			}
@@ -105,14 +97,18 @@ void draw_data(GPSPoint points[], int numPoints)
 		count[xi][yi]++;
 	}
 
-	//TODO make colour drawing proportional rather than absolute
+	//Make colours proportional to number of points
+	int colours[HEATMAP_H][HEATMAP_V];
+	//TODO actually do what the above comment says this does
 
+	//Draw points
 	int h, v;
 	for (v = 0; v < HEATMAP_V; v++) {
 		for (h = 0; h < HEATMAP_H; h++) {
-			WriteFilledRectangle(h * XRES/HEATMAP_H, v * YRES/HEATMAP_V, (h + 1) * XRES/HEATMAP_H, (v + 1) * YRES/HEATMAP_V, count[h][v]);
+			WriteFilledRectangle(h * (XRES-1)/HEATMAP_H, v * (YRES - (YRES-MENU_TOP))/HEATMAP_V, (h + 1) * (XRES-1)/HEATMAP_H, (v + 1) * (YRES - (YRES-MENU_TOP))/HEATMAP_V, count[h][v]);
 		}
 	}
+	printf("Heatmap drawn.\n");
 }
 
 void draw_menu(void)
@@ -124,11 +120,37 @@ void draw_menu(void)
 	Text(10, (MENU_TOP + YRES)/2, BLACK, WHITE, "Save", 0);
 	Text(XRES/3 + 10, (MENU_TOP + YRES)/2, BLACK, WHITE, "Interpret", 0);
 	Text(XRES*2/3 + 10, (MENU_TOP + YRES)/2, BLACK, WHITE, "Settings", 0);
+	printf("Menu drawn.\n");
 }
 void main_menu(void)
 {
 	clear_screen(WHITE);
-	//draw_data(<GPSPoint array or something>, 10); TODO how did this get here i am not good with computer
+
+	//Fake GPS data points for testing
+	GPSPoint p0, p1, p2, p3, p4, p5, p6, p7, p8, p9;
+	p0.x = 0; p0.y = 0;
+	p1.x = 100; p1.y = 50;
+	p2.x = 200; p2.y = 100;
+	p3.x = 300; p3.y = 150;
+	p4.x = 400; p4.y = 200;
+	p5.x = 500; p5.y = 250;
+	p6.x = 600; p6.y = 300;
+	p7.x = 700; p7.y = 350;
+	p8.x = 799; p8.y = 400;
+	p9.x = 799; p9.y = 479;
+	GPSPoint fake[10];
+	fake[0] = p0;
+	fake[1] = p1;
+	fake[2] = p2;
+	fake[3] = p3;
+	fake[4] = p4;
+	fake[5] = p5;
+	fake[6] = p6;
+	fake[7] = p7;
+	fake[8] = p8;
+	fake[9] = p9;
+
+	//draw_data(fake, 10);
 	draw_field();
 	draw_menu();
 	Text(0, 0, BLACK, WHITE, "Main Menu", 0);

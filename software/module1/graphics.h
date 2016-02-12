@@ -11,6 +11,15 @@
 #define XRES 800
 #define YRES 480
 
+// Screen divisions.
+#define MENU_TOP 440
+#define GOAL_WIDTH 120
+
+// Heatmap divisions
+#define HEATMAP_H 5
+#define HEATMAP_V 3
+#define INIT_COLOUR 0x00006400
+
 #define ASSERT_POINTS_ARE_VALID TRUE
 
 // graphics registers all address begin with '8' so as to by pass data cache on NIOS
