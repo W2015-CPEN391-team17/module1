@@ -13,7 +13,7 @@
 
 // Screen divisions.
 #define MENU_TOP 440
-#define GOAL_WIDTH 120
+#define GOAL_WIDTH 60
 
 // Heatmap divisions
 #define HEATMAP_H 5

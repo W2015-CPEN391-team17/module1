@@ -63,10 +63,12 @@ void draw_field(void)
 	//Middle line
 	WriteVLine(XRES/2, 0, MENU_TOP, BLACK);
 	//Goals
-	//WriteFilledRectangle(0, YRES/4, GOAL_WIDTH, 3*YRES/4, BLACK);
-	//WriteFilledRectangle(0, YRES/4 + 1, GOAL_WIDTH - 1, 3*YRES/4 - 1, WHITE);
-	//WriteFilledRectangle(XRES - GOAL_WIDTH, YRES/4, XRES - 1, 3*YRES/4, BLACK);
-	//WriteFilledRectangle(XRES - GOAL_WIDTH + 1, YRES/4 + 1, XRES - 1, 3*YRES/4 - 1, WHITE);
+	WriteVLine(GOAL_WIDTH, MENU_TOP/4, MENU_TOP/2, BLACK);
+	WriteVLine(XRES-GOAL_WIDTH, MENU_TOP/4, MENU_TOP/2, BLACK);
+	WriteHLine(0, MENU_TOP/4, GOAL_WIDTH, BLACK);
+	WriteHLine(0, 3*MENU_TOP/4, GOAL_WIDTH, BLACK);
+	WriteHLine(XRES-GOAL_WIDTH, MENU_TOP/4, GOAL_WIDTH-1, BLACK);
+	WriteHLine(XRES-GOAL_WIDTH, 3*MENU_TOP/4, GOAL_WIDTH-1, BLACK);
 	printf("Field drawn.\n");
 }
 
