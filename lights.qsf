@@ -381,7 +381,7 @@ set_global_assignment -name VHDL_FILE VGA_Controller_256Pallette.vhd
 set_global_assignment -name VHDL_FILE RGBMapper.vhd
 set_global_assignment -name VHDL_FILE RamAddressMapper.vhd
 set_global_assignment -name VHDL_FILE VideoRamMux.vhd
-set_global_assignment -name VHDL_FILE GraphicsController.vhd -hdl_version VHDL_2008
+set_global_assignment -name VHDL_FILE GraphicsController.vhd
 set_global_assignment -name BDF_FILE SystemTopLevel.bdf
 set_global_assignment -name VHDL_FILE output_files/lpm_bustri0.vhd
 set_global_assignment -name VHDL_FILE NIOS_II_SYSTEM.vhd
