@@ -1,13 +1,12 @@
 #ifndef SD_CARD_H_
 #define SD_CARD_H_
 
-// TODO:
-// Attempt to write an array of GPSPoints to the SD card
-// Return a non-zero value on success, otherwise return 0.
-int sd_card_write_points(void);
+#include "conversion.h"
 
-// Attempt to open a FAT16 formatted SD card and write a file named
-// "test.txt" to it.
-void sd_card_test(void);
+// Print file contents of a file corresponding to a given filename.
+void sd_card_print_contents(char *filename);
+
+// Attempt to write a GPSPoint value to the SD card.
+void sd_card_write_point(GPSPoint point, char *filename);
 
 #endif /* SD_CARD_H_ */

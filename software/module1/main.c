@@ -40,6 +40,13 @@ int main()
   printf("Starting module 1 code.\n");
 
   initialize();
+
+  GPSPoint points[1];
+  GPSPoint point = {1.0, 2.0};
+  points[0] = point;
+  sd_card_write_point(point, "TEST.TXT");
+  sd_card_print_contents("TEST.TXT");
+
   main_menu();
 
   // Should never reach this point, but here in case we implement an exit button.
