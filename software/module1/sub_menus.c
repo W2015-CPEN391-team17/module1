@@ -63,7 +63,7 @@ void SettingsMenu(Point* p, Colours* scheme){
 				scheme->connectTheDotsLine = (scheme->connectTheDotsLine + 1) % NCOLOURS;
 			}while(scheme->connectTheDotsLine == WHITE || scheme->connectTheDotsLine == scheme->menuBackground);
 			GetRelease();
-		}else{
+		}else if(!(p->x >= 2 * XRES / 3 && p->y >= MENU_TOP)){
 			break;
 		}
 	}while(1);
