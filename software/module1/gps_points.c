@@ -284,6 +284,7 @@ void query_log(void){
 	}
 	printf("%s", out);
 }
+
 /* Testing function
 int main()
 {

@@ -11,6 +11,7 @@
 #include "bluetooth.h"
 #include "gps_points.h"
 #include "sub_menus.h"
+#include "sd_card.h"
 
 // Meta stuff.
 void initialize(void);
@@ -28,11 +29,27 @@ void sub_menu(void);
 
 Colours colorScheme;
 
+#define GPSPOINTLEN 2
+
 int main()
 {
   printf("Starting module 1 code.\n");
 
   initialize();
+
+  // Test writing and reading points
+  GPSPoint points[GPSPOINTLEN];
+  GPSPoint p0;
+  p0.x = 1.0;
+  p0.y = 2.0;
+  GPSPoint p1;
+  p1.x = 3.0;
+  p1.y = 4.0;
+  points[0] = p0;
+  points[1] = p1;
+  sd_card_write_points(points, GPSPOINTLEN, "TEST.TXT");
+  sd_card_print_contents("TEST.TXT");
+
   main_menu();
 
   // Should never reach this point, but here in case we implement an exit button.
