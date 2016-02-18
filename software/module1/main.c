@@ -47,6 +47,7 @@ void initialize(void)
 	colorScheme.menuBackground = WHITE;
 	colorScheme.text = BLACK;
 	colorScheme.connectTheDotsLine = WHITE;
+	colorScheme.pairNum = INITPAIR;
 
 	init_gps();
 	printf("GPS initialized.\n");
@@ -151,13 +152,13 @@ void draw_data(GPSPoint points[], int numPoints)
 
 void draw_menu(void)
 {
-	WriteFilledRectangle(0, MENU_TOP, XRES-1, YRES-1, WHITE);
-	WriteHLine(0, MENU_TOP, XRES - 1, LIME);
+	WriteFilledRectangle(0, MENU_TOP, XRES-1, YRES-1, colorScheme.menuBackground);
+	WriteHLine(0, MENU_TOP, XRES - 1, BLACK);
 	WriteVLine(XRES/3, MENU_TOP, YRES - MENU_TOP - 1, BLACK);
 	WriteVLine(XRES*2/3, MENU_TOP, YRES - MENU_TOP - 1, BLACK);
-	Text(10, (MENU_TOP + YRES)/2, BLACK, WHITE, "Save/Load", 0);
-	Text(XRES/3 + 10, (MENU_TOP + YRES)/2, BLACK, WHITE, "Interpret", 0);
-	Text(XRES*2/3 + 10, (MENU_TOP + YRES)/2, BLACK, WHITE, "Settings", 0);
+	Text(10, (MENU_TOP + YRES)/2, colorScheme.text, colorScheme.menuBackground, "Save/Load", 0);
+	Text(XRES/3 + 10, (MENU_TOP + YRES)/2, colorScheme.text, colorScheme.menuBackground, "Interpret", 0);
+	Text(XRES*2/3 + 10, (MENU_TOP + YRES)/2, colorScheme.text, colorScheme.menuBackground, "Settings", 0);
 	printf("Menu drawn.\n");
 }
 void main_menu(void)
@@ -193,14 +194,13 @@ void main_menu(void)
 	draw_menu();
 	Text(0, 0, BLACK, WHITE, "Main Menu", 0);
 	Point p;
-	int newP = 0; //Boolean
+	p.y = 0;
 	while(1)
 	{
-		if(!newP){
+		if(p.y < MENU_TOP){
 			p = GetPress();
-		}else{
-			newP = 0;
 		}
+
 		if(p.y < MENU_TOP){
 			//Field touched. Switch to connect-the-dots?
 		}else{
@@ -212,10 +212,11 @@ void main_menu(void)
 				InterpretMenu(&p);
 			}else{
 				//Settings touched
-				SettingsMenu(&p, 0);
+				SettingsMenu(&p, &colorScheme);
+				draw_data(fake, 10);
+				draw_field();
+				draw_menu();
 			}
-
-			newP = 1;
 		}
 	}
 }
