@@ -35,16 +35,25 @@ void main_menu(void);
 // Sub-menu function, should return struct point eventually, but void for now
 void sub_menu(void);
 
+#define GPSPOINTLEN 2
+
 int main()
 {
   printf("Starting module 1 code.\n");
 
   initialize();
 
-  GPSPoint points[1];
-  GPSPoint point = {1.0, 2.0};
-  points[0] = point;
-  sd_card_write_point(point, "TEST.TXT");
+  // Test writing and reading points
+  GPSPoint points[GPSPOINTLEN];
+  GPSPoint p0;
+  p0.x = 1.0;
+  p0.y = 2.0;
+  GPSPoint p1;
+  p1.x = 3.0;
+  p1.y = 4.0;
+  points[0] = p0;
+  points[1] = p1;
+  sd_card_write_points(points, GPSPOINTLEN, "TEST.TXT");
   sd_card_print_contents("TEST.TXT");
 
   main_menu();

@@ -7,6 +7,7 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "gps_points.h"
 
@@ -284,33 +285,33 @@ void query_log(void){
 	}
 	printf("%s", out);
 }
-/* Testing function
-int main()
-{
-	printf("Initializing GPS...\n");
-	int i = 0;
-	init_gps();
 
-	/*erase_log();
-
-	start_log();
-
-	for(i = 0; i < 20; i++){
-		log_now();
-		usleep(3000000);
-	}
-
-	//usleep(180000000);
-
-	stop_log();*/
-
-	save_points();
-
-	//printf("latitude %d: %f  longitude %d: %f\n", place, gps_points[place].lat_float,
-	//										      place, gps_points[place].long_float);
-
-	printf("done.");
-
-	return 0;
-}
-*/
+//Testing function
+//int main()
+//{
+//	printf("Initializing GPS...\n");
+//	int i = 0;
+//	init_gps();
+//
+//	erase_log();
+//
+//	start_log();
+//
+//	for(i = 0; i < 20; i++){
+//		log_now();
+//		usleep(3000000);
+//	}
+//
+//	//usleep(180000000);
+//
+//	stop_log();
+//
+//	//save_points();
+//
+//	//printf("latitude %d: %f  longitude %d: %f\n", place, gps_points[place].lat_float,
+//	//										      place, gps_points[place].long_float);
+//
+//	//printf("done.");
+//
+//	return 0;
+//}
