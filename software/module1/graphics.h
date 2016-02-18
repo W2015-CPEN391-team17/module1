@@ -64,6 +64,8 @@
 #define	CYAN			6
 #define	MAGENTA			7
 
+#define NCOLOURS 8
+
 void WriteAPixel(int x, int y, int Colour);
 void WriteHLine(int x1, int y1, int length, int Colour);
 void WriteVLine(int x1, int y1, int length, int Colour);

@@ -46,7 +46,7 @@ void initialize(void)
 {
 	colorScheme.menuBackground = WHITE;
 	colorScheme.text = BLACK;
-	colorScheme.connectTheDotsLine = WHITE;
+	colorScheme.connectTheDotsLine = BLACK;
 	colorScheme.pairNum = INITPAIR;
 
 	init_gps();

@@ -43,7 +43,10 @@ void SettingsMenu(Point* p, Colours* scheme){
 		WriteFilledRectangle(XRES/2-100, 0, XRES/2+100, MENU_TOP/2 - BUFFER_BTW_BUTTONS,scheme->menuBackground);
 		WriteFilledRectangle(XRES/2-100, MENU_TOP/2, XRES/2+100, MENU_TOP - BUFFER_BTW_BUTTONS,scheme->menuBackground);
 
-		Text(XRES/2-100+10, (MENU_TOP/2 - 50)/2, scheme->text, scheme->menuBackground, "Text/background", 0);
+		Text(XRES/2-100+10, (MENU_TOP/2 - BUFFER_BTW_BUTTONS)/2, scheme->text, scheme->menuBackground, "Text/background", 0);
+		Text(XRES/2-100+10, MENU_TOP/2 + 1, scheme->text, scheme->menuBackground, "Line Colour", 0);
+
+		Line(XRES/2-100, MENU_TOP - BUFFER_BTW_BUTTONS, XRES/2+100, MENU_TOP/2, scheme->connectTheDotsLine);
 
 		*p = GetPress();
 
@@ -54,6 +57,10 @@ void SettingsMenu(Point* p, Colours* scheme){
 			GetRelease();
 		}else if(p->x <= XRES/2+100 && p->x >= XRES/2-100 && p->y <= MENU_TOP-BUFFER_BTW_BUTTONS && p->y > MENU_TOP/2){
 			//Do stuff if other button pressed
+			scheme->connectTheDotsLine = (scheme->connectTheDotsLine + 1) % NCOLOURS;
+			while(scheme->connectTheDotsLine == WHITE || scheme->connectTheDotsLine == scheme->menuBackground){
+				scheme->connectTheDotsLine = (scheme->connectTheDotsLine + 1) % NCOLOURS;
+			}
 			GetRelease();
 		}else{
 			break;
