@@ -16,11 +16,11 @@ typedef struct{
 
 
 void SaveLoadMenu(Point* p){
-
+	*p = GetPress();
 }
 
 void InterpretMenu(Point* p){
-
+	*p = GetPress();
 }
 
 /*Settings:
@@ -51,16 +51,17 @@ void SettingsMenu(Point* p, Colours* scheme){
 		*p = GetPress();
 
 		if(p->x <= XRES/2+100 && p->x >= XRES/2-100 && p->y <= MENU_TOP/2-BUFFER_BTW_BUTTONS){
-			scheme->menuBackground = pairs[(scheme->pairNum + 1) % NPAIRS].background;
-			scheme->text = pairs[(scheme->pairNum + 1) % NPAIRS].text;
-			scheme->pairNum = (scheme->pairNum + 1) % NPAIRS;
+			do{
+				scheme->menuBackground = pairs[(scheme->pairNum + 1) % NPAIRS].background;
+				scheme->text = pairs[(scheme->pairNum + 1) % NPAIRS].text;
+				scheme->pairNum = (scheme->pairNum + 1) % NPAIRS;
+			}while(scheme->menuBackground == scheme->connectTheDotsLine);
 			GetRelease();
 		}else if(p->x <= XRES/2+100 && p->x >= XRES/2-100 && p->y <= MENU_TOP-BUFFER_BTW_BUTTONS && p->y > MENU_TOP/2){
 			//Do stuff if other button pressed
-			scheme->connectTheDotsLine = (scheme->connectTheDotsLine + 1) % NCOLOURS;
-			while(scheme->connectTheDotsLine == WHITE || scheme->connectTheDotsLine == scheme->menuBackground){
+			do{
 				scheme->connectTheDotsLine = (scheme->connectTheDotsLine + 1) % NCOLOURS;
-			}
+			}while(scheme->connectTheDotsLine == WHITE || scheme->connectTheDotsLine == scheme->menuBackground);
 			GetRelease();
 		}else{
 			break;
