@@ -8,12 +8,12 @@
 #ifndef CONVERSION_H_
 #define CONVERSION_H_
 
-#define TOPRIGHTLAT (float) 49.261738
-#define TOPRIGHTLONG (float) -123.249931
-#define TOPLEFTLAT (float) 49.261738
-#define TOPLEFTLONG (float) -123.250021
-#define BOTRIGHTLAT (float) 49.261566
-#define BOTRIGHTLONG (float) -123.249931
+#define TOPRIGHTLAT (float) 49.268000
+#define TOPRIGHTLONG (float) -123.248000
+#define TOPLEFTLAT (float) 49.268000
+#define TOPLEFTLONG (float) -123.251000
+#define BOTRIGHTLAT (float) 49.266500
+#define BOTRIGHTLONG (float) -123.248000
 
 #include "touchScreen.h"
 
