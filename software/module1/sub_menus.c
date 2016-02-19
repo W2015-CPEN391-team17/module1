@@ -42,7 +42,9 @@ void initInterpret(int count[HEATMAP_H][HEATMAP_V], int nPoints){
 	percentageRight = 1 - percentageLeft;
 }
 
-void SaveLoadMenu(Point* p){
+void SaveLoadMenu(Point* p, Colours* scheme){
+	WriteFilledRectangle(0, 0, XRES-1, MENU_TOP-1, scheme->menuBackground);
+
 	*p = GetPress();
 }
 

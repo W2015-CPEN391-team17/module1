@@ -186,7 +186,7 @@ void main_menu(void)
 		}else{
 			if(p.x < XRES / 3){
 				//Save/Load touched
-				SaveLoadMenu(&p);
+				SaveLoadMenu(&p, &colorScheme);
 			}else if(p.x < 2 * XRES / 3){
 				//Interpret touched
 				InterpretMenu(&p, &colorScheme);

@@ -25,7 +25,7 @@ typedef struct{
 
 void initInterpret(int count[HEATMAP_H][HEATMAP_V], int nPoints);
 
-void SaveLoadMenu(Point*);
+void SaveLoadMenu(Point*, Colours*);
 
 void InterpretMenu(Point*, Colours*);
 
