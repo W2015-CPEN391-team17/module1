@@ -4,9 +4,9 @@
 #include "conversion.h"
 
 // Heatmap properties
-#define HEATMAP_H 5
-#define HEATMAP_V 3
-#define HM_SHADES 8
+#define HEATMAP_H 10
+#define HEATMAP_V 6
+#define HM_SHADES 10
 
 void draw_heatmap(GPSPoint points[], int numPoints);
 
