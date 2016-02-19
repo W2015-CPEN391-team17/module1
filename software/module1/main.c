@@ -193,10 +193,12 @@ void main_menu(void)
 			}else{
 				//Settings touched
 				SettingsMenu(&p, &colorScheme);
-				if (showing_heatmap) {
-					draw_data(fake, 10);
-				} else {
-					connect_points(fake, 10);
+				if(p.y < MENU_TOP){
+					if (showing_heatmap) {
+						draw_data(fake, 10);
+					} else {
+						connect_points(fake, 10);
+					}
 				}
 				draw_menu();
 				GetRelease();
