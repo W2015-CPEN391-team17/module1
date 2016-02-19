@@ -25,12 +25,18 @@ struct points {
 	int long_swapped;
 };
 
+struct demo_points {
+	float lat_float;
+	float long_float;
+};
+
 struct logs {
 	char string[256];
 };
 
 struct logs gps_log[50];
-struct points gps_points[120];
+struct points gps_points[100];
+struct demo_points gps_demo_points[100];
 
 void init_gps(void);
 char putchar_gps(char c);
@@ -45,5 +51,6 @@ void start_log(void);
 void stop_log(void);
 void erase_log(void);
 void query_log(void);
+void save_demo_points(void)
 
 #endif
