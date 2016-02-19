@@ -21,6 +21,8 @@ void cleanup(void);
 void draw_field(void);
 void draw_data(GPSPoint points[], int numPoints);
 void draw_menu(void);
+void write_demo_screen(void);
+void connect_points(GPSPoint points[], int numPoints);
 
 // Main menu function, should return struct point eventually, but void for now
 void main_menu(void);
@@ -31,78 +33,14 @@ Colours colorScheme;
 
 #define GPSPOINTLEN 2
 
-void write_demo_screen(void) {
-	clear_screen(BLACK);
-
-	int colour = LIME;
-
-
-	int x = 0;
-	for(x = 0; x <= XRES-1; x++) {
-		  WriteLine(XRES/8, YRES/8, x, 0, colour);
-		  if (colour == LIME) {
-			  colour = WHITE;
-		  } else {
-			  colour = LIME;
-		  }
-	}
-	for(x = XRES-1; x >= 0; x--) {
-		  WriteLine(XRES/8, YRES/8, x, YRES-1, colour);
-		  if (colour == LIME) {
-			  colour = WHITE;
-		  } else {
-			  colour = LIME;
-		  }
-	}
-	int y = 0;
-	for(y = 0; y <= YRES-1; y++) {
-		  WriteLine(XRES/8, YRES/8, 0, y, colour);
-		  if (colour == LIME) {
-			  colour = WHITE;
-		  } else {
-			  colour = LIME;
-		  }
-	}
-	for(y = YRES-1; y >= 0; y--) {
-		  WriteLine(XRES/8, YRES/8, XRES-1, y, colour);
-		  if (colour == LIME) {
-			  colour = WHITE;
-		  } else {
-			  colour = LIME;
-		  }
-	}
-
-	int i = 0;
-	int j = 200;
-	int k = 0;
-	int n = 23;
-	int s = 0;
-	colour = 1;
-	while(TRUE) {
-		int r = 0;
-		x = XRES/8;
-		y = YRES/8;
-		s++;
-		for(r = 0; r <= YRES/4; r = r + 5) {
-			j = (n + j + 1) % 500;
-			n = (n + k*j) % 350;
-			k = (k + j + n + r) % 50;
-			colour = (colour + n + j + k + r + s) % 8;
-			x = x + 10;
-			y = y + 10;
-			WriteCircle(x, y, r, colour);
-		}
-	}
-}
-
 int main()
 {
   printf("Starting module 1 code.\n");
-  write_demo_screen();
+  //write_demo_screen();
 
-/*
+
   initialize();
-
+/*
   // Test writing and reading points
   GPSPoint points[GPSPOINTLEN];
   GPSPoint p0;
@@ -115,12 +53,12 @@ int main()
   points[1] = p1;
   sd_card_write_points(points, GPSPOINTLEN, "TEST.TXT");
   sd_card_print_contents("TEST.TXT");
-
+*/
   main_menu();
 
   // Should never reach this point, but here in case we implement an exit button.
   cleanup();
-*/
+
   printf("Program terminated.\n");
 
   return 0;
@@ -151,7 +89,7 @@ void cleanup(void)
 void draw_field(void)
 {
 	//Centre circle
-	Circle(XRES/2, MENU_TOP/2, MENU_TOP/8, BLACK);
+	WriteCircle(XRES/2, MENU_TOP/2, MENU_TOP/8, BLACK);
 	//Middle line
 	WriteVLine(XRES/2, 0, MENU_TOP, BLACK);
 	//Goals
@@ -168,6 +106,7 @@ void draw_data(GPSPoint points[], int numPoints)
 {
 	//Initialize 2D array representing points
 	int count[HEATMAP_H][HEATMAP_V] = {0};
+
 	//TODO Initialize array of heatmap shades
 	int shades[HM_SHADES];
 	shades[0] = 1;
@@ -245,6 +184,7 @@ void draw_menu(void)
 	Text(XRES*2/3 + 10, (MENU_TOP + YRES)/2, colorScheme.text, colorScheme.menuBackground, "Settings", 0);
 	printf("Menu drawn.\n");
 }
+
 void main_menu(void)
 {
 	clear_screen(WHITE);
@@ -286,7 +226,7 @@ void main_menu(void)
 		}
 
 		if(p.y < MENU_TOP){
-			//Field touched. Switch to connect-the-dots?
+			connect_points(fake, 10);
 		}else{
 			if(p.x < XRES / 3){
 				//Save/Load touched
@@ -316,5 +256,82 @@ void sub_menu(void)
 		//Wait for touch
 		//Based on touch coords:
 		//Exit submenu (break)
+	}
+}
+
+void write_demo_screen(void) {
+	clear_screen(BLACK);
+
+	int colour = LIME;
+
+	int x = 0;
+	for(x = 0; x <= XRES-1; x++) {
+		  WriteLine(XRES/8, YRES/8, x, 0, colour);
+		  if (colour == LIME) {
+			  colour = WHITE;
+		  } else {
+			  colour = LIME;
+		  }
+	}
+	for(x = XRES-1; x >= 0; x--) {
+		  WriteLine(XRES/8, YRES/8, x, YRES-1, colour);
+		  if (colour == LIME) {
+			  colour = WHITE;
+		  } else {
+			  colour = LIME;
+		  }
+	}
+	int y = 0;
+	for(y = 0; y <= YRES-1; y++) {
+		  WriteLine(XRES/8, YRES/8, 0, y, colour);
+		  if (colour == LIME) {
+			  colour = WHITE;
+		  } else {
+			  colour = LIME;
+		  }
+	}
+	for(y = YRES-1; y >= 0; y--) {
+		  WriteLine(XRES/8, YRES/8, XRES-1, y, colour);
+		  if (colour == LIME) {
+			  colour = WHITE;
+		  } else {
+			  colour = LIME;
+		  }
+	}
+
+	int i = 0;
+	int j = 200;
+	int k = 0;
+	int n = 23;
+	int s = 0;
+	colour = 1;
+	while(TRUE) {
+		int r = 0;
+		x = XRES/8;
+		y = YRES/8;
+		s++;
+		for(r = 0; r <= YRES/4; r = r + 5) {
+			j = (n + j + 1) % 500;
+			n = (n + k*j) % 350;
+			k = (k + j + n + r) % 50;
+			colour = (colour + n + j + k + r + s) % 8;
+			x = x + 10;
+			y = y + 10;
+			WriteCircle(x, y, r, colour);
+		}
+	}
+}
+
+void connect_points(GPSPoint points[], int numPoints)
+{
+	int colour = MAGENTA; //TODO
+	int i;
+	GPSPoint point_a;
+	GPSPoint point_b;
+	for(i = 1; i < numPoints; i++) {
+		point_a = points[i-1];
+		point_b = points[i];
+		WriteLine((int)point_a.x, (int)point_a.y, (int)point_b.x, (int)point_b.y, colour);
+		printf("help (%d %d) to (%d %d)\n", (int)point_a.x, (int)point_a.y, (int)point_b.x, (int)point_b.y);
 	}
 }
