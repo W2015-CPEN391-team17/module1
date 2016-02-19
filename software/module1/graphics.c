@@ -263,7 +263,7 @@ void WriteFilledRectangle(int x1, int y1, int x2, int y2, int Colour)
  * bottom-right point at (x2, y2).
  * Preconditions: x1 <= x2 and y1 <= y2
  */
-void FilledRectangle(int x1, int y1, int x2, int y2, int color)
+void TestFilledRectangle(int x1, int y1, int x2, int y2, int color)
 {
 	if (ASSERT_POINTS_ARE_VALID && x1 > x2) {
 		printf("ERROR: DrawFilledRectangle failed because x1 > x2 (x1 is %d, x2 is %d)\n", x1, x2);
@@ -333,7 +333,7 @@ void WriteCircle(int x0, int y0, int radius, int color)
  * Draw a circle (one pixel at a time)
  * Prints an error message and returns without drawing anything if any points would be off screen
  */
-void Circle(int x0, int y0, int radius, int color)
+void TestCircle(int x0, int y0, int radius, int color)
 {
 	if (ASSERT_POINTS_ARE_VALID && !check_if_point_is_on_screen(x0, y0)) {
 		printf("ERROR: DrawCircle failed for center point (%d,%d)\n", x0, y0);
@@ -411,7 +411,7 @@ void Button(int x1, int y1, int x2, int y2, int outline_color, int font_color, i
 {
 	const int text_padding_x = 6;
 	const int text_padding_y = 6;
-	FilledRectangle(x1, y1, x2, y2, fill_color);
+	WriteFilledRectangle(x1, y1, x2, y2, fill_color);
 	Rectangle(x1, y1, x2, y2, outline_color);
 	Text(x1+text_padding_x, y1+text_padding_y, font_color, fill_color, text, 1);
 }
@@ -421,7 +421,7 @@ void Button(int x1, int y1, int x2, int y2, int outline_color, int font_color, i
 * Use for testing only
 *********************************************************************************************/
 
-void HLine(int x1, int y1, int length, int Colour)
+void TestHLine(int x1, int y1, int length, int Colour)
 {
 	int i;
 	for(i = x1; i < x1+length; i++ )
@@ -433,7 +433,7 @@ void HLine(int x1, int y1, int length, int Colour)
 * Use for testing only
 *********************************************************************************************/
 
-void VLine(int x1, int y1, int length, int Colour)
+void TestVLine(int x1, int y1, int length, int Colour)
 {
 	int i;
 	for(i = y1; i < y1+length; i++ )
@@ -463,7 +463,7 @@ int sign(int a)
         return 1 ;
 }
 
-void Line(int x1, int y1, int x2, int y2, int Colour)
+void TestLine(int x1, int y1, int x2, int y2, int Colour)
 {
     int x = x1;
     int y = y1;
@@ -528,7 +528,7 @@ void write_test_screen() {
 	// the rest of the test will be harder to see
 	int i;
 	for(i = 0; i <= YRES-1; i++) {
-		HLine(0, i, XRES-1, RED);
+		TestHLine(0, i, XRES-1, RED);
 	}
 
 	//each pair of lines (for horizontal/vertical) should have the same length
@@ -539,11 +539,11 @@ void write_test_screen() {
 	//because they may be drawn incorrectly when drawing two pixels per cycle
 
 	// even start pixel, even length
-	HLine(100,100,100,LIME);
-	HLine(100,101,100,LIME);
-	HLine(100,102,100,LIME);
-	HLine(100,103,100,LIME);
-	HLine(100,104,100,LIME);
+	TestHLine(100,100,100,LIME);
+	TestHLine(100,101,100,LIME);
+	TestHLine(100,102,100,LIME);
+	TestHLine(100,103,100,LIME);
+	TestHLine(100,104,100,LIME);
 	WriteHLine(100,105,100,BLUE);
 	WriteHLine(100,106,100,BLUE);
 	WriteHLine(100,107,100,BLUE);
@@ -551,11 +551,11 @@ void write_test_screen() {
 	WriteHLine(100,109,100,BLUE);
 
 	// odd start pixel, even length
-	HLine(101,120,100,LIME);
-	HLine(101,121,100,LIME);
-	HLine(101,122,100,LIME);
-	HLine(101,123,100,LIME);
-	HLine(101,124,100,LIME);
+	TestHLine(101,120,100,LIME);
+	TestHLine(101,121,100,LIME);
+	TestHLine(101,122,100,LIME);
+	TestHLine(101,123,100,LIME);
+	TestHLine(101,124,100,LIME);
 	WriteHLine(101,125,100,BLUE);
 	WriteHLine(101,126,100,BLUE);
 	WriteHLine(101,127,100,BLUE);
@@ -563,11 +563,11 @@ void write_test_screen() {
 	WriteHLine(101,129,100,BLUE);
 
 	// even start pixel, odd length
-	HLine(100,140,101,LIME);
-	HLine(100,141,101,LIME);
-	HLine(100,142,101,LIME);
-	HLine(100,143,101,LIME);
-	HLine(100,144,101,LIME);
+	TestHLine(100,140,101,LIME);
+	TestHLine(100,141,101,LIME);
+	TestHLine(100,142,101,LIME);
+	TestHLine(100,143,101,LIME);
+	TestHLine(100,144,101,LIME);
 	WriteHLine(100,145,101,BLUE);
 	WriteHLine(100,146,101,BLUE);
 	WriteHLine(100,147,101,BLUE);
@@ -575,11 +575,11 @@ void write_test_screen() {
 	WriteHLine(100,149,101,BLUE);
 
 	// odd start pixel, odd length
-	HLine(101,160,101,LIME);
-	HLine(101,161,101,LIME);
-	HLine(101,162,101,LIME);
-	HLine(101,163,101,LIME);
-	HLine(101,164,101,LIME);
+	TestHLine(101,160,101,LIME);
+	TestHLine(101,161,101,LIME);
+	TestHLine(101,162,101,LIME);
+	TestHLine(101,163,101,LIME);
+	TestHLine(101,164,101,LIME);
 	WriteHLine(101,165,101,BLUE);
 	WriteHLine(101,166,101,BLUE);
 	WriteHLine(101,167,101,BLUE);
@@ -587,11 +587,11 @@ void write_test_screen() {
 	WriteHLine(101,169,101,BLUE);
 
 	// test vertical lines
-	VLine(200,200,100,LIME);
-	VLine(201,200,100,LIME);
-	VLine(202,200,100,LIME);
-	VLine(203,200,100,LIME);
-	VLine(204,200,100,LIME);
+	TestVLine(200,200,100,LIME);
+	TestVLine(201,200,100,LIME);
+	TestVLine(202,200,100,LIME);
+	TestVLine(203,200,100,LIME);
+	TestVLine(204,200,100,LIME);
 	WriteVLine(205,200,100,BLUE);
 	WriteVLine(206,200,100,BLUE);
 	WriteVLine(207,200,100,BLUE);
@@ -605,11 +605,11 @@ void write_test_screen() {
 
 	WriteLine(240,340,440,440,MAGENTA);
 	WriteLine(239,339,439,439,MAGENTA);
-	Line(240,340,440,440,BLACK);
-	Line(239,339,439,439,BLACK);
+	TestLine(240,340,440,440,BLACK);
+	TestLine(239,339,439,439,BLACK);
 
-	Line(250,350,450,450,BLACK);
-	Line(249,349,449,449,BLACK);
+	TestLine(250,350,450,450,BLACK);
+	TestLine(249,349,449,449,BLACK);
 	WriteLine(250,350,450,450,MAGENTA);
 	WriteLine(249,349,449,449,MAGENTA);
 
@@ -619,23 +619,23 @@ void write_test_screen() {
 
 	// even to even
 	WriteFilledRectangle(400, 250, 500, 300, LIME);
-	FilledRectangle(400, 250, 500, 300, WHITE);
+	TestFilledRectangle(400, 250, 500, 300, WHITE);
 
 	// even to odd
 	WriteFilledRectangle(600, 250, 701, 300, LIME);
-	FilledRectangle(600, 250, 701, 300, WHITE);
+	TestFilledRectangle(600, 250, 701, 300, WHITE);
 
 	// odd to even
-	FilledRectangle(401, 350, 500, 400, WHITE);
+	TestFilledRectangle(401, 350, 500, 400, WHITE);
 	WriteFilledRectangle(401, 350, 500, 400, LIME);
 
 	// odd to odd
-	FilledRectangle(601, 350, 701, 400, WHITE);
+	TestFilledRectangle(601, 350, 701, 400, WHITE);
 	WriteFilledRectangle(601, 350, 701, 400, LIME);
 
 	// compare circles
 	WriteCircle(500, 100, 50, LIME);
-	Circle(500, 100, 50, WHITE);
-	Circle(700, 100, 50, WHITE);
+	TestCircle(500, 100, 50, WHITE);
+	TestCircle(700, 100, 50, WHITE);
 	WriteCircle(700, 100, 50, LIME);
 }

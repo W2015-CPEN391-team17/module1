@@ -259,13 +259,15 @@ void write_demo_screen(void) {
 
 void connect_points(GPSPoint points[], int numPoints)
 {
-	int colour = MAGENTA; //TODO
-	int i;
+	int colour = LIME; //TODO
+
 	GPSPoint point_a;
 	GPSPoint point_b;
+	int i;
 	for(i = 1; i < numPoints; i++) {
 		point_a = points[i-1];
 		point_b = points[i];
+		// draw a line from point_a to point_b
 		WriteLine((int)point_a.x, (int)point_a.y, (int)point_b.x, (int)point_b.y, colour);
 		printf("help (%d %d) to (%d %d)\n", (int)point_a.x, (int)point_a.y, (int)point_b.x, (int)point_b.y);
 	}
