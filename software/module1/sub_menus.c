@@ -122,17 +122,22 @@ void SettingsMenu(Point* p, Colours* scheme){
 
 	WriteFilledRectangle(0, 0, XRES-1, MENU_TOP-1, BLACK);//Clear background
 
+	int settingsTouched = 0;
 	do{
-		WriteFilledRectangle(XRES/2-100, 0, XRES/2+100, MENU_TOP/2 - BUFFER_BTW_BUTTONS,scheme->menuBackground);//Create buttons
-		WriteFilledRectangle(XRES/2-100, MENU_TOP/2, XRES/2+100, MENU_TOP - BUFFER_BTW_BUTTONS,scheme->menuBackground);
+		if(!settingsTouched){
+			WriteFilledRectangle(XRES/2-100, 0, XRES/2+100, MENU_TOP/2 - BUFFER_BTW_BUTTONS,scheme->menuBackground);//Create buttons
+			WriteFilledRectangle(XRES/2-100, MENU_TOP/2, XRES/2+100, MENU_TOP - BUFFER_BTW_BUTTONS,scheme->menuBackground);
 
-		Text(XRES/2-100+10, (MENU_TOP/2 - BUFFER_BTW_BUTTONS)/2, scheme->text, scheme->menuBackground, "Text/background", 0);//Print text on buttons
-		Text(XRES/2-100+10, MENU_TOP/2 + 1, scheme->text, scheme->menuBackground, "Line Colour", 0);
+			Text(XRES/2-100+10, (MENU_TOP/2 - BUFFER_BTW_BUTTONS)/2, scheme->text, scheme->menuBackground, "Text/background", 0);//Print text on buttons
+			Text(XRES/2-100+10, MENU_TOP/2 + 1, scheme->text, scheme->menuBackground, "Line Colour", 0);
 
-		//Display example lines
-		WriteLine(XRES/2-100, MENU_TOP - BUFFER_BTW_BUTTONS-1, XRES/2+100, MENU_TOP/2-1, scheme->connectTheDotsLine);
-		WriteLine(XRES/2-100, MENU_TOP - BUFFER_BTW_BUTTONS, XRES/2+100, MENU_TOP/2, scheme->connectTheDotsLine);
-		WriteLine(XRES/2-100, MENU_TOP - BUFFER_BTW_BUTTONS+1, XRES/2+100, MENU_TOP/2+1, scheme->connectTheDotsLine);
+			//Display example lines
+			WriteLine(XRES/2-100, MENU_TOP - BUFFER_BTW_BUTTONS-1, XRES/2+100, MENU_TOP/2-1, scheme->connectTheDotsLine);
+			WriteLine(XRES/2-100, MENU_TOP - BUFFER_BTW_BUTTONS, XRES/2+100, MENU_TOP/2, scheme->connectTheDotsLine);
+			WriteLine(XRES/2-100, MENU_TOP - BUFFER_BTW_BUTTONS+1, XRES/2+100, MENU_TOP/2+1, scheme->connectTheDotsLine);
+		}else{
+			settingsTouched = 0;
+		}
 
 		*p = GetPress();
 
@@ -151,6 +156,8 @@ void SettingsMenu(Point* p, Colours* scheme){
 			GetRelease();
 		}else if(!(p->x >= 2 * XRES / 3 && p->y >= MENU_TOP)){//If touched outside of this menu's buttons and not the settings button itself break out of menu
 			break;
+		}else{
+			settingsTouched = 1;
 		}
 	}while(1); //Do this while in settings menu
 
