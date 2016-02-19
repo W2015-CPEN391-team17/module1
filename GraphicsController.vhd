@@ -1,6 +1,7 @@
 LIBRARY ieee; 
-USE ieee.Std_Logic_1164.all;
-use ieee.numeric_std.all;
+USE ieee.std_logic_1164.all;
+use ieee.std_logic_arith.all;
+use ieee.std_logic_signed.all;
    
 entity GraphicsController is  
 	Port (  
@@ -167,40 +168,40 @@ architecture bhvr of GraphicsController is
 -- Bresenham line and rectangle signals
 ------------------------------------------------------------------------------
 
-	signal x				: signed(15 downto 0);	-- 'x'
-	signal x_Data		: signed(15 downto 0);	-- carries data to be stored in 'x'
+	signal x				: std_logic_vector(15 downto 0);	-- 'x'
+	signal x_Data		: std_logic_vector(15 downto 0);	-- carries data to be stored in 'x'
 	signal x_Load_H	: std_logic;				-- whether to update 'x'
 	
-	signal y				: signed(15 downto 0);
-	signal y_Data		: signed(15 downto 0);
+	signal y				: std_logic_vector(15 downto 0);
+	signal y_Data		: std_logic_vector(15 downto 0);
 	signal y_Load_H	: std_logic;
 
-	signal dx			: signed(15 downto 0);
-	signal dx_Data		: signed(15 downto 0);
+	signal dx			: std_logic_vector(15 downto 0);
+	signal dx_Data		: std_logic_vector(15 downto 0);
 	signal dx_Load_H	: std_logic;
 	
-	signal dy			: signed(15 downto 0);
-	signal dy_Data		: signed(15 downto 0);
+	signal dy			: std_logic_vector(15 downto 0);
+	signal dy_Data		: std_logic_vector(15 downto 0);
 	signal dy_Load_H	: std_logic;
 	
-	signal s1			: signed(15 downto 0);
-	signal s1_Data		: signed(15 downto 0);
+	signal s1			: std_logic_vector(15 downto 0);
+	signal s1_Data		: std_logic_vector(15 downto 0);
 	signal s1_Load_H	: std_logic;
 	
-	signal s2			: signed(15 downto 0);
-	signal s2_Data		: signed(15 downto 0);
+	signal s2			: std_logic_vector(15 downto 0);
+	signal s2_Data		: std_logic_vector(15 downto 0);
 	signal s2_Load_H	: std_logic;
 
 	signal interchange			: std_logic;
 	signal interchange_Data		: std_logic;
 	signal interchange_Load_H	: std_logic;
 	
-	signal error			: signed(15 downto 0);
-	signal error_Data		: signed(15 downto 0);
+	signal error			: std_logic_vector(15 downto 0);
+	signal error_Data		: std_logic_vector(15 downto 0);
 	signal error_Load_H	: std_logic;
 
-	signal i				: signed(15 downto 0);
-	signal i_Data		: signed(15 downto 0);
+	signal i				: std_logic_vector(15 downto 0);
+	signal i_Data		: std_logic_vector(15 downto 0);
 	signal i_Load_H	: std_logic;
 
 Begin
@@ -339,9 +340,9 @@ Begin
 				end if ;
 			-- only one of the increment signals should be high but X1_Increment_2_H has priority
 			elsif(X1_Increment_2_H = '1') then
-				X1 <= std_logic_vector(signed(X1) + 2);
+				X1 <= X1 + 2;
 			elsif(X1_Increment_1_H = '1') then
-				X1 <= std_logic_vector(signed(X1) + 1);
+				X1 <= X1 + 1;
 			end if;
 		end if;
 	end process;
@@ -366,7 +367,7 @@ Begin
 					Y1(7 downto 0) <= DataInFromCPU(7 downto 0);
 				end if;
 			elsif(Y1_Increment_H = '1') then
-				Y1 <= std_logic_vector(signed(Y1) + 1);
+				Y1 <= Y1 + 1;
 			end if;
 		end if;
 	end process;
@@ -621,14 +622,14 @@ end process;
 	process(CurrentState, CommandWritten_H, Command, X1, X2, Y1, Y2, Colour, OKToDraw_L, VSync_L,
 				BackGroundColour, AS_L, Sram_DataIn, CLK, Colour_Latch, x, y, dx, dy, s1, s2, interchange, error, i)
 		-- for bresenham line
-		variable x2Minusx1 : signed(15 downto 0);
-		variable y2Minusy1 : signed(15 downto 0);
+		variable x2Minusx1 : std_logic_vector(15 downto 0);
+		variable y2Minusy1 : std_logic_vector(15 downto 0);
 		
 		-- for bresenham circle
-		variable xToDraw : signed(15 downto 0);
-		variable yToDraw : signed(15 downto 0);
-		variable s2_temp : signed(15 downto 0);
-		variable s2_temp2 : signed(15 downto 0);
+		variable xToDraw : std_logic_vector(15 downto 0);
+		variable yToDraw : std_logic_vector(15 downto 0);
+		variable s2_temp : std_logic_vector(15 downto 0);
+		variable s2_temp2 : std_logic_vector(15 downto 0);
 	begin
 		-- IMPORTANT
 		-- start with default values for EVERY signal (so we do not infer storage for signals inside this process)
@@ -680,14 +681,21 @@ end process;
 
 		error_Load_H						<= '0';
 		error_Data							<= X"0000";
-		
+
 		i_Load_H								<= '0';
 		i_Data								<= X"0000";
 
 		-- IMPORTANT we have to define what the default NEXT state will be. In this case we the state machine
 		-- will return to the IDLE state unless we override this with a different one
 		NextState							<= Idle;
-				
+
+		x2Minusx1 := X"0000";
+		y2Minusy1 := X"0000";
+		xToDraw := X"0000";
+		yToDraw := X"0000";
+		s2_temp := X"0000";
+		s2_temp2 := X"0000";
+
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------				
 		if(CurrentState = Idle ) then
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -870,7 +878,7 @@ end process;
 					-- write the left-side pixel
 					Sig_UDS_Out_L <= '0';
 					-- may also be able to draw the right-side pixel
-					if(signed(signed(X1) + 1) /= signed(X2)) then
+					if((X1 + 1) /= X2) then
 						Sig_LDS_Out_L <= '0';
 					end if;
 					-- increment X1 by 2
@@ -885,7 +893,7 @@ end process;
 				end if;
 				
 				-- decide whether to write and choose the next state
-				if(signed(X1) >= signed(X2)) then
+				if(X1 >= X2) then
 					Sig_RW_Out <= '1'; -- do not draw a line with only one pixel
 					NextState <= IDLE;
 				else
@@ -909,7 +917,7 @@ end process;
 					Sig_LDS_Out_L 	<= '0';
 				end if;
 
-				if(signed(Y1) >= signed(Y2)) then
+				if(Y1 >= Y2) then
 					Sig_RW_Out <= '1'; -- do not draw a line with only one pixel
 					NextState <= IDLE;
 				else
@@ -924,11 +932,11 @@ end process;
 ------------------------------------------------------------------------------
 		elsif(CurrentState = DrawLine) then
 ------------------------------------------------------------------------------
-			x_Data <= signed(x1);
-			y_Data <= signed(y1);
+			x_Data <= X1;
+			y_Data <= Y1;
 			
-			x2Minusx1 := signed(x2) - signed(x1);
-			y2Minusy1 := signed(y2) - signed(y1);
+			x2Minusx1 := X2 - X1;
+			y2Minusy1 := Y2 - Y1;
 
 			dx_Data <= abs(x2Minusx1);
 			dy_Data <= abs(y2Minusy1);
@@ -961,7 +969,7 @@ end process;
 			s2_Load_H <= '1';
 			interchange_Load_H <= '1';
 			
-			if ((signed(x1) = signed(x2)) and (signed(y1) = signed(y2))) then
+			if ((X1 = X2) and (Y1 = Y2)) then
 				NextState <= IDLE; -- do not draw line of length 0
 			else
 				NextState <= DrawLine1;
@@ -983,10 +991,10 @@ end process;
 				interchange_Data <= '1';
 				interchange_Load_H <= '1';
 				
-				error_Data <= signed((dx(14 downto 0) & '0') - dy);
+				error_Data <= (dx(14 downto 0) & '0') - dy;
 				error_Load_H <= '1';
 			else
-				error_Data <= signed((dy(14 downto 0) & '0') - dx);
+				error_Data <= (dy(14 downto 0) & '0') - dx;
 				error_Load_H <= '1';
 			end if;
 			
@@ -1003,8 +1011,7 @@ end process;
 			if(i <= dx) then
 				-- write a pixel
 				if(OKToDraw_L = '0') then
-					Sig_AddressOut <= std_logic_vector(y(8 downto 0)) 
-						& std_logic_vector(x(9 downto 1));
+					Sig_AddressOut <= y(8 downto 0) & x(9 downto 1);
 					Sig_RW_Out <= '0';
 				
 					if(x(0) = '0') then
@@ -1036,7 +1043,7 @@ end process;
 				end if;
 				
 				-- update error
-				error_Data <= signed(error - (dx(14 downto 0) & '0'));
+				error_Data <= error - (dx(14 downto 0) & '0');
 				error_Load_H <= '1';
 				
 				NextState <= DrawLine3;
@@ -1070,8 +1077,8 @@ end process;
 		elsif(CurrentState = DrawRectangle) then
 ------------------------------------------------------------------------------
 			--check if corner points are valid
-			if((signed(X2) >= signed(X1)) and (signed(Y2) >= signed(Y1))) then
-				x_Data <= signed(X1);
+			if((X2 >= X1) and (Y2 >= Y1)) then
+				x_Data <= X1;
 				x_Load_H <= '1';
 				NextState <= DrawRectangle1;
 			else
@@ -1082,7 +1089,7 @@ end process;
 		elsif(CurrentState = DrawRectangle1) then
 ------------------------------------------------------------------------------
 			if(OKToDraw_L = '0') then
-				Sig_AddressOut <= Y1(8 downto 0) & std_logic_vector(x(9 downto 1));
+				Sig_AddressOut <= Y1(8 downto 0) & x(9 downto 1);
 
 				-- choose which pixels to write and how much to increment x
 				-- can draw two pixels per cycle when x is even
@@ -1090,7 +1097,7 @@ end process;
 					-- write the left-side pixel
 					Sig_UDS_Out_L <= '0';
 					-- may also be able to draw the right-side pixel
-					if(signed(x + 1) /= signed(X2)) then
+					if((x + 1) /= X2) then
 						Sig_LDS_Out_L <= '0';
 					end if;
 					-- increment x by 2 so next state may start at an even x
@@ -1105,7 +1112,7 @@ end process;
 				end if;
 
 				-- decide whether to write and choose the next state
-				if(x >= signed(X2)) then
+				if(x >= X2) then
 					Sig_RW_Out <= '1';
 					NextState <= DrawRectangle2;
 				else
@@ -1120,13 +1127,13 @@ end process;
 		elsif(CurrentState = DrawRectangle2) then
 ------------------------------------------------------------------------------
 			-- restore original value of x
-			x_Data <= signed(X1);
+			x_Data <= X1;
 			x_Load_H <= '1';
 
 			Y1_Increment_H <= '1';
 
 			-- move on to horizontal line drawing step unless we are done
-			if(signed(Y1) >= signed(Y2)) then
+			if(Y1 >= Y2) then
 				NextState <= IDLE;
 			else
 				NextState <= DrawRectangle1;
@@ -1136,13 +1143,13 @@ end process;
 		elsif(CurrentState = DrawCircle) then
 ------------------------------------------------------------------------------
 			-- X2 holds the radius argument
-			x_Data <= signed(X2);
+			x_Data <= X2;
 			x_Load_H <= '1';
 			y_Data <= X"0000";
 			y_Load_H <= '1';
 
 			-- reuse s2 register for "decisionOver2" from the algorithm
-			s2_Data <= 1 - signed(X2);
+			s2_Data <= 1 - X2;
 			s2_Load_H <= '1';
 
 			NextState <= DrawCircle1;
@@ -1161,13 +1168,12 @@ end process;
 		elsif(CurrentState = DrawCircle2) then
 ------------------------------------------------------------------------------
 			-- calculate coordinates for the pixel
-			xToDraw := x + signed(X1); --TODO depends on octant
-			yToDraw := y + signed(Y1); --TODO depends on octant
+			xToDraw := x + X1;
+			yToDraw := y + Y1;
 
 			-- draw the pixel for octant 1
 			if(OKToDraw_L = '0') then
-				Sig_AddressOut <= std_logic_vector(yToDraw(8 downto 0)
-											& xToDraw(9 downto 1));
+				Sig_AddressOut <= yToDraw(8 downto 0) & xToDraw(9 downto 1);
 				Sig_RW_Out <= '0';
 
 				if(xToDraw(0) = '0') then
@@ -1176,19 +1182,171 @@ end process;
 					Sig_LDS_Out_L <= '0';
 				end if;
 
-				NextState <= DrawCircle10; --TODO should actually be DrawCircle3
+				NextState <= DrawCircle3;
 			else
-				NextState <= DrawCircle2; --TODO should be same as current state
-			end if ;
+				NextState <= DrawCircle2;
+			end if;
 
-			--TODO need all these states to actually draw a circle
-			--DrawCircle3
-			--DrawCircle4
-			--DrawCircle5
-			--DrawCircle6
-			--DrawCircle7
-			--DrawCircle8
-			--DrawCircle9
+------------------------------------------------------------------------------
+		elsif(CurrentState = DrawCircle3) then
+------------------------------------------------------------------------------
+			-- calculate coordinates for the pixel
+			xToDraw := y + X1;
+			yToDraw := x + Y1;
+
+			-- draw the pixel for octant 2
+			if(OKToDraw_L = '0') then
+				Sig_AddressOut <= yToDraw(8 downto 0) & xToDraw(9 downto 1);
+				Sig_RW_Out <= '0';
+
+				if(xToDraw(0) = '0') then
+					Sig_UDS_Out_L <= '0';
+				else
+					Sig_LDS_Out_L <= '0';
+				end if;
+
+				NextState <= DrawCircle4;
+			else
+				NextState <= DrawCircle3;
+			end if;
+
+------------------------------------------------------------------------------
+		elsif(CurrentState = DrawCircle4) then
+------------------------------------------------------------------------------
+			-- calculate coordinates for the pixel
+			xToDraw := X1 - x;
+			yToDraw := y + Y1;
+
+			-- draw the pixel for octant 4
+			if(OKToDraw_L = '0') then
+				Sig_AddressOut <= yToDraw(8 downto 0) & xToDraw(9 downto 1);
+				Sig_RW_Out <= '0';
+
+				if(xToDraw(0) = '0') then
+					Sig_UDS_Out_L <= '0';
+				else
+					Sig_LDS_Out_L <= '0';
+				end if;
+
+				NextState <= DrawCircle5;
+			else
+				NextState <= DrawCircle4;
+			end if;
+
+------------------------------------------------------------------------------
+		elsif(CurrentState = DrawCircle5) then
+------------------------------------------------------------------------------
+			-- calculate coordinates for the pixel
+			xToDraw := X1 - y;
+			yToDraw := x + Y1;
+
+			-- draw the pixel for octant 3
+			if(OKToDraw_L = '0') then
+				Sig_AddressOut <= yToDraw(8 downto 0) & xToDraw(9 downto 1);
+				Sig_RW_Out <= '0';
+
+				if(xToDraw(0) = '0') then
+					Sig_UDS_Out_L <= '0';
+				else
+					Sig_LDS_Out_L <= '0';
+				end if;
+
+				NextState <= DrawCircle6;
+			else
+				NextState <= DrawCircle5;
+			end if;
+
+------------------------------------------------------------------------------
+		elsif(CurrentState = DrawCircle6) then
+------------------------------------------------------------------------------
+			-- calculate coordinates for the pixel
+			xToDraw := X1 - x;
+			yToDraw := Y1 - y;
+
+			-- draw the pixel for octant 5
+			if(OKToDraw_L = '0') then
+				Sig_AddressOut <= yToDraw(8 downto 0) & xToDraw(9 downto 1);
+				Sig_RW_Out <= '0';
+
+				if(xToDraw(0) = '0') then
+					Sig_UDS_Out_L <= '0';
+				else
+					Sig_LDS_Out_L <= '0';
+				end if;
+
+				NextState <= DrawCircle7;
+			else
+				NextState <= DrawCircle6;
+			end if;
+
+------------------------------------------------------------------------------
+		elsif(CurrentState = DrawCircle7) then
+------------------------------------------------------------------------------
+			-- calculate coordinates for the pixel
+			xToDraw := X1 - y;
+			yToDraw := Y1 - x;
+
+			-- draw the pixel for octant 6
+			if(OKToDraw_L = '0') then
+				Sig_AddressOut <= yToDraw(8 downto 0) & xToDraw(9 downto 1);
+				Sig_RW_Out <= '0';
+
+				if(xToDraw(0) = '0') then
+					Sig_UDS_Out_L <= '0';
+				else
+					Sig_LDS_Out_L <= '0';
+				end if;
+
+				NextState <= DrawCircle8;
+			else
+				NextState <= DrawCircle7;
+			end if;
+
+------------------------------------------------------------------------------
+		elsif(CurrentState = DrawCircle8) then
+------------------------------------------------------------------------------
+			-- calculate coordinates for the pixel
+			xToDraw := x + X1;
+			yToDraw := Y1 - y;
+
+			-- draw the pixel for octant 7
+			if(OKToDraw_L = '0') then
+				Sig_AddressOut <= yToDraw(8 downto 0) & xToDraw(9 downto 1);
+				Sig_RW_Out <= '0';
+
+				if(xToDraw(0) = '0') then
+					Sig_UDS_Out_L <= '0';
+				else
+					Sig_LDS_Out_L <= '0';
+				end if;
+
+				NextState <= DrawCircle9;
+			else
+				NextState <= DrawCircle8;
+			end if;
+
+------------------------------------------------------------------------------
+		elsif(CurrentState = DrawCircle9) then
+------------------------------------------------------------------------------
+			-- calculate coordinates for the pixel
+			xToDraw := y + X1;
+			yToDraw := Y1 - x;
+
+			-- draw the pixel for octant 8
+			if(OKToDraw_L = '0') then
+				Sig_AddressOut <= yToDraw(8 downto 0) & xToDraw(9 downto 1);
+				Sig_RW_Out <= '0';
+
+				if(xToDraw(0) = '0') then
+					Sig_UDS_Out_L <= '0';
+				else
+					Sig_LDS_Out_L <= '0';
+				end if;
+
+				NextState <= DrawCircle10;
+			else
+				NextState <= DrawCircle9;
+			end if;
 
 ------------------------------------------------------------------------------
 		elsif(CurrentState = DrawCircle10) then
