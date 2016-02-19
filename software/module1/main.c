@@ -39,22 +39,8 @@ int main()
   printf("Starting module 1 code.\n");
   //write_demo_screen();
 
-
   initialize();
-/*
-  // Test writing and reading points
-  GPSPoint points[GPSPOINTLEN];
-  GPSPoint p0;
-  p0.x = 1.0;
-  p0.y = 2.0;
-  GPSPoint p1;
-  p1.x = 3.0;
-  p1.y = 4.0;
-  points[0] = p0;
-  points[1] = p1;
-  sd_card_write_points(points, GPSPOINTLEN, "TEST.TXT");
-  sd_card_print_contents("TEST.TXT");
-*/
+
   main_menu();
 
   // Should never reach this point, but here in case we implement an exit button.
@@ -106,6 +92,7 @@ void draw_field(void)
 void draw_data(GPSPoint points[], int numPoints)
 {
 	draw_heatmap(points, numPoints);
+	draw_field();
 	printf("Heatmap drawn.\n");
 }
 
@@ -132,11 +119,11 @@ void main_menu(void)
 	p2.x = 200; p2.y = 100;
 	p3.x = 300; p3.y = 150;
 	p4.x = 400; p4.y = 200;
-	p5.x = 500; p5.y = 250;
+	p5.x = 450; p5.y = 150;
 	p6.x = 600; p6.y = 300;
 	p7.x = 700; p7.y = 350;
 	p8.x = 799; p8.y = 400;
-	p9.x = 799; p9.y = 479;
+	p9.x = 750; p9.y = 390;
 	GPSPoint fake[10];
 	fake[0] = p0;
 	fake[1] = p1;
@@ -155,6 +142,7 @@ void main_menu(void)
 	Text(0, 0, BLACK, WHITE, "Main Menu", 0);
 	Point p;
 	p.y = 0;
+	int showing_heatmap = TRUE;
 	while(1)
 	{
 		if(p.y < MENU_TOP){
@@ -162,20 +150,32 @@ void main_menu(void)
 		}
 
 		if(p.y < MENU_TOP){
-			connect_points(fake, 10);
+			if (showing_heatmap) {
+				showing_heatmap = FALSE;
+				connect_points(fake, 10);
+				GetRelease();
+			} else {
+				showing_heatmap = TRUE;
+				draw_data(fake, 10);
+				GetRelease();
+			}
 		}else{
 			if(p.x < XRES / 3){
 				//Save/Load touched
 				SaveLoadMenu(&p);
 			}else if(p.x < 2 * XRES / 3){
 				//Interpret touched
-				InterpretMenu(&p);
+				InterpretMenu(&p, &colorScheme);
 			}else{
 				//Settings touched
 				SettingsMenu(&p, &colorScheme);
-				draw_data(fake, 10);
-				draw_field();
+				if (showing_heatmap) {
+					draw_data(fake, 10);
+				} else {
+					connect_points(fake, 10);
+				}
 				draw_menu();
+				GetRelease();
 			}
 		}
 	}
@@ -260,7 +260,10 @@ void write_demo_screen(void) {
 
 void connect_points(GPSPoint points[], int numPoints)
 {
-	int colour = LIME; //TODO
+	WriteFilledRectangle(0,0,XRES-1,MENU_TOP-1,WHITE);
+	draw_field();
+
+	int colour = colorScheme.connectTheDotsLine;
 
 	GPSPoint point_a;
 	GPSPoint point_b;
@@ -270,6 +273,5 @@ void connect_points(GPSPoint points[], int numPoints)
 		point_b = points[i];
 		// draw a line from point_a to point_b
 		WriteLine((int)point_a.x, (int)point_a.y, (int)point_b.x, (int)point_b.y, colour);
-		printf("help (%d %d) to (%d %d)\n", (int)point_a.x, (int)point_a.y, (int)point_b.x, (int)point_b.y);
 	}
 }

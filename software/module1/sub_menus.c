@@ -15,9 +15,31 @@ typedef struct{
 	int text;
 }back_textPair;
 
+double percentageLeft, percentageRight, percentageForward, percentageBack;
 
-void initInterpret(int count[HEATMAP_H][HEATMAP_V]){
+void initInterpret(int count[HEATMAP_H][HEATMAP_V], int nPoints){
+	int backCount = 0;
+	int leftCount = 0;
 
+	int i;
+	for(i = 0; i < HEATMAP_H; i++){
+		int j;
+		for(j = 0; j < HEATMAP_V; j++){
+			if(i <= HEATMAP_H / 2){
+				backCount++;
+			}
+
+			if(j <= HEATMAP_V / 2){
+				leftCount++;
+			}
+		}
+	}
+
+	percentageBack = (double)backCount / nPoints;
+	percentageLeft = (double)leftCount / nPoints;
+
+	percentageForward = 1 - percentageBack;
+	percentageRight = 1 - percentageLeft;
 }
 
 void SaveLoadMenu(Point* p){
@@ -25,7 +47,7 @@ void SaveLoadMenu(Point* p){
 }
 
 //CHANGE MAIN
-void InterpretMenu(Point* p){
+void InterpretMenu(Point* p, Colours* scheme){
 	/*WriteFilledRectangle(0, 0, XRES-1, MENU_TOP-1, scheme->menuBackground);
 
 	char* str = "Time on Right:   %";
@@ -58,7 +80,10 @@ void SettingsMenu(Point* p, Colours* scheme){
 		Text(XRES/2-100+10, (MENU_TOP/2 - BUFFER_BTW_BUTTONS)/2, scheme->text, scheme->menuBackground, "Text/background", 0);//Print text on buttons
 		Text(XRES/2-100+10, MENU_TOP/2 + 1, scheme->text, scheme->menuBackground, "Line Colour", 0);
 
-		WriteLine(XRES/2-100, MENU_TOP - BUFFER_BTW_BUTTONS, XRES/2+100, MENU_TOP/2, scheme->connectTheDotsLine);//Display example line
+		//Display example lines
+		WriteLine(XRES/2-100, MENU_TOP - BUFFER_BTW_BUTTONS-1, XRES/2+100, MENU_TOP/2-1, scheme->connectTheDotsLine);
+		WriteLine(XRES/2-100, MENU_TOP - BUFFER_BTW_BUTTONS, XRES/2+100, MENU_TOP/2, scheme->connectTheDotsLine);
+		WriteLine(XRES/2-100, MENU_TOP - BUFFER_BTW_BUTTONS+1, XRES/2+100, MENU_TOP/2+1, scheme->connectTheDotsLine);
 
 		*p = GetPress();
 
