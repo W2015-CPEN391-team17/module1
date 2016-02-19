@@ -25,10 +25,8 @@ void draw_menu(void);
 void write_demo_screen(void);
 void connect_points(GPSPoint points[], int numPoints);
 
-// Main menu function, should return struct point eventually, but void for now
+// Main menu function
 void main_menu(void);
-// Sub-menu function, should return struct point eventually, but void for now
-void sub_menu(void);
 
 Colours colorScheme;
 
@@ -92,13 +90,9 @@ void initialize(void)
 	colorScheme.pairNum = INITPAIR;
 
 	init_gps();
-	printf("GPS initialized.\n");
 	Init_Touch();
-	printf("Touchscreen initialized.\n");
 	init_btport();
-	printf("Bluetooth port initialized.\n");
 	clear_screen(WHITE);
-	printf("Screen cleared.\n");
 }
 
 void cleanup(void)
@@ -119,14 +113,12 @@ void draw_field(void)
 	WriteHLine(0, 3*MENU_TOP/4, GOAL_WIDTH, BLACK);
 	WriteHLine(XRES-GOAL_WIDTH, MENU_TOP/4, GOAL_WIDTH-1, BLACK);
 	WriteHLine(XRES-GOAL_WIDTH, 3*MENU_TOP/4, GOAL_WIDTH-1, BLACK);
-	printf("Field drawn.\n");
 }
 
 void draw_data(GPSPoint points[], int numPoints)
 {
 	draw_heatmap(points, numPoints);
 	draw_field();
-	printf("Heatmap drawn.\n");
 }
 
 void draw_menu(void)
@@ -138,7 +130,6 @@ void draw_menu(void)
 	Text(10, (MENU_TOP + YRES)/2, colorScheme.text, colorScheme.menuBackground, "Save/Load", 0);
 	Text(XRES/3 + 10, (MENU_TOP + YRES)/2, colorScheme.text, colorScheme.menuBackground, "Interpret", 0);
 	Text(XRES*2/3 + 10, (MENU_TOP + YRES)/2, colorScheme.text, colorScheme.menuBackground, "Settings", 0);
-	printf("Menu drawn.\n");
 }
 
 void main_menu(void)
@@ -214,20 +205,6 @@ void main_menu(void)
 	}
 }
 
-void sub_menu(void)
-{
-	clear_screen(WHITE);
-	//TODO draw submenu stuff here
-	draw_menu();
-	Text(0, 0, BLACK, WHITE, "Additional Info", 0);
-	while(1)
-	{
-		//Wait for touch
-		//Based on touch coords:
-		//Exit submenu (break)
-	}
-}
-
 void write_demo_screen(void) {
 	clear_screen(BLACK);
 
@@ -268,7 +245,6 @@ void write_demo_screen(void) {
 		  }
 	}
 
-	int i = 0;
 	int j = 200;
 	int k = 0;
 	int n = 23;
