@@ -15,19 +15,11 @@ typedef struct{
 	int text;
 }back_textPair;
 
-int percentageLeft, percentageRight, percentageForward, percentageBack;
-
-
-int backCount;
-int frontCount;
-int leftCount;
-int rightCount;
+double percentageLeft, percentageRight, percentageForward, percentageBack;
 
 void initInterpret(int count[HEATMAP_H][HEATMAP_V], int nPoints){
-	backCount = 0;
-	frontCount = 0;
-	leftCount = 0;
-	rightCount = 0;
+	int backCount = 0;
+	int leftCount = 0;
 
 	int i;
 	for(i = 0; i < HEATMAP_H; i++){
@@ -35,17 +27,19 @@ void initInterpret(int count[HEATMAP_H][HEATMAP_V], int nPoints){
 		for(j = 0; j < HEATMAP_V; j++){
 			if(i <= HEATMAP_H / 2){
 				backCount++;
-			}else{
-				frontCount++;
 			}
 
 			if(j <= HEATMAP_V / 2){
 				leftCount++;
-			}else{
-				rightCount++;
 			}
 		}
 	}
+
+	percentageBack = (double)backCount / nPoints;
+	percentageLeft = (double)leftCount / nPoints;
+
+	percentageForward = 1 - percentageBack;
+	percentageRight = 1 - percentageLeft;
 }
 
 void SaveLoadMenu(Point* p){
@@ -53,7 +47,7 @@ void SaveLoadMenu(Point* p){
 }
 
 //CHANGE MAIN
-void InterpretMenu(Point* p){
+void InterpretMenu(Point* p, Colours* scheme){
 	/*WriteFilledRectangle(0, 0, XRES-1, MENU_TOP-1, scheme->menuBackground);
 
 	char* str = "Time on Right:   %";
