@@ -26,11 +26,11 @@ void initInterpret(int count[HEATMAP_H][HEATMAP_V], int nPoints){
 		int j;
 		for(j = 0; j < HEATMAP_V; j++){
 			if(i <= HEATMAP_H / 2){
-				backCount++;
+				backCount += count[i][j];
 			}
 
 			if(j <= HEATMAP_V / 2){
-				leftCount++;
+				leftCount += count[i][j];
 			}
 		}
 	}
