@@ -16,16 +16,16 @@ void draw_heatmap(GPSPoint points[], int numPoints)
 
 	//Initialize array of heatmap shades
 	int shades[HM_SHADES];
-	shades[0] = WHITE;
-	shades[1] = 0;
-	shades[2] = 2;
-	shades[3] = 7;
-	shades[4] = 4;
-	shades[5] = 6;
-	shades[6] = 3;
-	shades[7] = 5;
-	shades[8] = 5;
-	shades[9] = 5;
+	shades[0] = OLIVE_DRAB;
+	shades[1] = YELLOW_GREEN;
+	shades[2] = LAWN_GREEN;
+	shades[3] = GREEN_YELLOW;
+	shades[4] = YELLOW;
+	shades[5] = GOLD;
+	shades[6] = ORANGE;
+	shades[7] = DARK_ORANGE;
+	shades[8] = ORANGE_RED;
+	shades[9] = RED;
 
 	//Check where points land
 	int i;

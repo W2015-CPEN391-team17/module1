@@ -19,6 +19,12 @@
 
 typedef struct { float x, y; } GPSPoint;
 
+typedef struct {
+	int tag;  // name of struct (used for ID purposes)
+	int points_len;  // number of GPSPoints in points
+	GPSPoint points[GPSPOINTSET_POINTSMAXLEN];
+} GPSPointSet;
+
 GPSPoint* convertGPSPoints( int nPoints );
 void convertGPSReal( GPSPoint topLeft, GPSPoint topRight, GPSPoint points[], GPSPoint bottomRight, int nPoints);
 

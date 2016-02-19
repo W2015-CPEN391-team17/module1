@@ -26,11 +26,11 @@ void initInterpret(int count[HEATMAP_H][HEATMAP_V], int nPoints){
 		int j;
 		for(j = 0; j < HEATMAP_V; j++){
 			if(i <= HEATMAP_H / 2){
-				backCount++;
+				backCount += count[i][j];
 			}
 
 			if(j <= HEATMAP_V / 2){
-				leftCount++;
+				leftCount += count[i][j];
 			}
 		}
 	}
@@ -48,13 +48,62 @@ void SaveLoadMenu(Point* p){
 
 //CHANGE MAIN
 void InterpretMenu(Point* p, Colours* scheme){
-	/*WriteFilledRectangle(0, 0, XRES-1, MENU_TOP-1, scheme->menuBackground);
+	WriteFilledRectangle(0, 0, XRES-1, MENU_TOP-1, scheme->menuBackground);
 
 	char* str = "Time on Right:   %";
+	str[15] = (char)(100 * percentageRight / 10 + '0');
+	str[16] = (char)((int)(100 * percentageRight) % 10 + '0');
 
+	if(str[15] == '0'){
+		str[15] = str[16];
+		str[16] = '%';
+		str[17] = '\0';
+	}
 
-	Text(2*XRES/5, 10, scheme->text, scheme->menuBackground, , 0);*/
-	*p = GetPress();
+	Text(XRES/5, 10, scheme->text, scheme->menuBackground, str, 0);
+
+	str = "Time on Left:   %";
+
+	str[14] = (char)(100 * percentageLeft / 10 + '0');
+	str[15] = (char)((int)(100 * percentageLeft) % 10 + '0');
+
+	if(str[14] == '0'){
+		str[14] = str[16];
+		str[15] = '%';
+		str[16] = '\0';
+	}
+
+	Text(XRES/5, 210, scheme->text, scheme->menuBackground, str, 0);
+
+	str = "Time Forward:   %";
+
+	str[14] = (char)(100 * percentageForward / 10 + '0');
+	str[15] = (char)((int)(100 * percentageForward) % 10 + '0');
+
+	if(str[14] == '0'){
+		str[14] = str[16];
+		str[15] = '%';
+		str[16] = '\0';
+	}
+
+	Text(3*XRES/5, 10, scheme->text, scheme->menuBackground, str, 0);
+
+	str = "Time Back:   %";
+
+	str[11] = (char)(100 * percentageBack / 10 + '0');
+	str[12] = (char)((int)(100 * percentageBack) % 10 + '0');
+
+	if(str[11] == '0'){
+		str[11] = str[16];
+		str[12] = '%';
+		str[13] = '\0';
+	}
+
+	Text(3*XRES/5, 210, scheme->text, scheme->menuBackground, str, 0);
+
+	do{
+		*p = GetPress();
+	}while(p->x > XRES/3 && p->x < 2*XRES/3 && p->y > MENU_TOP);
 }
 
 /*
@@ -73,17 +122,22 @@ void SettingsMenu(Point* p, Colours* scheme){
 
 	WriteFilledRectangle(0, 0, XRES-1, MENU_TOP-1, BLACK);//Clear background
 
+	int settingsTouched = 0;
 	do{
-		WriteFilledRectangle(XRES/2-100, 0, XRES/2+100, MENU_TOP/2 - BUFFER_BTW_BUTTONS,scheme->menuBackground);//Create buttons
-		WriteFilledRectangle(XRES/2-100, MENU_TOP/2, XRES/2+100, MENU_TOP - BUFFER_BTW_BUTTONS,scheme->menuBackground);
+		if(!settingsTouched){
+			WriteFilledRectangle(XRES/2-100, 0, XRES/2+100, MENU_TOP/2 - BUFFER_BTW_BUTTONS,scheme->menuBackground);//Create buttons
+			WriteFilledRectangle(XRES/2-100, MENU_TOP/2, XRES/2+100, MENU_TOP - BUFFER_BTW_BUTTONS,scheme->menuBackground);
 
-		Text(XRES/2-100+10, (MENU_TOP/2 - BUFFER_BTW_BUTTONS)/2, scheme->text, scheme->menuBackground, "Text/background", 0);//Print text on buttons
-		Text(XRES/2-100+10, MENU_TOP/2 + 1, scheme->text, scheme->menuBackground, "Line Colour", 0);
+			Text(XRES/2-100+10, (MENU_TOP/2 - BUFFER_BTW_BUTTONS)/2, scheme->text, scheme->menuBackground, "Text/background", 0);//Print text on buttons
+			Text(XRES/2-100+10, MENU_TOP/2 + 1, scheme->text, scheme->menuBackground, "Line Colour", 0);
 
-		//Display example lines
-		WriteLine(XRES/2-100, MENU_TOP - BUFFER_BTW_BUTTONS-1, XRES/2+100, MENU_TOP/2-1, scheme->connectTheDotsLine);
-		WriteLine(XRES/2-100, MENU_TOP - BUFFER_BTW_BUTTONS, XRES/2+100, MENU_TOP/2, scheme->connectTheDotsLine);
-		WriteLine(XRES/2-100, MENU_TOP - BUFFER_BTW_BUTTONS+1, XRES/2+100, MENU_TOP/2+1, scheme->connectTheDotsLine);
+			//Display example lines
+			WriteLine(XRES/2-100, MENU_TOP - BUFFER_BTW_BUTTONS-1, XRES/2+100, MENU_TOP/2-1, scheme->connectTheDotsLine);
+			WriteLine(XRES/2-100, MENU_TOP - BUFFER_BTW_BUTTONS, XRES/2+100, MENU_TOP/2, scheme->connectTheDotsLine);
+			WriteLine(XRES/2-100, MENU_TOP - BUFFER_BTW_BUTTONS+1, XRES/2+100, MENU_TOP/2+1, scheme->connectTheDotsLine);
+		}else{
+			settingsTouched = 0;
+		}
 
 		*p = GetPress();
 
@@ -102,6 +156,8 @@ void SettingsMenu(Point* p, Colours* scheme){
 			GetRelease();
 		}else if(!(p->x >= 2 * XRES / 3 && p->y >= MENU_TOP)){//If touched outside of this menu's buttons and not the settings button itself break out of menu
 			break;
+		}else{
+			settingsTouched = 1;
 		}
 	}while(1); //Do this while in settings menu
 
