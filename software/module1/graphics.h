@@ -77,11 +77,11 @@ void Button(int x1, int y1, int x2, int y2, int outline_color, int font_color,
 void clear_screen(int colour);
 
 // use these only for testing single-command functions
-void HLine(int x1, int y1, int length, int Colour);
-void VLine(int x1, int y1, int length, int Colour);
-void Line(int x1, int y1, int x2, int y2, int Colour);
-void FilledRectangle(int x1, int y1, int x2, int y2, int color);
-void Circle(int x0, int y0, int radius, int color);
+void TestHLine(int x1, int y1, int length, int Colour);
+void TestVLine(int x1, int y1, int length, int Colour);
+void TestLine(int x1, int y1, int x2, int y2, int Colour);
+void TestFilledRectangle(int x1, int y1, int x2, int y2, int color);
+void TestCircle(int x0, int y0, int radius, int color);
 void line_test_screen();
 
 #endif /* EXERCISE1_7_H_ */
