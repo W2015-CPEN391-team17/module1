@@ -320,8 +320,6 @@ void WriteCircle(int x0, int y0, int radius, int color)
 		return;
 	}
 
-	printf("WARNING WriteCircle may not be implemented\n");
-
 	WAIT_FOR_GRAPHICS;
 
 	GraphicsX1Reg = x0;
@@ -637,7 +635,7 @@ void write_test_screen() {
 
 	// compare circles
 	WriteCircle(500, 100, 50, LIME);
-	//Circle(500, 100, 50, WHITE);
-	//Circle(700, 100, 50, WHITE);
+	Circle(500, 100, 50, WHITE);
+	Circle(700, 100, 50, WHITE);
 	WriteCircle(700, 100, 50, LIME);
 }

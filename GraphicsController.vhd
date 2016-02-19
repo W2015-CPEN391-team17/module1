@@ -1196,16 +1196,17 @@ end process;
 			y_Data <= y + 1;
 			y_Load_H <= '1';
 
-			if(s2 <= 0) then
+			if(s2 <= X"0000") then
 				s2_temp := (y + 1) + 1;
-				s2_Data <= s2_temp(14 downto 0) & '0';
+				s2_Data <= s2 + (s2_temp(14 downto 0) & '0');
 				s2_Load_H <= '1';
 			else
 				x_Data <= x - 1;
 				x_Load_H <= '1';
+
 				s2_temp := (y + 1) - (x - 1);
 				s2_temp2 := s2_temp(14 downto 0) & '0';
-				s2_Data <= s2_temp2 + 1;
+				s2_Data <= s2 + s2_temp2 + 1;
 				s2_Load_H <= '1';
 			end if;
 
