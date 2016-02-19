@@ -15,9 +15,35 @@ typedef struct{
 	int text;
 }back_textPair;
 
+int percentageLeft, percentageRight, percentageForward, percentageBack;
 
-void initInterpret(int count[HEATMAP_H][HEATMAP_V]){
 
+int backCount;
+int frontCount;
+int leftCount;
+int rightCount;
+
+void initInterpret(int count[HEATMAP_H][HEATMAP_V], int nPoints){
+	backCount = 0;
+	frontCount = 0;
+	leftCount = 0;
+	rightCount = 0;
+
+	for(int i = 0; i < HEATMAP_H; i++){
+		for(int j = 0; j < HEATMAP_V; j++){
+			if(i <= HEATMAP_H / 2){
+				backCount++;
+			}else{
+				frontCount++;
+			}
+
+			if(j <= HEATMAP_V / 2){
+				leftCount++;
+			}else{
+				rightCount++;
+			}
+		}
+	}
 }
 
 void SaveLoadMenu(Point* p){

@@ -23,7 +23,7 @@ typedef struct{
 	int pairNum;
 }Colours;
 
-void initInterpret(int count[HEATMAP_H][HEATMAP_V]);
+void initInterpret(int count[HEATMAP_H][HEATMAP_V], int nPoints);
 
 void SaveLoadMenu(Point*);
 
