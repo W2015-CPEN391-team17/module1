@@ -106,6 +106,7 @@ void draw_field(void)
 void draw_data(GPSPoint points[], int numPoints)
 {
 	draw_heatmap(points, numPoints);
+	printf("Heatmap drawn.\n");
 }
 
 void draw_menu(void)
