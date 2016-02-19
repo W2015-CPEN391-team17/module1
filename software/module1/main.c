@@ -33,6 +33,7 @@ void sub_menu(void);
 Colours colorScheme;
 
 #define GPSPOINTLEN 2
+#define GPSPOINTSETLEN 2
 
 int main()
 {
@@ -40,6 +41,38 @@ int main()
   //write_demo_screen();
 
   initialize();
+
+  // Test writing and reading points
+  GPSPoint points0[GPSPOINTLEN];
+  GPSPoint p0;
+  p0.x = 1.0;
+  p0.y = 2.0;
+  GPSPoint p1;
+  p1.x = 3.0;
+  p1.y = 4.0;
+  points0[0] = p0;
+  points0[1] = p1;
+  GPSPoint points1[GPSPOINTLEN];
+  GPSPoint p2;
+  p2.x = 5.0;
+  p2.y = 6.0;
+  points1[0] = p2;
+  GPSPointSet set0;
+  set0.points[0] = p0;
+  set0.points[1] = p1;
+  set0.points_len = 2;
+  set0.tag = 0;
+  GPSPointSet set1;
+  set1.points[0] = p2;
+  set1.points_len = 1;
+  set1.tag = 1;
+
+  GPSPointSet sets[GPSPOINTSETLEN];
+  sets[0] = set0;
+  sets[1] = set1;
+
+  sd_card_write_GPSPointSets(sets, GPSPOINTSETLEN, "TEST.TXT");
+  sd_card_print_contents("TEST.TXT");
 
   main_menu();
 
