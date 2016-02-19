@@ -15,11 +15,6 @@
 #define MENU_TOP 440
 #define GOAL_WIDTH 60
 
-// Heatmap properties
-#define HEATMAP_H 5
-#define HEATMAP_V 3
-#define HM_SHADES 8
-
 #define ASSERT_POINTS_ARE_VALID TRUE
 
 // graphics registers all address begin with '8' so as to by pass data cache on NIOS
