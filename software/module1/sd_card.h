@@ -31,7 +31,7 @@ void sd_card_write_points(GPSPoint points[], unsigned long len, char *filename);
 // GPSPointSets that are read and written to the SD card are represented
 // by this schema:
 //
-// {tag0:x0,y0;x1,y1;},{tag1:x2,y2;}
+// {[tag0:x0,y0;x1,y1;][tag1:x2,y2;]}
 //
 // If set 0 contains point 0 "1.0,2.0;" and point 1 "3.0,4.0;' and set
 // 1 contains point 2 "5.0,6.0;", it would be represented as:
