@@ -3,6 +3,14 @@
 
 #include "conversion.h"
 
+#define GPSPOINTSET_POINTSMAXLEN 1024
+
+typedef struct {
+	int tag;  // name of struct (used for ID purposes)
+	int points_len;  // number of GPSPoints in points
+	GPSPoint points[GPSPOINTSET_POINTSMAXLEN];
+} GPSPointSet;
+
 // GPSPoints that are read and written to the SD card are represented
 // by this schema:
 //
