@@ -88,8 +88,8 @@ architecture bhvr of GraphicsController is
 	Signal 	Sig_UDS_Out_L, 
 				Sig_LDS_Out_L, 
 				Sig_RW_Out, 
-				Sig_CE_L,Sig_CE_Temp_L,Sig_UDS_Out_temp_L, Sig_LDS_Out_temp_L,
-				Sig_OE_L, Sig_RW_Out_temp														: Std_Logic;
+				Sig_CE_L,
+				Sig_OE_L																				: Std_Logic;
 	Signal	Sig_Busy_H																			: Std_Logic;
 	
 	Signal	Colour_Latch_Load_H																: Std_Logic;
@@ -139,6 +139,17 @@ architecture bhvr of GraphicsController is
 	constant DrawRectangle							: Std_Logic_Vector(7 downto 0) := X"14";
 	constant DrawRectangle1							: Std_Logic_Vector(7 downto 0) := X"15";
 	constant DrawRectangle2							: Std_Logic_Vector(7 downto 0) := X"16";
+	constant DrawCircle								: Std_Logic_Vector(7 downto 0) := X"17";
+	constant DrawCircle1								: Std_Logic_Vector(7 downto 0) := X"18";
+	constant DrawCircle2								: Std_Logic_Vector(7 downto 0) := X"19";
+	constant DrawCircle3								: Std_Logic_Vector(7 downto 0) := X"1A";
+	constant DrawCircle4								: Std_Logic_Vector(7 downto 0) := X"1B";
+	constant DrawCircle5								: Std_Logic_Vector(7 downto 0) := X"1C";
+	constant DrawCircle6								: Std_Logic_Vector(7 downto 0) := X"1D";
+	constant DrawCircle7								: Std_Logic_Vector(7 downto 0) := X"1E";
+	constant DrawCircle8								: Std_Logic_Vector(7 downto 0) := X"1F";
+	constant DrawCircle9								: Std_Logic_Vector(7 downto 0) := X"20";
+	constant DrawCircle10							: Std_Logic_Vector(7 downto 0) := X"21";
 
 -------------------------------------------------------------------------------------------------------------------------------------------------
 -- Commands that can be written to command register by NIOS to get graphics controller to draw a shape
@@ -150,6 +161,7 @@ architecture bhvr of GraphicsController is
 	constant	GetPixel									: Std_Logic_Vector(15 downto 0) := X"000b";	-- command to Graphics chip from NIOS to read a pixel
 	constant ProgramPallette						: Std_Logic_Vector(15 downto 0) := X"0010";	-- command to Graphics chip from NIOS is program one of the pallettes with a new RGB value
 	constant Rectangle								: Std_Logic_Vector(15 downto 0) := X"0011";	-- command to Graphics chip from NIOS to draw a rectangle
+	constant Circle									: Std_Logic_Vector(15 downto 0) := X"0012";	-- command to Graphics chip from NIOS to draw a circle
 
 ------------------------------------------------------------------------------
 -- Bresenham line and rectangle signals
@@ -570,22 +582,17 @@ end process;
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --	State Machine Registers and XY clipper prevents write if off the screen
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	Process(Clk, Reset_L, Sig_CE_Temp_L, Sig_AddressOut, Colour_latch_load_H, Sig_UDS_Out_temp_L, Sig_LDS_Out_temp_L, Sig_RW_Out_temp)
+	Process(Clk, Reset_L, Sig_AddressOut, Colour_latch_load_H)
 	Begin
-	
 		if(Reset_L = '0') then
 			CurrentState <= Idle; 					-- on reset enter the idle state (always a good idea!!)
 			
 		elsif(Rising_edge(Clk)) then
 			CurrentState <= NextState;				-- with each clock move to the next state (which could be same state if there is nothing to do)
-
------------------------------------------------------------------------------------------------------------------------------------------------------			
--- IMPORTANT -  Make outputs to the Sram SYNCHRONOUS - here, on each rising edge of the clock we copy all our calculated values to the actual Sram memory
---
--- It's important to remember that there is a 1 clock cycle delay from when we generate our calculated signals to when they are
--- actually presented to the graphics controller - remember the "MOORE" model of a state machine
------------------------------------------------------------------------------------------------------------------------------------------------------			
 			
+			-- IMPORTANT -  Make outputs to the Sram SYNCHRONOUS - here, on each rising edge of the clock we copy all our calculated values to the actual Sram memory
+			-- It's important to remember that there is a 1 clock cycle delay from when we generate our calculated signals to when they are
+			-- actually presented to the graphics controller - remember the "MOORE" model of a state machine
 			Sram_AddressOut		<= Sig_AddressOut ;			-- On rising edge of clock copy our calculated address to the Sram
 			Sram_DataOut 			<= Sig_DataOut;				-- On rising edge of clock copy our calculated data to the Sram
 			Sram_UDS_Out_L 		<= Sig_UDS_Out_L;				-- On rising edge of clock copy our calculated UDS value to the Sram
@@ -596,15 +603,14 @@ end process;
 			
 			-- Graphics Busy and scroll signal updates
 			-- turn off Busy during display periods as we will not be drawing, let VGA controller have the Sram during display periods and Graphics during blanking periods
-			GraphicsBusy_H			<= Sig_Busy_H AND (NOT OKToDraw_L);		
+			GraphicsBusy_H			<= Sig_Busy_H AND (NOT OKToDraw_L);
 			VScrollValue 			<= B"00_0000_0000"; 							-- no scrolling implemented so output 0
 			HScrollValue			<= B"00_0000_0000"; 							-- no scrolling implemented so output 0
 			
 			-- copy colour pallette calculated signals to colour pallette memory
 			ColourPalletteAddr	<= Sig_ColourPalletteAddr;
 			ColourPalletteData	<= Sig_ColourPalletteData;
-			ColourPallette_WE_H	<= Sig_ColourPallette_WE_H; 
-	
+			ColourPallette_WE_H	<= Sig_ColourPallette_WE_H;
 		end if; 
 	end process;
 	
@@ -614,15 +620,19 @@ end process;
 	
 	process(CurrentState, CommandWritten_H, Command, X1, X2, Y1, Y2, Colour, OKToDraw_L, VSync_L,
 				BackGroundColour, AS_L, Sram_DataIn, CLK, Colour_Latch, x, y, dx, dy, s1, s2, interchange, error, i)
+		-- for bresenham line
 		variable x2Minusx1 : signed(15 downto 0);
 		variable y2Minusy1 : signed(15 downto 0);
+		
+		-- for bresenham circle
+		variable xToDraw : signed(15 downto 0);
+		variable yToDraw : signed(15 downto 0);
+		variable s2_temp : signed(15 downto 0);
+		variable s2_temp2 : signed(15 downto 0);
 	begin
-	
-	----------------------------------------------------------------------------------------------------------------------------------
-	-- IMPORTANT
-	-- start with default values for EVERY signal (so we do not infer storage for signals inside this process)
-	-- and override as necessary.
-	-----------------------------------------------------------------------------------------------------------------------------------
+		-- IMPORTANT
+		-- start with default values for EVERY signal (so we do not infer storage for signals inside this process)
+		-- and override as necessary.
 		Sig_AddressOut 					<= B"00_0000_0000_0000_0000";			-- got to supply something so it might as well be address 0
 		Sig_DataOut 						<= Colour(7 downto 0) & Colour(7 downto 0);		-- default is to output the value of the colour registers to the Sram data bus
 		Sig_UDS_Out_L 						<= '1';	-- assume upper data bus NOT being accessed
@@ -674,12 +684,9 @@ end process;
 		i_Load_H								<= '0';
 		i_Data								<= X"0000";
 
-		-------------------------------------------------------------------------------------
 		-- IMPORTANT we have to define what the default NEXT state will be. In this case we the state machine
 		-- will return to the IDLE state unless we override this with a different one
-		-------------------------------------------------------------------------------------
-		
-		NextState							<= Idle;	
+		NextState							<= Idle;
 				
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------				
 		if(CurrentState = Idle ) then
@@ -884,7 +891,6 @@ end process;
 					NextState <= DrawHline;
 				end if;
 			else
-				Sig_RW_Out <= '0';
 				NextState <= DrawHline;
 			end if;
 
@@ -910,7 +916,6 @@ end process;
 					NextState <= DrawVline;
 				end if;
 			else
-				Sig_RW_Out <= '0';
 				NextState <= DrawVline;
 			end if;
 			
@@ -1106,7 +1111,6 @@ end process;
 					NextState <= DrawRectangle1;
 				end if;
 			else
-				Sig_RW_Out <= '0';
 				NextState <= DrawRectangle1;
 			end if;
 
@@ -1116,7 +1120,7 @@ end process;
 			-- restore original value of x
 			x_Data <= signed(X1);
 			x_Load_H <= '1';
-			
+
 			Y1_Increment_H <= '1';
 
 			-- move on to horizontal line drawing step unless we are done
@@ -1126,6 +1130,84 @@ end process;
 				NextState <= DrawRectangle1;
 			end if;
 
+------------------------------------------------------------------------------
+		elsif(CurrentState = DrawCircle) then
+------------------------------------------------------------------------------
+			-- X2 holds the radius argument
+			x_Data <= signed(X2);
+			x_Load_H <= '1';
+			y_Data <= X"0000";
+			y_Load_H <= '1';
+
+			-- reuse s2 register for "decisionOver2" from the algorithm
+			s2_Data <= 1 - signed(X2);
+			s2_Load_H <= '1';
+
+			NextState <= DrawCircle1;
+
+------------------------------------------------------------------------------
+		elsif(CurrentState = DrawCircle1) then
+------------------------------------------------------------------------------		
+			-- test y <= x, continue if true or IDLE if false
+			if(y <= x) then
+				NextState <= DrawCircle2;
+			else
+				NextState <= IDLE;
+			end if;
+
+------------------------------------------------------------------------------
+		elsif(CurrentState = DrawCircle2) then
+------------------------------------------------------------------------------
+			-- calculate coordinates for the pixel
+			xToDraw := x + signed(X1); --TODO depends on octant
+			yToDraw := y + signed(Y1); --TODO depends on octant
+
+			-- draw the pixel for octant 1
+			if(OKToDraw_L = '0') then
+				Sig_AddressOut <= std_logic_vector(yToDraw(8 downto 0)
+											& xToDraw(9 downto 1));
+				Sig_RW_Out <= '0';
+
+				if(xToDraw(0) = '0') then
+					Sig_UDS_Out_L <= '0';
+				else
+					Sig_LDS_Out_L <= '0';
+				end if;
+
+				NextState <= DrawCircle10; --TODO should actually be DrawCircle3
+			else
+				NextState <= DrawCircle2; --TODO should be same as current state
+			end if ;
+
+			--TODO need all these states to actually draw a circle
+			--DrawCircle3
+			--DrawCircle4
+			--DrawCircle5
+			--DrawCircle6
+			--DrawCircle7
+			--DrawCircle8
+			--DrawCircle9
+
+------------------------------------------------------------------------------
+		elsif(CurrentState = DrawCircle10) then
+------------------------------------------------------------------------------		
+			y_Data <= y + 1;
+			y_Load_H <= '1';
+
+			if(s2 <= 0) then
+				s2_temp := (y + 1) + 1;
+				s2_Data <= s2_temp(14 downto 0) & '0';
+				s2_Load_H <= '1';
+			else
+				x_Data <= x - 1;
+				x_Load_H <= '1';
+				s2_temp := (y + 1) - (x - 1);
+				s2_temp2 := s2_temp(14 downto 0) & '0';
+				s2_Data <= s2_temp2 + 1;
+				s2_Load_H <= '1';
+			end if;
+
+			NextState <= DrawCircle1;
 		end if;
 
 	end process;
