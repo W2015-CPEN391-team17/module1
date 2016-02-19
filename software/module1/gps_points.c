@@ -336,33 +336,60 @@ void query_log(void){
 	printf("%s", out);
 }
 
-/* Testing function
-int main()
-{
-	printf("Initializing GPS...\n");
+void save_demo_points(void) {
+	float latitude = 49.266700;
+	float longitude = -123.248500;
 	int i = 0;
-	init_gps();
 
-	erase_log();
-
-	start_log();
-
-	for(i = 0; i < 20; i++){
-		log_now();
-		usleep(3000000);
+	for( i = 0; i < 9; i++ ){
+		gps_demo_points[i].lat_float = latitude;
+		gps_demo_points[i].long_float = longitude;
 	}
 
-	//usleep(180000000);
+	for( i = 9; i < 19; i++ ){
+		latitude += 0.000050;
+		longitude += 0.000030;
 
-	stop_log();
+		gps_demo_points[i].lat_float = latitude;
+		gps_demo_points[i].long_float = longitude;
+	}
 
-	save_points();
+	for( i = 19; i < 29; i++ ){
+		longitude += 0.000030;
 
-	//printf("latitude %d: %f  longitude %d: %f\n", place, gps_points[place].lat_float,
-	//										      place, gps_points[place].long_float);
+		gps_demo_points[i].lat_float = latitude;
+		gps_demo_points[i].long_float = longitude;
+	}
 
-	printf("done.");
+	for( i = 29; i < 49; i++ ){
+		gps_demo_points[i].lat_float = latitude;
+		gps_demo_points[i].long_float = longitude;
+	}
 
-	return 0;
+	for( i = 49; i < 69; i++ ){
+		latitude -= 0.000040;
+		longitude -= 0.000050;
+
+		gps_demo_points[i].lat_float = latitude;
+		gps_demo_points[i].long_float = longitude;
+	}
+
+	for( i = 69; i < 79; i++ ){
+		longitude -= 0.000030;
+
+		gps_demo_points[i].lat_float = latitude;
+		gps_demo_points[i].long_float = longitude;
+	}
+
+	for( i = 79; i < 99; i++ ){
+		longitude += 0.000060;
+
+		gps_demo_points[i].lat_float = latitude;
+		gps_demo_points[i].long_float = longitude;
+	}
+
+	for( i = 0; i < 99; i++ ) {
+		printf("latitude %d: %f  longitude %d: %f\n", i, gps_points[i].lat_float,
+													  i, gps_points[i].long_float);
+	}
 }
-*/
