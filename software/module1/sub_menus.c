@@ -90,7 +90,7 @@ void InterpretMenu(Point* p, Colours* scheme){
 
 	str = "Time Back:   %";
 
-	str[11] = (char)(100 * percentageForward / 10 + '0');
+	str[11] = (char)(100 * percentageBack / 10 + '0');
 	str[12] = (char)((int)(100 * percentageBack) % 10 + '0');
 
 	if(str[11] == '0'){
@@ -101,7 +101,9 @@ void InterpretMenu(Point* p, Colours* scheme){
 
 	Text(3*XRES/5, 210, scheme->text, scheme->menuBackground, str, 0);
 
-	*p = GetPress();
+	do{
+		*p = GetPress();
+	}while(p->x > XRES/3 && p->x < 2*XRES/3 && p->y > MENU_TOP);
 }
 
 /*
