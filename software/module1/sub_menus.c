@@ -16,11 +16,22 @@ typedef struct{
 }back_textPair;
 
 
+void initInterpret(int count[HEATMAP_H][HEATMAP_V]){
+
+}
+
 void SaveLoadMenu(Point* p){
 	*p = GetPress();
 }
 
+//CHANGE MAIN
 void InterpretMenu(Point* p){
+	/*WriteFilledRectangle(0, 0, XRES-1, MENU_TOP-1, scheme->menuBackground);
+
+	char* str = "Time on Right:   %";
+
+
+	Text(2*XRES/5, 10, scheme->text, scheme->menuBackground, , 0);*/
 	*p = GetPress();
 }
 
