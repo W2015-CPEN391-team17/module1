@@ -155,7 +155,6 @@ void save_points(void){
 	}
 
 	for(log_count = 0; log_count < 9; log_count++){
-
 			strcpy(cur_string, (const char *)gps_log[log_count].string);
 
 			lat_count = 24;
