@@ -157,7 +157,6 @@ void save_points(void){
 	for(log_count = 0; log_count < 9; log_count++){
 
 			strcpy(cur_string, (const char *)gps_log[log_count].string);
-			printf("%s\n", cur_string);
 
 			lat_count = 24;
 			long_count = 33;
@@ -205,10 +204,9 @@ void save_points(void){
 			}
 		}
 
-		for(log_count = 9; log_count < 13; log_count++){
+		for(log_count = 9; log_count < 12; log_count++){
 
 				strcpy(cur_string, (const char *)gps_log[log_count].string);
-				printf("%s\n", cur_string);
 
 				lat_count = 25;
 				long_count = 34;
