@@ -31,10 +31,76 @@ Colours colorScheme;
 
 #define GPSPOINTLEN 2
 
+void write_demo_screen(void) {
+	clear_screen(BLACK);
+
+	int colour = LIME;
+
+
+	int x = 0;
+	for(x = 0; x <= XRES-1; x++) {
+		  WriteLine(XRES/8, YRES/8, x, 0, colour);
+		  if (colour == LIME) {
+			  colour = WHITE;
+		  } else {
+			  colour = LIME;
+		  }
+	}
+	for(x = XRES-1; x >= 0; x--) {
+		  WriteLine(XRES/8, YRES/8, x, YRES-1, colour);
+		  if (colour == LIME) {
+			  colour = WHITE;
+		  } else {
+			  colour = LIME;
+		  }
+	}
+	int y = 0;
+	for(y = 0; y <= YRES-1; y++) {
+		  WriteLine(XRES/8, YRES/8, 0, y, colour);
+		  if (colour == LIME) {
+			  colour = WHITE;
+		  } else {
+			  colour = LIME;
+		  }
+	}
+	for(y = YRES-1; y >= 0; y--) {
+		  WriteLine(XRES/8, YRES/8, XRES-1, y, colour);
+		  if (colour == LIME) {
+			  colour = WHITE;
+		  } else {
+			  colour = LIME;
+		  }
+	}
+
+	int i = 0;
+	int j = 200;
+	int k = 0;
+	int n = 23;
+	int s = 0;
+	colour = 1;
+	while(TRUE) {
+		int r = 0;
+		x = XRES/8;
+		y = YRES/8;
+		s++;
+		for(r = 0; r <= YRES/4; r = r + 5) {
+			j = (n + j + 1) % 500;
+			n = (n + k*j) % 350;
+			k = (k + j + n + r) % 50;
+			colour = (colour + n + j + k + r + s) % 8;
+			x = x + 10;
+			y = y + 10;
+			WriteCircle(x, y, r, colour);
+		}
+	}
+}
+
 int main()
 {
   printf("Starting module 1 code.\n");
+  write_demo_screen();
 
+/*
   initialize();
 
   // Test writing and reading points
@@ -54,6 +120,7 @@ int main()
 
   // Should never reach this point, but here in case we implement an exit button.
   cleanup();
+*/
   printf("Program terminated.\n");
 
   return 0;
