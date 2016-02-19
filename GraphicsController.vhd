@@ -725,6 +725,8 @@ end process;
 				NextState <= DrawLine;
 			elsif(Command = Rectangle) then
 				NextState <= DrawRectangle;
+			elsif(Command = Circle) then
+				NextState <= DrawCircle;
 			end if;
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

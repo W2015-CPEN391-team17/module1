@@ -290,7 +290,49 @@ void FilledRectangle(int x1, int y1, int x2, int y2, int color)
 }
 
 /*
- * Draw a circle
+ * Draw a circle (hardware-accelerated)
+ * Prints an error message and returns without drawing anything if any points would be off screen
+ */
+void WriteCircle(int x0, int y0, int radius, int color)
+{
+	if (ASSERT_POINTS_ARE_VALID && !check_if_point_is_on_screen(x0, y0)) {
+		printf("ERROR: DrawCircle failed for center point (%d,%d)\n", x0, y0);
+		return;
+	}
+
+	if (ASSERT_POINTS_ARE_VALID && !check_if_point_is_on_screen(x0+radius, y0)) {
+		printf("ERROR: DrawCircle failed in positive x direction (%d,%d)\n", x0+radius, y0);
+		return;
+	}
+
+	if (ASSERT_POINTS_ARE_VALID && !check_if_point_is_on_screen(x0, y0+radius)) {
+		printf("ERROR: DrawCircle failed in positive y direction (%d,%d)\n", x0, y0+radius);
+		return;
+	}
+
+	if (ASSERT_POINTS_ARE_VALID && !check_if_point_is_on_screen(x0-radius, y0)) {
+		printf("ERROR: DrawCircle failed in negative x direction (%d,%d)\n", x0-radius, y0);
+		return;
+	}
+
+	if (ASSERT_POINTS_ARE_VALID && !check_if_point_is_on_screen(x0, y0-radius)) {
+		printf("ERROR: DrawCircle failed in negative y direction (%d,%d)\n", x0, y0-radius);
+		return;
+	}
+
+	printf("WARNING WriteCircle may not be implemented\n");
+
+	WAIT_FOR_GRAPHICS;
+
+	GraphicsX1Reg = x0;
+	GraphicsY1Reg = y0;
+	GraphicsX2Reg = radius; //pass in radius using X2 reg
+	GraphicsColourReg = color;
+	GraphicsCommandReg = DrawCircle;
+}
+
+/*
+ * Draw a circle (one pixel at a time)
  * Prints an error message and returns without drawing anything if any points would be off screen
  */
 void Circle(int x0, int y0, int radius, int color)
@@ -350,7 +392,6 @@ void Circle(int x0, int y0, int radius, int color)
  * Note: Writing a space character with erase set to true will set all pixels
  * in the character to the background colour
  */
-
 void Text(int x, int y, int font_color, int background_color, char *text, int erase)
 {
 	const int text_char_x_size = 12;
@@ -480,7 +521,7 @@ void Line(int x1, int y1, int x2, int y2, int Colour)
 }
 
 /*******************************************************************************
-* Compare software and hardware lines to check for off-by-one-errors
+* Compare functions to check for correctness
 * Use for testing only
 *******************************************************************************/
 void write_test_screen() {
@@ -593,4 +634,10 @@ void write_test_screen() {
 	// odd to odd
 	FilledRectangle(601, 350, 701, 400, WHITE);
 	WriteFilledRectangle(601, 350, 701, 400, LIME);
+
+	// compare circles
+	WriteCircle(500, 100, 50, LIME);
+	//Circle(500, 100, 50, WHITE);
+	//Circle(700, 100, 50, WHITE);
+	WriteCircle(700, 100, 50, LIME);
 }
