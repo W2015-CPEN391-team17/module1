@@ -257,6 +257,7 @@ void save_points(void){
 			}
 
 		return;
+
 }
 
 // log_now will log a point at that instant. Ensure you sleep 3 seconds before
