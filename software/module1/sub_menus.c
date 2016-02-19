@@ -48,12 +48,57 @@ void SaveLoadMenu(Point* p){
 
 //CHANGE MAIN
 void InterpretMenu(Point* p, Colours* scheme){
-	/*WriteFilledRectangle(0, 0, XRES-1, MENU_TOP-1, scheme->menuBackground);
+	WriteFilledRectangle(0, 0, XRES-1, MENU_TOP-1, scheme->menuBackground);
 
 	char* str = "Time on Right:   %";
+	str[15] = percentageRight / 10 + '0';
+	str[16] = percentageRight % 10 + '0';
 
+	if(str[15] == '0'){
+		str[15] = str[16];
+		str[16] = '%';
+		str[17] = '\0';
+	}
 
-	Text(2*XRES/5, 10, scheme->text, scheme->menuBackground, , 0);*/
+	Text(2*XRES/5, 10, scheme->text, scheme->menuBackground, str, 0);
+
+	str = "Time on Left:   %"
+
+	str[14] = percentageLeft / 10 + '0';
+	str[15] = percentageLeft % 10 + '0';
+
+	if(str[14] == '0'){
+		str[14] = str[16];
+		str[15] = '%';
+		str[16] = '\0';
+	}
+
+	Text(2*XRES/5, 210, scheme->text, scheme->menuBackground, str, 0);
+
+	str = "Time Forward:   %";
+
+	str[14] = percentageForward / 10 + '0';
+	str[15] = percentageForward % 10 + '0';
+
+	if(str[14] == '0'){
+		str[14] = str[16];
+		str[15] = '%';
+		str[16] = '\0';
+	}
+
+	Text(4*XRES/5, 10, scheme->text, scheme->menuBackground, str, 0);
+
+	str = "Time Back:   %";
+
+	str[11] = percentageBack / 10 + '0';
+	str[12] = percentageBack % 10 + '0';
+
+	if(str[11] == '0'){
+		str[11] = str[16];
+		str[12] = '%';
+		str[13] = '\0';
+	}
+
 	*p = GetPress();
 }
 
