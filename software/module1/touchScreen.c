@@ -7,7 +7,9 @@
 
 #include <stdio.h>
 #include "touchScreen.h"
+#include "graphics.h"
 
+//define memory locations
 #define TOUCH_CONTROL (*(volatile unsigned char *) (0x84000230))
 #define TOUCH_STATUS (*(volatile unsigned char *) (0x84000230))
 #define TOUCH_TX (*(volatile unsigned char *) (0x84000232))
@@ -17,10 +19,10 @@
 #define TOUCH_STATUS_RX_MASK 0x01
 #define TOUCH_STATUS_TX_MASK 0x02
 
-void Init_Touch ( void )
-{
 // Program 6850 and baud rate generator to communicate with touchscreen
 // send touchscreen controller an "enable touch" command
+void Init_Touch ( void )
+{
 	TOUCH_CONTROL = 0x03;
 	TOUCH_BAUD = 0x07;
 	TOUCH_CONTROL = 0x15;
@@ -50,10 +52,10 @@ void Init_Touch ( void )
 /*****************************************************************************
 **   test if screen touched
 *****************************************************************************/
-int ScreenTouched( void)
-{
 // return TRUE if any data received from 6850 connected to touchscreen
 // or FALSE otherwise
+int ScreenTouched( void)
+{
 	if(TOUCH_STATUS_RX_MASK & TOUCH_STATUS){
 		if(TOUCH_RX == 0x81){
 			return 1;
@@ -78,11 +80,12 @@ a touch screen press
 event
 and returns X,Y coord
 *****************************************************************************/
+// wait for a pen down command then return the X,Y coord of the point
+// calibrated correctly so that it maps to a pixel on screen
 Point GetPress(void)
 {
 Point p1;
-// wait for a pen down command then return the X,Y coord of the point
-// calibrated correctly so that it maps to a pixel on screen
+
 WaitForTouch();
 
 while(!(TOUCH_STATUS_RX_MASK & TOUCH_STATUS))
@@ -102,9 +105,9 @@ while(!(TOUCH_STATUS_RX_MASK & TOUCH_STATUS))
 	;
 p1.y += TOUCH_RX << 7;
 
-p1.x = (int) ((p1.x) / 4090.0 * 800.0);
+p1.x = (int) ((p1.x) / 4090.0 * (double)XRES);
 
-p1.y = (int) ((p1.y - 30) / 4070.0 * 480.0);
+p1.y = (int) ((p1.y - 30) / 4070.0 * (double)YRES);
 return p1;
 }
 /*****************************************************************************
@@ -114,10 +117,10 @@ a touch screen release
 event
 and returns X,Y coord
 *****************************************************************************/
-Point GetRelease(void){
-	Point p1;
 // wait for a pen up command then return the X,Y coord of the point
 // calibrated correctly so that it maps to a pixel on screen
+Point GetRelease(void){
+	Point p1;
 	while(1){
 		if(TOUCH_STATUS_RX_MASK & TOUCH_STATUS){
 			if(TOUCH_RX == 0x80){
@@ -143,8 +146,8 @@ while(!(TOUCH_STATUS_RX_MASK & TOUCH_STATUS))
 		;
 	p1.y += TOUCH_RX << 7;
 
-	p1.x = (int) ((p1.x) / 4090.0 * 800.0);
+	p1.x = (int) ((p1.x) / 4090.0 * (double)XRES);
 
-	p1.y = (int) ((p1.y - 30) / 4070.0 * 480.0);
+	p1.y = (int) ((p1.y - 30) / 4070.0 * (double)YRES);
 	return p1;
 }
