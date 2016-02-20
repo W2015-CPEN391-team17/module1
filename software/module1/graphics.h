@@ -10,6 +10,10 @@
 
 #define XRES 800
 #define YRES 480
+// Heatmap properties
+#define HEATMAP_H 10
+#define HEATMAP_V 6
+#define HM_SHADES 10
 
 // Screen divisions.
 #define MENU_TOP 440
@@ -56,6 +60,15 @@
 #define	MAGENTA			7
 
 #define NCOLOURS 8
+
+//Struct for colour set
+typedef struct{
+	int menuBackground;
+	int text;
+	int connectTheDotsLine;
+	int pairNum;
+	int shades[HM_SHADES];
+}Colours;
 
 void WriteAPixel(int x, int y, int Colour);
 void WriteHLine(int x1, int y1, int length, int Colour);

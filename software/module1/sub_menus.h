@@ -9,19 +9,11 @@
 #define SUB_MENUS_H_
 
 #include "touchScreen.h"
-#include "heatmap.h"
+#include "graphics.h"
 
 #define NPAIRS 3 //Number of text/background colours
 #define INITPAIR 0 //Should stay 0
 #define BUFFER_BTW_BUTTONS 50 //Amount of black pixels between buttons
-
-//Struct for colour set
-typedef struct{
-	int menuBackground;
-	int text;
-	int connectTheDotsLine;
-	int pairNum;
-}Colours;
 
 void initInterpret(int count[HEATMAP_H][HEATMAP_V], int nPoints);
 

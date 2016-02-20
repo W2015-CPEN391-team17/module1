@@ -7,6 +7,7 @@
 #include <Altera_UP_SD_Card_Avalon_Interface.h>
 #include "conversion.h"
 #include "touchScreen.h"
+#include "colours.h"
 #include "graphics.h"
 #include "heatmap.h"
 #include "bluetooth.h"
@@ -18,17 +19,17 @@
 void initialize(void);
 void cleanup(void);
 
-// Drawing functions.
+// Data-independent drawing functions.
 void draw_field(void);
-void draw_data(GPSPoint points[], int numPoints);
 void draw_menu(void);
 void write_demo_screen(void);
-void connect_points(GPSPoint points[], int numPoints);
 
 // Main menu function
 void main_menu(void);
 
-Colours colorScheme;
+// Draw settings
+Colours colourScheme;
+int draw_mode;
 
 #define GPSPOINTLEN 2
 #define GPSPOINTSETLEN 2
@@ -84,10 +85,22 @@ int main()
 
 void initialize(void)
 {
-	colorScheme.menuBackground = WHITE;
-	colorScheme.text = BLACK;
-	colorScheme.connectTheDotsLine = BLACK;
-	colorScheme.pairNum = INITPAIR;
+	colourScheme.menuBackground = WHITE;
+	colourScheme.text = BLACK;
+	colourScheme.connectTheDotsLine = BLACK;
+	colourScheme.pairNum = INITPAIR;
+	colourScheme.shades[0] = OLIVE_DRAB;
+	colourScheme.shades[1] = YELLOW_GREEN;
+	colourScheme.shades[2] = LAWN_GREEN;
+	colourScheme.shades[3] = GREEN_YELLOW;
+	colourScheme.shades[4] = YELLOW;
+	colourScheme.shades[5] = GOLD;
+	colourScheme.shades[6] = ORANGE;
+	colourScheme.shades[7] = DARK_ORANGE;
+	colourScheme.shades[8] = ORANGE_RED;
+	colourScheme.shades[9] = RED;
+
+	draw_mode = MODE_HEATMAP;
 
 	init_gps();
 	Init_Touch();
@@ -115,21 +128,15 @@ void draw_field(void)
 	WriteHLine(XRES-GOAL_WIDTH, 3*MENU_TOP/4, GOAL_WIDTH-1, BLACK);
 }
 
-void draw_data(GPSPoint points[], int numPoints)
-{
-	draw_heatmap(points, numPoints);
-	draw_field();
-}
-
 void draw_menu(void)
 {
-	WriteFilledRectangle(0, MENU_TOP, XRES-1, YRES-1, colorScheme.menuBackground);
+	WriteFilledRectangle(0, MENU_TOP, XRES-1, YRES-1, colourScheme.menuBackground);
 	WriteHLine(0, MENU_TOP, XRES - 1, BLACK);
 	WriteVLine(XRES/3, MENU_TOP, YRES - MENU_TOP - 1, BLACK);
 	WriteVLine(XRES*2/3, MENU_TOP, YRES - MENU_TOP - 1, BLACK);
-	Text(10, (MENU_TOP + YRES)/2, colorScheme.text, colorScheme.menuBackground, "Save/Load", 0);
-	Text(XRES/3 + 10, (MENU_TOP + YRES)/2, colorScheme.text, colorScheme.menuBackground, "Interpret", 0);
-	Text(XRES*2/3 + 10, (MENU_TOP + YRES)/2, colorScheme.text, colorScheme.menuBackground, "Settings", 0);
+	Text(10, (MENU_TOP + YRES)/2, colourScheme.text, colourScheme.menuBackground, "Save/Load", 0);
+	Text(XRES/3 + 10, (MENU_TOP + YRES)/2, colourScheme.text, colourScheme.menuBackground, "Interpret", 0);
+	Text(XRES*2/3 + 10, (MENU_TOP + YRES)/2, colourScheme.text, colourScheme.menuBackground, "Settings", 0);
 }
 
 void main_menu(void)
@@ -160,13 +167,15 @@ void main_menu(void)
 	fake[8] = p8;
 	fake[9] = p9;
 
-	draw_data(fake, 10);
+	int numPoints = 10; // placeholder to avoid magic numbers
+
+	draw_data(fake, numPoints, colourScheme, draw_mode);
 	draw_field();
 	draw_menu();
 	Text(0, 0, BLACK, WHITE, "Main Menu", 0);
 	Point p;
 	p.y = 0;
-	int showing_heatmap = TRUE;
+
 	while(1)
 	{
 		if(p.y < MENU_TOP){
@@ -174,31 +183,23 @@ void main_menu(void)
 		}
 
 		if(p.y < MENU_TOP){
-			if (showing_heatmap) {
-				showing_heatmap = FALSE;
-				connect_points(fake, 10);
-				GetRelease();
-			} else {
-				showing_heatmap = TRUE;
-				draw_data(fake, 10);
-				GetRelease();
-			}
+			draw_mode = (draw_mode + 1) % NUM_DRAW_MODES; // Cycle draw modes
+			draw_data(fake, 10, colourScheme, draw_mode);
+			draw_field();
+			GetRelease();
 		}else{
 			if(p.x < XRES / 3){
 				//Save/Load touched
-				SaveLoadMenu(&p, &colorScheme);
+				SaveLoadMenu(&p, &colourScheme);
 			}else if(p.x < 2 * XRES / 3){
 				//Interpret touched
-				InterpretMenu(&p, &colorScheme);
+				InterpretMenu(&p, &colourScheme);
 			}else{
 				//Settings touched
-				SettingsMenu(&p, &colorScheme);
+				SettingsMenu(&p, &colourScheme);
 				if(p.y < MENU_TOP){
-					if (showing_heatmap) {
-						draw_data(fake, 10);
-					} else {
-						connect_points(fake, 10);
-					}
+					draw_data(fake, numPoints, colourScheme, draw_mode);
+					draw_field();
 				}
 				draw_menu();
 				GetRelease();
@@ -266,23 +267,5 @@ void write_demo_screen(void) {
 			y = y + 10;
 			WriteCircle(x, y, r, colour);
 		}
-	}
-}
-
-void connect_points(GPSPoint points[], int numPoints)
-{
-	WriteFilledRectangle(0,0,XRES-1,MENU_TOP-1,WHITE);
-	draw_field();
-
-	int colour = colorScheme.connectTheDotsLine;
-
-	GPSPoint point_a;
-	GPSPoint point_b;
-	int i;
-	for(i = 1; i < numPoints; i++) {
-		point_a = points[i-1];
-		point_b = points[i];
-		// draw a line from point_a to point_b
-		WriteLine((int)point_a.x, (int)point_a.y, (int)point_b.x, (int)point_b.y, colour);
 	}
 }
