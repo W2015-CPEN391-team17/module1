@@ -43,9 +43,33 @@ void initInterpret(int count[HEATMAP_H][HEATMAP_V], int nPoints){
 }
 
 void SaveLoadMenu(Point* p, Colours* scheme){
-	WriteFilledRectangle(0, 0, XRES-1, MENU_TOP-1, scheme->menuBackground);
+	WriteFilledRectangle(0, 0, XRES-1, MENU_TOP-1, WHITE);
+
+	if(scheme->menuBackground == WHITE){
+		Rectangle(XRES/5, YRES/4, XRES/5+5*BUFFER_BTW_BUTTONS/4, YRES/4+5*BUFFER_BTW_BUTTONS/4, BLACK);
+		Rectangle(4*XRES/5, YRES/4, XRES/5+5*BUFFER_BTW_BUTTONS/4, YRES/4+5*BUFFER_BTW_BUTTONS/4, BLACK);
+		Rectangle(XRES/5, YRES/4 + BUFFER_BTW_BUTTONS, XRES/5 + 100, YRES/4 + BUFFER_BTW_BUTTONS + 50, BLACK);
+		Rectangle(4*XRES/5+5*BUFFER_BTW_BUTTONS/4-100, YRES/4 + BUFFER_BTW_BUTTONS, 4*XRES/5+5*BUFFER_BTW_BUTTONS/4, YRES/4 + BUFFER_BTW_BUTTONS + 50, BLACK);
+
+	}else{
+		WriteFilledRectangle(XRES/5, YRES/4, 5*BUFFER_BTW_BUTTONS/4, 5*BUFFER_BTW_BUTTONS/4, scheme->menuBackground);
+		WriteFilledRectangle(4*XRES/5, YRES/4, 5*BUFFER_BTW_BUTTONS/4, 5*BUFFER_BTW_BUTTONS/4, scheme->menuBackground);
+		WriteFilledRectangle(XRES/5, YRES/4 + BUFFER_BTW_BUTTONS, 100, 50, scheme->menuBackground);
+		WriteFilledRectangle(4*XRES/5+BUFFER_BTW_BUTTONS-100, YRES/4 + BUFFER_BTW_BUTTONS, 100, 50, scheme->menuBackground);
+	}
+
+	Text(XRES/5 + 1, YRES/4 + 10, scheme->text, scheme->menuBackground, "<", 0);
+	Text(4*XRES/5 + 1, YRES/4 + 10, scheme->text, scheme->menuBackground, ">", 0);
+	Text(XRES/5 + 1, YRES/4 + BUFFER_BTW_BUTTONS + 10, scheme->text, scheme->menuBackground, "Load", 0);
+	Text(4*XRES/5+BUFFER_BTW_BUTTONS-100 + 1, YRES/4 + BUFFER_BTW_BUTTONS + 10, scheme->text, scheme->menuBackground, "Save", 0);
+
+	int set = 0;//0 == GPS, else dataSet = set - 1.
+	char* str = calloc(10, sizeof(char));
+	Text(XRES/5 + 5*BUFFER_BTW_BUTTONS/4 + 10, YRES/4, scheme->text, scheme->menuBackground, "GPS");
 
 	*p = GetPress();
+
+	free(str);
 }
 
 //CHANGE MAIN
