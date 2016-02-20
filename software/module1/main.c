@@ -41,6 +41,7 @@ int main()
 
   initialize();
 
+  // save_points(); // this line will save the logged GPS data into to array gps_points[].
   // Test writing and reading points
   GPSPoint points0[GPSPOINTLEN];
   GPSPoint p0;
