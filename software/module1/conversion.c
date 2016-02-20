@@ -9,7 +9,7 @@
 #include "graphics.h" //for XRES/YRES and MENU_TOP
 #include "gps_points.h"
 
-#include <math.h>
+//#include <math.h>
 
 /*
  *Assumes field is in line with lat/long. Converts global array (ugh) of gps_points to array of GPSPoint scaled to screen pixels.
@@ -20,12 +20,12 @@ GPSPoint* convertGPSPoints( int nPoints ){
 	GPSPoint* points = calloc(nPoints, sizeof(GPSPoint));
 
 	double mX = (double) XRES / (TOPRIGHTLONG - TOPLEFTLONG);
-	double mY = (double) MENU_TOP / (TOPLEFTLAT - BOTRIGHTLAT);
+	double mY = (double) MENU_TOP / (TOPRIGHTLAT - BOTRIGHTLAT);
 
 	int i;
 	for(i = 0; i < nPoints; i++){
 		points[i].x = mX * (gps_points[i].long_float - TOPLEFTLONG);
-		points[i].y = mY * (gps_points[i].lat_float - BOTRIGHTLAT);
+		points[i].y = MENU_TOP - (mY * (gps_points[i].lat_float - BOTRIGHTLAT));
 
 		if(points[i].x > XRES && points[i].x < XRES + 1){
 			points[i].x = XRES;
