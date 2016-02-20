@@ -25,11 +25,6 @@ struct points {
 	int long_swapped;
 };
 
-struct demo_points {
-	float lat_float;
-	float long_float;
-};
-
 struct logs {
 	char string[256];
 };

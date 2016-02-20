@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "gps_points.h"
+#include "graphics.h"
 
 //call this function at the start of the program before
 //attempting to read or write
@@ -129,6 +130,14 @@ void save_points(void){
 
 	printf("starting dump\n");
 	int i, lat_count, lat_end, long_count, long_end, save_count;
+	int j = 200;
+	int k = 0;
+	int n = 23;
+	int s = 0;
+	int colour = 1;
+	int x = XRES/4;
+	int y = YRES/2;
+	int r = XRES/8;
 	int count, log_count = 0;
 	int place = 0;
 	const char command[] = "$PMTK622,1*29\r\n";
@@ -152,109 +161,103 @@ void save_points(void){
 
 	for(log_count = 1; log_count < 20; log_count++){
 		read_string(gps_log[log_count].string);
+		j = (n + j + 1) % 500;
+		n = (n + k*j) % 350;
+		k = (k + j + n + r) % 50;
+		colour = (colour + n + j + k + r + s) % 8;
+		x += (XRES-(XRES/2))/20;
+		WriteCircle(x, y, r, colour);
 	}
 
 	for(log_count = 0; log_count < 9; log_count++){
 
-			strcpy(cur_string, (const char *)gps_log[log_count].string);
+		strcpy(cur_string, (const char *)gps_log[log_count].string);
 
-			lat_count = 24;
-			long_count = 33;
-			lat_end = 32;
-			long_end = 41;
+		lat_count = 24;
+		long_count = 33;
+		lat_end = 32;
+		long_end = 41;
 
-			for(count = 0; count < 6; count++){
-				save_count = 0;
-				while(lat_count <= lat_end){
-					if(cur_string[lat_count] != ','){
-						gps_points[place].latitude[save_count] = cur_string[lat_count];
-						lat_count++;
-						save_count++;
-					}
-					else
-						lat_count++;
+		for(count = 0; count < 6; count++){
+			save_count = 0;
+			while(lat_count <= lat_end){
+				if(cur_string[lat_count] != ','){
+					gps_points[place].latitude[save_count] = cur_string[lat_count];
+					lat_count++;
+					save_count++;
 				}
-				save_count = 0;
-				while(long_count <= long_end){
-					if(cur_string[long_count] != ','){
-						gps_points[place].longitude[save_count] = cur_string[long_count];
-						long_count++;
-						save_count++;
-					}
-					else
-						long_count++;
-				}
-				gps_points[place].long_swapped = swapEndian(gps_points[place].longitude);
-				gps_points[place].lat_swapped = swapEndian(gps_points[place].latitude);
-
-				gps_points[place].long_float = FloatToLongitudeConversion(gps_points[place].long_swapped);
-				gps_points[place].lat_float = FloatToLatitudeConversion(gps_points[place].lat_swapped);
-
-				//strcpy(gps_points[place].latitude, FloatToLatitudeConversion(gps_points[place].lat_swapped));
-				//strcpy(gps_points[place].longitude, FloatToLongitudeConversion(gps_points[place].long_swapped));
-
-				printf("latitude %d: %f  longitude %d: %f\n", place, gps_points[place].lat_float,
-															  place, gps_points[place].long_float);
-
-				place++;
-				lat_count += 27;
-				long_count += 27;
-				lat_end += 36;
-				long_end += 36;
+				else
+					lat_count++;
 			}
+			save_count = 0;
+			while(long_count <= long_end){
+				if(cur_string[long_count] != ','){
+					gps_points[place].longitude[save_count] = cur_string[long_count];
+					long_count++;
+					save_count++;
+				}
+				else
+					long_count++;
+			}
+			gps_points[place].long_swapped = swapEndian(gps_points[place].longitude);
+			gps_points[place].lat_swapped = swapEndian(gps_points[place].latitude);
+
+			gps_points[place].long_float = FloatToLongitudeConversion(gps_points[place].long_swapped);
+			gps_points[place].lat_float = FloatToLatitudeConversion(gps_points[place].lat_swapped);
+
+			place++;
+			lat_count += 27;
+			long_count += 27;
+			lat_end += 36;
+			long_end += 36;
 		}
+	}
 
-		for(log_count = 9; log_count < 12; log_count++){
+	for(log_count = 9; log_count < 12; log_count++){
 
-				strcpy(cur_string, (const char *)gps_log[log_count].string);
+		strcpy(cur_string, (const char *)gps_log[log_count].string);
 
-				lat_count = 25;
-				long_count = 34;
-				lat_end = 33;
-				long_end = 42;
+		lat_count = 25;
+		long_count = 34;
+		lat_end = 33;
+		long_end = 42;
 
-				for(count = 0; count < 6; count++){
-					save_count = 0;
-					while(lat_count <= lat_end){
-						if(cur_string[lat_count] != ','){
-							gps_points[place].latitude[save_count] = cur_string[lat_count];
-							lat_count++;
-							save_count++;
-						}
-						else
-							lat_count++;
-					}
-					save_count = 0;
-					while(long_count <= long_end){
-						if(cur_string[long_count] != ','){
-							gps_points[place].longitude[save_count] = cur_string[long_count];
-							long_count++;
-							save_count++;
-						}
-						else
-							long_count++;
-					}
-					gps_points[place].long_swapped = swapEndian(gps_points[place].longitude);
-					gps_points[place].lat_swapped = swapEndian(gps_points[place].latitude);
-
-					gps_points[place].long_float = FloatToLongitudeConversion(gps_points[place].long_swapped);
-					gps_points[place].lat_float = FloatToLatitudeConversion(gps_points[place].lat_swapped);
-
-					//strcpy(gps_points[place].latitude, FloatToLatitudeConversion(gps_points[place].lat_swapped));
-					//strcpy(gps_points[place].longitude, FloatToLongitudeConversion(gps_points[place].long_swapped));
-
-					printf("latitude %d: %f  longitude %d: %f\n", place, gps_points[place].lat_float,
-																  place, gps_points[place].long_float);
-
-					place++;
-					lat_count += 27;
-					long_count += 27;
-					lat_end += 36;
-					long_end += 36;
+		for(count = 0; count < 6; count++){
+			save_count = 0;
+			while(lat_count <= lat_end){
+				if(cur_string[lat_count] != ','){
+					gps_points[place].latitude[save_count] = cur_string[lat_count];
+					lat_count++;
+					save_count++;
 				}
+				else
+					lat_count++;
 			}
+			save_count = 0;
+			while(long_count <= long_end){
+				if(cur_string[long_count] != ','){
+					gps_points[place].longitude[save_count] = cur_string[long_count];
+					long_count++;
+					save_count++;
+				}
+				else
+					long_count++;
+			}
+			gps_points[place].long_swapped = swapEndian(gps_points[place].longitude);
+			gps_points[place].lat_swapped = swapEndian(gps_points[place].latitude);
 
-		return;
+			gps_points[place].long_float = FloatToLongitudeConversion(gps_points[place].long_swapped);
+			gps_points[place].lat_float = FloatToLatitudeConversion(gps_points[place].lat_swapped);
+
+			place++;
+			lat_count += 27;
+			long_count += 27;
+			lat_end += 36;
+			long_end += 36;
+		}
+	}
+
+	return;
 
 }
 
@@ -337,57 +340,65 @@ void query_log(void){
 }
 
 void save_demo_points(void) {
-	float latitude = 49.266700;
-	float longitude = -123.248500;
+	float latitude = 49.266500;
+	float longitude = -123.248000;
 	int i = 0;
 
-	for( i = 0; i < 9; i++ ){
-		gps_demo_points[i].lat_float = latitude;
-		gps_demo_points[i].long_float = longitude;
+	for( i = 0; i < 49; i++ ){
+		latitude += 0.000020;
+		longitude -= 0.000020;
+
+		gps_points[i].lat_float = latitude;
+		gps_points[i].long_float = longitude;
+	}
+	for( i = 49; i < 99; i++ ){
+		gps_points[i].lat_float = latitude;
+		gps_points[i].long_float = longitude;
 	}
 
+/*
 	for( i = 9; i < 19; i++ ){
-		latitude += 0.000050;
-		longitude += 0.000030;
+		latitude -= 0.000050;
+		longitude -= 0.000030;
 
-		gps_demo_points[i].lat_float = latitude;
-		gps_demo_points[i].long_float = longitude;
+		gps_points[i].lat_float = latitude;
+		gps_points[i].long_float = longitude;
 	}
 
 	for( i = 19; i < 29; i++ ){
-		longitude += 0.000030;
+		longitude -= 0.000030;
 
-		gps_demo_points[i].lat_float = latitude;
-		gps_demo_points[i].long_float = longitude;
+		gps_points[i].lat_float = latitude;
+		gps_points[i].long_float = longitude;
 	}
 
 	for( i = 29; i < 49; i++ ){
-		gps_demo_points[i].lat_float = latitude;
-		gps_demo_points[i].long_float = longitude;
+		gps_points[i].lat_float = latitude;
+		gps_points[i].long_float = longitude;
 	}
 
 	for( i = 49; i < 69; i++ ){
 		latitude -= 0.000040;
 		longitude -= 0.000050;
 
-		gps_demo_points[i].lat_float = latitude;
-		gps_demo_points[i].long_float = longitude;
+		gps_points[i].lat_float = latitude;
+		gps_points[i].long_float = longitude;
 	}
 
 	for( i = 69; i < 79; i++ ){
 		longitude -= 0.000030;
 
-		gps_demo_points[i].lat_float = latitude;
-		gps_demo_points[i].long_float = longitude;
+		gps_points[i].lat_float = latitude;
+		gps_points[i].long_float = longitude;
 	}
 
 	for( i = 79; i < 99; i++ ){
-		longitude += 0.000060;
+		longitude -= 0.000060;
 
-		gps_demo_points[i].lat_float = latitude;
-		gps_demo_points[i].long_float = longitude;
+		gps_points[i].lat_float = latitude;
+		gps_points[i].long_float = longitude;
 	}
-
+*/
 	for( i = 0; i < 99; i++ ) {
 		printf("latitude %d: %f  longitude %d: %f\n", i, gps_points[i].lat_float,
 													  i, gps_points[i].long_float);
