@@ -8,6 +8,7 @@
 #include "sub_menus.h"
 #include "graphics.h"
 #include "touchScreen.h"
+#include "datasets.h"
 
 //Struct for background/text colour pairs - only a limited selection are available to the user
 typedef struct{
@@ -49,13 +50,12 @@ void SaveLoadMenu(Point* p, Colours* scheme){
 		Rectangle(XRES/5, YRES/4, (5*BUFFER_BTW_BUTTONS/4) + XRES/5, 5*BUFFER_BTW_BUTTONS/4 + YRES/4, BLACK);
 		Rectangle(4*XRES/5 - (5*BUFFER_BTW_BUTTONS/4), YRES/4,  4*XRES/5, 5*BUFFER_BTW_BUTTONS/4 + YRES/4, BLACK);
 		Rectangle(XRES/5, 5*BUFFER_BTW_BUTTONS/4 + YRES/4 + BUFFER_BTW_BUTTONS, 100 + XRES/5, 50 + YRES/4 + 5*BUFFER_BTW_BUTTONS/4 + BUFFER_BTW_BUTTONS, BLACK);
-		Rectangle(4*XRES/5-100, 5*BUFFER_BTW_BUTTONS/4 + YRES/4 + BUFFER_BTW_BUTTONS, 100 + 4*XRES/5-100, 50 + YRES/4 + 5*BUFFER_BTW_BUTTONS/4 + BUFFER_BTW_BUTTONS, BLACK);
-
+		Rectangle(4*XRES/5-100, 5*BUFFER_BTW_BUTTONS/4 + YRES/4 + BUFFER_BTW_BUTTONS, 4*XRES/5, 50 + YRES/4 + 5*BUFFER_BTW_BUTTONS/4 + BUFFER_BTW_BUTTONS, BLACK);
 	}else{
 		WriteFilledRectangle(XRES/5, YRES/4, (5*BUFFER_BTW_BUTTONS/4) + XRES/5, 5*BUFFER_BTW_BUTTONS/4 + YRES/4, scheme->menuBackground);
 		WriteFilledRectangle(4*XRES/5 - (5*BUFFER_BTW_BUTTONS/4), YRES/4,  4*XRES/5, 5*BUFFER_BTW_BUTTONS/4 + YRES/4, scheme->menuBackground);
 		WriteFilledRectangle(XRES/5, 5*BUFFER_BTW_BUTTONS/4 + YRES/4 + BUFFER_BTW_BUTTONS, 100 + XRES/5, 50 + YRES/4 + 5*BUFFER_BTW_BUTTONS/4 + BUFFER_BTW_BUTTONS, scheme->menuBackground);
-		WriteFilledRectangle(4*XRES/5-100, 5*BUFFER_BTW_BUTTONS/4 + YRES/4 + BUFFER_BTW_BUTTONS, 100 + 4*XRES/5-100, 50 + YRES/4 + 5*BUFFER_BTW_BUTTONS/4 + BUFFER_BTW_BUTTONS, scheme->menuBackground);
+		WriteFilledRectangle(4*XRES/5-100, 5*BUFFER_BTW_BUTTONS/4 + YRES/4 + BUFFER_BTW_BUTTONS, 4*XRES/5, 50 + YRES/4 + 5*BUFFER_BTW_BUTTONS/4 + BUFFER_BTW_BUTTONS, scheme->menuBackground);
 	}
 
 	Text((XRES/5 + (5*BUFFER_BTW_BUTTONS/4) + XRES/5)/2, (YRES/4 + 5*BUFFER_BTW_BUTTONS/4 + YRES/4)/2-5, scheme->text, scheme->menuBackground, "<", 0);
@@ -64,18 +64,88 @@ void SaveLoadMenu(Point* p, Colours* scheme){
 	Text(4*XRES/5-100 + 10, 5*BUFFER_BTW_BUTTONS/4 + YRES/4 + BUFFER_BTW_BUTTONS + 10, scheme->text, scheme->menuBackground, "Save", 0);
 
 	int set = 0;//0 == GPS, else dataSet = set - 1.
-	char* str = calloc(10, sizeof(char));
+	char* str = "DataSet   ";
 	Text(XRES/2-25, (YRES/2 + BUFFER_BTW_BUTTONS)/2, scheme->text, scheme->menuBackground, "GPS", 0);
 
-
+	int buttonTouched = 0;
 	do{
-		*p = GetPress();
-	}while(p->y > MENU_TOP && p->x < XRES/3);
+		if(buttonTouched){
+			buttonTouched = 0;
+		}
 
-	free(str);
+		*p = GetPress();
+
+		if(p->y > YRES/4 && p->y < 5*BUFFER_BTW_BUTTONS/4 + YRES/4){
+			if(p->x > XRES/5 && p->x < (5*BUFFER_BTW_BUTTONS/4) + XRES/5){
+				buttonTouched = 1;
+				WriteFilledRectangle((5*BUFFER_BTW_BUTTONS/4) + XRES/5 + 1, YRES/4, 4*XRES/5 - (5*BUFFER_BTW_BUTTONS/4) - 1, 5*BUFFER_BTW_BUTTONS/4 + YRES/4, WHITE);
+
+				if(set == 0){
+					set = MAX_N_SETS;
+				}else{
+					set--;
+				}
+
+				if(set == 0){
+					Text(XRES/2-25, (YRES/2 + BUFFER_BTW_BUTTONS)/2, scheme->text, scheme->menuBackground, "GPS", 0);
+				}else{
+					str[8] = (char)(set / 10) + '0';
+					str[9] = (char)(set % 10) + '0';
+					if(str[8] == '0'){
+						str[8] = str[9];
+						str[9] = '\0';
+					}
+
+					Text(XRES/2-45, (YRES/2 + BUFFER_BTW_BUTTONS)/2, scheme->text, scheme->menuBackground, str, 0);
+				}
+
+				GetRelease();
+			}else if(p->x > 4*XRES/5 - (5*BUFFER_BTW_BUTTONS/4) && p->x < 4*XRES/5){
+				buttonTouched = 1;
+				WriteFilledRectangle((5*BUFFER_BTW_BUTTONS/4) + XRES/5 + 1, YRES/4, 4*XRES/5 - (5*BUFFER_BTW_BUTTONS/4) - 1, 5*BUFFER_BTW_BUTTONS/4 + YRES/4, WHITE);
+
+				if(set == MAX_N_SETS){
+					set = 0;
+				}else{
+					set++;
+				}
+
+				if(set == 0){
+					Text(XRES/2-25, (YRES/2 + BUFFER_BTW_BUTTONS)/2, scheme->text, scheme->menuBackground, "GPS", 0);
+				}else{
+					str[8] = (char)(set / 10) + '0';
+					str[9] = (char)(set % 10) + '0';
+					if(str[8] == '0'){
+						str[8] = str[9];
+						str[9] = '\0';
+					}
+
+					Text(XRES/2-45, (YRES/2 + BUFFER_BTW_BUTTONS)/2, scheme->text, scheme->menuBackground, str, 0);
+				}
+
+				GetRelease();
+			}
+		}else if(p->y < 50 + YRES/4 + 5*BUFFER_BTW_BUTTONS/4 + BUFFER_BTW_BUTTONS && p->y > 5*BUFFER_BTW_BUTTONS/4 + YRES/4 + BUFFER_BTW_BUTTONS){
+			if(p->x > XRES/5 && p->x < 100 + XRES/5){
+				buttonTouched = 1;
+				printf("Load\n");
+				//Load NOTE set == 0 IS GPS, NOT DATASET 0. DATASET 0 IS set == 1, DATASET 1 IS set == 2 etc.
+				//More code here:
+
+				GetRelease();//Leave this at end
+			}else if(p->x > 4*XRES/5-100 && p->x < 4*XRES/5){
+				buttonTouched = 1;
+				printf("Save\n");
+				//Save NOTE set == 0 IS GPS, NOT DATASET 0. DATASET 0 IS set == 1, DATASET 1 IS set == 2 etc.
+				//More code here:
+
+				GetRelease();//Leave this at end
+			}
+		}
+
+	}while(buttonTouched || (p->y > MENU_TOP && p->x < XRES/3));
 }
 
-//CHANGE MAIN
 void InterpretMenu(Point* p, Colours* scheme){
 	WriteFilledRectangle(0, 0, XRES-1, MENU_TOP-1, scheme->menuBackground);
 
@@ -97,7 +167,7 @@ void InterpretMenu(Point* p, Colours* scheme){
 	str[15] = (char)((int)(100 * percentageLeft) % 10 + '0');
 
 	if(str[14] == '0'){
-		str[14] = str[16];
+		str[14] = str[15];
 		str[15] = '%';
 		str[16] = '\0';
 	}
@@ -110,7 +180,7 @@ void InterpretMenu(Point* p, Colours* scheme){
 	str[15] = (char)((int)(100 * percentageForward) % 10 + '0');
 
 	if(str[14] == '0'){
-		str[14] = str[16];
+		str[14] = str[15];
 		str[15] = '%';
 		str[16] = '\0';
 	}
@@ -123,7 +193,7 @@ void InterpretMenu(Point* p, Colours* scheme){
 	str[12] = (char)((int)(100 * percentageBack) % 10 + '0');
 
 	if(str[11] == '0'){
-		str[11] = str[16];
+		str[11] = str[12];
 		str[12] = '%';
 		str[13] = '\0';
 	}
