@@ -40,7 +40,7 @@ int main()
   //write_demo_screen();
 
   initialize();
-
+/*
   // Test writing and reading points
   GPSPoint points0[GPSPOINTLEN];
   GPSPoint p0;
@@ -72,7 +72,7 @@ int main()
 
   sd_card_write_GPSPointSets(sets, GPSPOINTSETLEN, "TEST.TXT");
   sd_card_print_contents("TEST.TXT");
-
+*/
   main_menu();
 
   // Should never reach this point, but here in case we implement an exit button.
