@@ -184,7 +184,7 @@ void main_menu(void)
 
 		if(p.y < MENU_TOP){
 			draw_mode = (draw_mode + 1) % NUM_DRAW_MODES; // Cycle draw modes
-			draw_data(fake, 10, colourScheme, draw_mode);
+			draw_data(fake, numPoints, colourScheme, draw_mode);
 			draw_field();
 			GetRelease();
 		}else{
