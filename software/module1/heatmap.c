@@ -77,13 +77,3 @@ void connect_points(GPSPoint points[], int numPoints, Colours colourScheme)
 		WriteLine((int)point_a.x, (int)point_a.y, (int)point_b.x, (int)point_b.y, colourScheme.connectTheDotsLine);
 	}
 }
-
-void draw_data(GPSPoint points[], int numPoints, Colours colourScheme, int draw_mode)
-{
-	if (draw_mode == MODE_HEATMAP) {
-		draw_heatmap(points, numPoints, colourScheme);
-	}
-	else if (draw_mode == MODE_CONNECT) {
-		connect_points(points, numPoints, colourScheme);
-	}
-}

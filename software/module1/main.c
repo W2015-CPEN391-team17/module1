@@ -29,7 +29,6 @@ void main_menu(void);
 
 // Draw settings
 Colours colourScheme;
-int draw_mode;
 
 #define GPSPOINTLEN 2
 #define GPSPOINTSETLEN 2
@@ -67,8 +66,6 @@ void initialize(void)
 	colourScheme.shades[7] = DARK_ORANGE;
 	colourScheme.shades[8] = ORANGE_RED;
 	colourScheme.shades[9] = RED;
-
-	draw_mode = MODE_HEATMAP;
 
 	init_gps();
 	Init_Touch();
@@ -137,24 +134,38 @@ void main_menu(void)
 
 	int numPoints = 10; // placeholder to avoid magic numbers
 
-	draw_data(fake, numPoints, colourScheme, draw_mode);
+	draw_heatmap(fake, numPoints, colourScheme);
 	draw_field();
 	draw_menu();
 	Text(0, 0, BLACK, WHITE, "Main Menu", 0);
 	Point p;
 	p.y = 0;
 
+	int showing_heatmap = TRUE;
+	int outSubMenu = FALSE;
 	while(1)
 	{
 		if(p.y < MENU_TOP){
-			p = GetPress();
+			if(!outSubMenu){
+				p = GetPress();
+				GetRelease();
+			}
 		}
 
 		if(p.y < MENU_TOP){
-			draw_mode = (draw_mode + 1) % NUM_DRAW_MODES; // Cycle draw modes
-			draw_data(fake, numPoints, colourScheme, draw_mode);
+			if(!outSubMenu){
+				showing_heatmap = !showing_heatmap;
+			}else{
+				outSubMenu = FALSE;
+			}
+
+			if(showing_heatmap){
+				connect_points(fake, 10, colourScheme);
+			}else{
+				draw_heatmap(fake, 10, colourScheme);
+			}
+
 			draw_field();
-			GetRelease();
 		}else{
 			if(p.x < XRES / 3){
 				//Save/Load touched
@@ -165,13 +176,9 @@ void main_menu(void)
 			}else{
 				//Settings touched
 				SettingsMenu(&p, &colourScheme);
-				if(p.y < MENU_TOP){
-					draw_data(fake, numPoints, colourScheme, draw_mode);
-					draw_field();
-				}
-				draw_menu();
-				GetRelease();
 			}
+			GetRelease();
+			outSubMenu = TRUE;
 		}
 	}
 }
