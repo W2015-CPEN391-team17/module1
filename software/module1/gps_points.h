@@ -31,7 +31,6 @@ struct logs {
 
 struct logs gps_log[50];
 struct points gps_points[100];
-struct demo_points gps_demo_points[100];
 
 void init_gps(void);
 char putchar_gps(char c);

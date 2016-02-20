@@ -65,7 +65,7 @@ void SaveLoadMenu(Point* p, Colours* scheme){
 
 	int set = 0;//0 == GPS, else dataSet = set - 1.
 	char* str = calloc(10, sizeof(char));
-	Text(XRES/5 + 5*BUFFER_BTW_BUTTONS/4 + 10, YRES/4, scheme->text, scheme->menuBackground, "GPS");
+	Text(XRES/5 + 5*BUFFER_BTW_BUTTONS/4 + 10, YRES/4, scheme->text, scheme->menuBackground, "GPS", 0);
 
 	*p = GetPress();
 
