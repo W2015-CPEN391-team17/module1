@@ -6,6 +6,7 @@
  */
 
 #include "datasets.h"
+#include "gps_points.h"
 
 /*
  * Copy the data from the slot with the given index in datasets
@@ -39,4 +40,22 @@ void save_from_workingDataSet(int index) {
 	for(i = 0; i < size; i++) {
 		copyToSet->points[i] = localData.workingDataSet.points[i];
 	}
+}
+
+void loadgps_workingDataSet(){
+	GPSPoint* screen_points;
+	save_points();
+
+	screen_points = convertGPSPoints(70);
+
+	GPSPoint *workingDataPoints = localData.workingDataSet.points;
+
+	int j;
+	for( j = 0; j < 70; j++ ){
+		workingDataPoints[j] = screen_points[j];
+		printf("x %d: %f  y %d: %f\n", j, workingDataPoints[j].x,
+									   j, workingDataPoints[j].y);
+	}
+
+	localData.workingDataSet.size = 70;
 }
