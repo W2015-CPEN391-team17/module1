@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include "gps_points.h"
 #include "graphics.h"
+#include "conversion.h"
 
 //call this function at the start of the program before
 //attempting to read or write
@@ -206,6 +207,7 @@ void save_points(void){
 			gps_points[place].long_float = FloatToLongitudeConversion(gps_points[place].long_swapped);
 			gps_points[place].lat_float = FloatToLatitudeConversion(gps_points[place].lat_swapped);
 
+			//printf("lat %d: %f, long %d: %f\n", place, gps_points[place].lat_float, place, gps_points[place].long_float);
 			place++;
 			lat_count += 27;
 			long_count += 27;
@@ -215,6 +217,8 @@ void save_points(void){
 	}
 
 	for(log_count = 9; log_count < 12; log_count++){
+		if(place == 70)
+			break;
 
 		strcpy(cur_string, (const char *)gps_log[log_count].string);
 
@@ -249,6 +253,8 @@ void save_points(void){
 
 			gps_points[place].long_float = FloatToLongitudeConversion(gps_points[place].long_swapped);
 			gps_points[place].lat_float = FloatToLatitudeConversion(gps_points[place].lat_swapped);
+
+			//printf("lat %d: %f, long %d: %f\n", place, gps_points[place].lat_float, place, gps_points[place].long_float);
 
 			place++;
 			lat_count += 27;
@@ -341,67 +347,52 @@ void query_log(void){
 }
 
 void save_demo_points(void) {
-	float latitude = 49.266500;
-	float longitude = -123.248000;
 	int i = 0;
+	int xval = 0;
+	int yval = 0;
 
-	for( i = 0; i < 49; i++ ){
-		latitude += 0.000020;
-		longitude -= 0.000020;
+	for( i = 0; i < 39; i++ ){
+		demo_points[i].x = xval;
+		demo_points[i].y = yval;
 
-		gps_points[i].lat_float = latitude;
-		gps_points[i].long_float = longitude;
-	}
-	for( i = 49; i < 99; i++ ){
-		gps_points[i].lat_float = latitude;
-		gps_points[i].long_float = longitude;
+		xval += 11;
+		yval += 11;
 	}
 
-/*
-	for( i = 9; i < 19; i++ ){
-		latitude -= 0.000050;
-		longitude -= 0.000030;
+	for( i = 39; i < 48; i++ ){
+		xval += 36;
 
-		gps_points[i].lat_float = latitude;
-		gps_points[i].long_float = longitude;
+		demo_points[i].x = xval;
+		demo_points[i].y = yval;
 	}
 
-	for( i = 19; i < 29; i++ ){
-		longitude -= 0.000030;
-
-		gps_points[i].lat_float = latitude;
-		gps_points[i].long_float = longitude;
+	for( i = 48; i < 60; i++ ){
+		demo_points[i].x = xval;
+		demo_points[i].y = yval;
 	}
 
-	for( i = 29; i < 49; i++ ){
-		gps_points[i].lat_float = latitude;
-		gps_points[i].long_float = longitude;
+	for( i = 60; i < 70; i++ ){
+		xval -= 22;
+		yval -= 22;
+
+		demo_points[i].x = xval;
+		demo_points[i].y = yval;
 	}
 
-	for( i = 49; i < 69; i++ ){
-		latitude -= 0.000040;
-		longitude -= 0.000050;
+	for( i = 70; i < 79; i++ ){
+		yval -= 22;
 
-		gps_points[i].lat_float = latitude;
-		gps_points[i].long_float = longitude;
+		demo_points[i].x = xval;
+		demo_points[i].y = yval;
 	}
 
-	for( i = 69; i < 79; i++ ){
-		longitude -= 0.000030;
-
-		gps_points[i].lat_float = latitude;
-		gps_points[i].long_float = longitude;
+	for( i = 79; i < 100; i++ ){
+		demo_points[i].x = xval;
+		demo_points[i].y = yval;
 	}
 
-	for( i = 79; i < 99; i++ ){
-		longitude -= 0.000060;
-
-		gps_points[i].lat_float = latitude;
-		gps_points[i].long_float = longitude;
-	}
-*/
-	for( i = 0; i < 99; i++ ) {
-		printf("latitude %d: %f  longitude %d: %f\n", i, gps_points[i].lat_float,
-													  i, gps_points[i].long_float);
+	for( i = 0; i < 100; i++ ) {
+		printf("x %d: %f  y %d: %f\n", i, demo_points[i].x,
+													  i, demo_points[i].y);
 	}
 }

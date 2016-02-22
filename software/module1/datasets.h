@@ -1,9 +1,11 @@
 /*
  * datasets.h
  *
- *  Created on: 2016-02-19
- *      Author: Kyle
+ * Structures for GPS data (mapped to screen pixels) representing a path
+ *
  */
+
+#include "conversion.h"
 
 #ifndef DATASETS_H_
 #define DATASETS_H_
@@ -24,5 +26,26 @@ typedef struct {
 	dataSet workingDataSet; //data currently being displayed
 	dataSet dataSets[MAX_N_SETS]; //cache for SD contents
 } localDataSets;
+
+// data being displayed on the screen and cached from SD card
+localDataSets localData;
+
+/*
+ * Copy the data from the slot with the given index in datasets
+ * to workingDataSet
+ */
+void load_into_workingDataSet(int index);
+
+/*
+ * Copy the data from the workingDataSet to the slot with the
+ * given index in datasets
+ */
+void save_from_workingDataSet(int index);
+
+/*
+ * On start up, copy the data from the GPS to the workingDataSet
+ * to display the GPS data immediately
+ */
+void loadgps_workingDataSet(void);
 
 #endif /* DATASETS_H_ */
