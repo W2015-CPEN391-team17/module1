@@ -1,3 +1,5 @@
+#include "graphics.h"
+
 // data structure to store a coordinate
 
 typedef struct { int x,y;} XYPixel ;

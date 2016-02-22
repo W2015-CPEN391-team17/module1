@@ -4,6 +4,7 @@
 #include <string.h>
 #include "sd_card.h"
 #include "datasets.h"
+#include "conversion.h"
 #include "cJSON.h"
 
 #define JSON_DATA_MAX_LEN 2048
