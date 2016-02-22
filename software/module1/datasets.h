@@ -21,6 +21,6 @@ typedef struct {
 typedef struct {
 	dataSet workingDataSet; //data currently being displayed
 	dataSet dataSets[MAX_N_SETS]; //cache for SD contents
-} localData;
+} localDataSets;
 
 #endif /* DATASETS_H_ */
