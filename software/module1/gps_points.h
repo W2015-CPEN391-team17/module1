@@ -11,6 +11,8 @@
 #define GPS_STATUS_TX_MASK 0x02
 #define GPS_STATUS_RX_MASK 0x01
 
+#include "conversion.h"
+
 struct points {
 	//to parse from gps data
 	char latitude[16];
@@ -30,7 +32,7 @@ struct logs {
 };
 
 struct logs gps_log[50];
-struct points gps_points[100];
+struct points gps_points[70];
 
 void init_gps(void);
 char putchar_gps(char c);
