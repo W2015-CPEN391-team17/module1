@@ -5,6 +5,8 @@
  *      Author: Kyle
  */
 
+#include "conversion.h"
+
 #ifndef DATASETS_H_
 #define DATASETS_H_
 

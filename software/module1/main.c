@@ -14,9 +14,13 @@
 #include "gps_points.h"
 #include "sub_menus.h"
 #include "sd_card.h"
+#include "datasets.h"
 
 // Meta stuff.
-void initialize(void);
+void initialize_components(void);
+void initialize_components(void);
+void initialize_colourScheme(void);
+void initialize_localData(void);
 void cleanup(void);
 
 // Data-independent drawing functions.
@@ -30,6 +34,9 @@ void main_menu(void);
 // Draw settings
 Colours colourScheme;
 
+// data being displayed on the screen and cached from SD card
+localDataSets localData;
+
 #define GPSPOINTLEN 2
 #define GPSPOINTSETLEN 2
 
@@ -38,8 +45,9 @@ int main()
   printf("Starting module 1 code.\n");
   //write_demo_screen();
 
-  initialize();
-
+  initialize_components();
+  initialize_colourScheme();
+  initialize_localData();
   main_menu();
 
   // Should never reach this point, but here in case we implement an exit button.
@@ -50,7 +58,17 @@ int main()
   return 0;
 }
 
-void initialize(void)
+// initialize each of the hardware components and clear the screen
+void initialize_components(void)
+{
+	init_gps();
+	Init_Touch();
+	init_btport();
+	clear_screen(WHITE);
+}
+
+// initialize the colour scheme that will be used for the menus and data visualizations
+void initialize_colourScheme(void)
 {
 	colourScheme.menuBackground = WHITE;
 	colourScheme.text = BLACK;
@@ -66,11 +84,46 @@ void initialize(void)
 	colourScheme.shades[7] = DARK_ORANGE;
 	colourScheme.shades[8] = ORANGE_RED;
 	colourScheme.shades[9] = RED;
+}
 
-	init_gps();
-	Init_Touch();
-	init_btport();
-	clear_screen(WHITE);
+void initialize_localData()
+{
+	//Fake GPS data points for testing
+
+	GPSPoint p0, p1, p2, p3, p4, p5, p6, p7, p8, p9;
+
+	p0.x = 0; p0.y = 0;
+	p1.x = 100; p1.y = 50;
+	p2.x = 200; p2.y = 100;
+	p3.x = 300; p3.y = 150;
+	p4.x = 400; p4.y = 200;
+	p5.x = 450; p5.y = 150;
+	p6.x = 600; p6.y = 300;
+	p7.x = 700; p7.y = 350;
+	p8.x = 799; p8.y = 400;
+	p9.x = 750; p9.y = 390;
+
+	GPSPoint *workingDataPoints = localData.workingDataSet.points;
+
+	workingDataPoints[0] = p0;
+	workingDataPoints[1] = p1;
+	workingDataPoints[2] = p2;
+	workingDataPoints[3] = p3;
+	workingDataPoints[4] = p4;
+	workingDataPoints[5] = p5;
+	workingDataPoints[6] = p6;
+	workingDataPoints[7] = p7;
+	workingDataPoints[8] = p8;
+	workingDataPoints[9] = p9;
+
+	localData.workingDataSet.size = 10;
+
+	// set all data sets to 0
+	int i;
+	for(i = 0; i < MAX_N_SETS; i++) {
+		localData.dataSets[i].size = 0;
+	}
+	//TODO should copy data from SD card instead
 }
 
 void cleanup(void)
@@ -108,33 +161,7 @@ void main_menu(void)
 {
 	clear_screen(WHITE);
 
-	//Fake GPS data points for testing
-	GPSPoint p0, p1, p2, p3, p4, p5, p6, p7, p8, p9;
-	p0.x = 0; p0.y = 0;
-	p1.x = 100; p1.y = 50;
-	p2.x = 200; p2.y = 100;
-	p3.x = 300; p3.y = 150;
-	p4.x = 400; p4.y = 200;
-	p5.x = 450; p5.y = 150;
-	p6.x = 600; p6.y = 300;
-	p7.x = 700; p7.y = 350;
-	p8.x = 799; p8.y = 400;
-	p9.x = 750; p9.y = 390;
-	GPSPoint fake[10];
-	fake[0] = p0;
-	fake[1] = p1;
-	fake[2] = p2;
-	fake[3] = p3;
-	fake[4] = p4;
-	fake[5] = p5;
-	fake[6] = p6;
-	fake[7] = p7;
-	fake[8] = p8;
-	fake[9] = p9;
-
-	int numPoints = 10; // placeholder to avoid magic numbers
-
-	draw_heatmap(fake, numPoints, colourScheme);
+	draw_heatmap(localData.workingDataSet.points, localData.workingDataSet.size, colourScheme);
 	draw_field();
 	draw_menu();
 	Text(0, 0, BLACK, WHITE, "Main Menu", 0);
@@ -160,9 +187,9 @@ void main_menu(void)
 			}
 
 			if(showing_heatmap){
-				connect_points(fake, 10, colourScheme);
+				connect_points(localData.workingDataSet.points, localData.workingDataSet.size, colourScheme);
 			}else{
-				draw_heatmap(fake, 10, colourScheme);
+				draw_heatmap(localData.workingDataSet.points, localData.workingDataSet.size, colourScheme);
 			}
 
 			draw_field();
