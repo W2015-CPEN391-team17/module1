@@ -43,7 +43,6 @@ localDataSets localData;
 int main()
 {
   printf("Starting module 1 code.\n");
-  //write_demo_screen();
 
   initialize_components();
   initialize_colourScheme();
