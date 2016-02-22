@@ -34,7 +34,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
-#include "Altera_UP_SD_Card_Avalon_Interface.h"
+#include "altera_up_sd_card_avalon_interface.h"
 
 ///////////////////////////////////////////////////////////////////////////
 // Local Define Statements

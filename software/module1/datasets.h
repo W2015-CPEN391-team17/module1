@@ -8,6 +8,8 @@
 #ifndef DATASETS_H_
 #define DATASETS_H_
 
+#include "conversion.h"
+
 #define MAX_N_POINTS 1024
 
 //assume double-digit at most (aka <= 99)
