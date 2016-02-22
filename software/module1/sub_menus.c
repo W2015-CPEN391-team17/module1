@@ -130,24 +130,26 @@ void SaveLoadMenu(Point* p, Colours* scheme){
 				buttonTouched = 1;
 				printf("Load\n");
 				//Load NOTE set == 0 IS GPS, NOT DATASET 0. DATASET 0 IS set == 1, DATASET 1 IS set == 2 etc.
-				//More code here:
 
-				//GPS is set 0 so we add 1 to get the correct index
-				load_into_workingDataSet(set+1);
+				if (set != 0) {
+					//GPS is set 0 so we add 1 to get the correct index
+					load_into_workingDataSet(set+1);
+				} else {
+					loadgps_workingDataSet();
+				}
+				
 
 				GetRelease();//Leave this at end
 			}else if(p->x > 4*XRES/5-100 && p->x < 4*XRES/5){
 				buttonTouched = 1;
 				printf("Save\n");
 				//Save NOTE set == 0 IS GPS, NOT DATASET 0. DATASET 0 IS set == 1, DATASET 1 IS set == 2 etc.
-				//More code here
-
-				
+		
 				if (set != 0) { // check set number since cannot save to GPS
 					//GPS is set 0 so we add 1 to get the correct index
 					save_from_workingDataSet(set+1);
 				} else {
-					printf("TODO you cannot save back to the GPS :(")
+					printf("TODO you cannot save back to the GPS :(");
 				}
 
 				GetRelease();//Leave this at end

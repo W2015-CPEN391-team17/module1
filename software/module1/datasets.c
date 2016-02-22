@@ -14,7 +14,7 @@
  */
 void load_into_workingDataSet(int index) {
 	//for the slot with the given index
-	dataSet *copyFromSet = localData.dataSets[index];
+	dataSet *copyFromSet = &localData.dataSets[index];
 
 	//copy the data
 	int size = copyFromSet->size;
@@ -31,7 +31,7 @@ void load_into_workingDataSet(int index) {
  */
 void save_from_workingDataSet(int index) {
 	//to the slot with the given index
-	dataSet *copyToSet = localData.dataSets[index];
+	dataSet *copyToSet = &localData.dataSets[index];
 
 	//copy the data
 	int size = localData.workingDataSet.size;

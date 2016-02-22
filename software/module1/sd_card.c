@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <altera_up_sd_card_avalon_interface.h>
+#include <Altera_UP_SD_Card_Avalon_Interface.h>
 #include <string.h>
 #include <assert.h>
 #include "sd_card.h"
