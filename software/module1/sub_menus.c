@@ -132,12 +132,19 @@ void SaveLoadMenu(Point* p, Colours* scheme){
 				//Load NOTE set == 0 IS GPS, NOT DATASET 0. DATASET 0 IS set == 1, DATASET 1 IS set == 2 etc.
 				//More code here:
 
+				load_into_workingDataSet(set+1); //note that GPS is set 0 so we add 1
+
 				GetRelease();//Leave this at end
 			}else if(p->x > 4*XRES/5-100 && p->x < 4*XRES/5){
 				buttonTouched = 1;
 				printf("Save\n");
 				//Save NOTE set == 0 IS GPS, NOT DATASET 0. DATASET 0 IS set == 1, DATASET 1 IS set == 2 etc.
-				//More code here:
+				//More code here
+
+				//TODO cannot save to GPS
+				if (set != 0) {
+					save_from_workingDataSet(set+1);	
+				}
 
 				GetRelease();//Leave this at end
 			}
