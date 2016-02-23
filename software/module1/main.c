@@ -142,7 +142,6 @@ void main_menu(void)
 	draw_heatmap(localData.workingDataSet.points, localData.workingDataSet.size, colourScheme);
 	draw_field();
 	draw_menu();
-	Text(0, 0, BLACK, WHITE, "Main Menu", 0);
 	Point p;
 	p.y = 0;
 
