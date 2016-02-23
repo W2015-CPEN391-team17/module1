@@ -141,7 +141,7 @@ void SaveLoadMenu(Point* p, Colours* scheme){
 				
 				WriteFilledRectangle(XRES/4, 0, 3*XRES/4, YRES/4-1, WHITE);
 				if(set == 0){
-					Text(XRES/4+1, 10, BLACK, WHITE, "GPS", 0);
+					Text(XRES/4+1, 10, BLACK, WHITE, "GPS Loaded", 0);
 				}else{
 					char tmpStr[strlen(str)+8];//Double check this
 					strcpy(tmpStr,str);
@@ -163,12 +163,12 @@ void SaveLoadMenu(Point* p, Colours* scheme){
 					printf("TODO you cannot save back to the GPS :(");
 				}
 
-				WriteFilledRectangle(XRES/4, 0, 3*XRES/4, YRES/4-1, WHITE);
+				WriteFilledRectangle(XRES/4, 0, XRES-1, YRES/4-1, WHITE);
 				if(set == 0){
 					Text(XRES/4+1, 10, BLACK, WHITE, "Cannot save to GPS", 0);
 					}else{
 					char tmpStr[strlen(str)+26];//Double check this
-					*tmpStr = "Current DataSet saved to ";
+					strcpy(tmpStr, "Current DataSet saved to ");
 					strcpy(tmpStr+25,str);
 
 					Text(XRES/4+1, 10, BLACK, WHITE, tmpStr, 0);
