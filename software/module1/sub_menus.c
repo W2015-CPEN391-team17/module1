@@ -48,13 +48,13 @@ void SaveLoadMenu(Point* p, Colours* scheme){
 	WriteFilledRectangle(0, 0, XRES-1, MENU_TOP-1, WHITE);
 
 	if(scheme->menuBackground == WHITE){
-		Rectangle(XRES/5, YRES/4, (5*BUFFER_BTW_BUTTONS/4) + XRES/5, 5*BUFFER_BTW_BUTTONS/4 + YRES/4, BLACK);
-		Rectangle(4*XRES/5 - (5*BUFFER_BTW_BUTTONS/4), YRES/4,  4*XRES/5, 5*BUFFER_BTW_BUTTONS/4 + YRES/4, BLACK);
+		Rectangle(XRES/5, YRES/4, 100 + XRES/5, 5*BUFFER_BTW_BUTTONS/4 + YRES/4, BLACK);
+		Rectangle(4*XRES/5 - 100, YRES/4,  4*XRES/5, 5*BUFFER_BTW_BUTTONS/4 + YRES/4, BLACK);
 		Rectangle(XRES/5, 5*BUFFER_BTW_BUTTONS/4 + YRES/4 + BUFFER_BTW_BUTTONS, 100 + XRES/5, 50 + YRES/4 + 5*BUFFER_BTW_BUTTONS/4 + BUFFER_BTW_BUTTONS, BLACK);
 		Rectangle(4*XRES/5-100, 5*BUFFER_BTW_BUTTONS/4 + YRES/4 + BUFFER_BTW_BUTTONS, 4*XRES/5, 50 + YRES/4 + 5*BUFFER_BTW_BUTTONS/4 + BUFFER_BTW_BUTTONS, BLACK);
 	}else{
-		WriteFilledRectangle(XRES/5, YRES/4, (5*BUFFER_BTW_BUTTONS/4) + XRES/5, 5*BUFFER_BTW_BUTTONS/4 + YRES/4, scheme->menuBackground);
-		WriteFilledRectangle(4*XRES/5 - (5*BUFFER_BTW_BUTTONS/4), YRES/4,  4*XRES/5, 5*BUFFER_BTW_BUTTONS/4 + YRES/4, scheme->menuBackground);
+		WriteFilledRectangle(XRES/5, YRES/4, 100 + XRES/5, 5*BUFFER_BTW_BUTTONS/4 + YRES/4, scheme->menuBackground);
+		WriteFilledRectangle(4*XRES/5 - 100, YRES/4,  4*XRES/5, 5*BUFFER_BTW_BUTTONS/4 + YRES/4, scheme->menuBackground);
 		WriteFilledRectangle(XRES/5, 5*BUFFER_BTW_BUTTONS/4 + YRES/4 + BUFFER_BTW_BUTTONS, 100 + XRES/5, 50 + YRES/4 + 5*BUFFER_BTW_BUTTONS/4 + BUFFER_BTW_BUTTONS, scheme->menuBackground);
 		WriteFilledRectangle(4*XRES/5-100, 5*BUFFER_BTW_BUTTONS/4 + YRES/4 + BUFFER_BTW_BUTTONS, 4*XRES/5, 50 + YRES/4 + 5*BUFFER_BTW_BUTTONS/4 + BUFFER_BTW_BUTTONS, scheme->menuBackground);
 	}
