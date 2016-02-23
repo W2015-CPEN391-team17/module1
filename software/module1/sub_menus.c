@@ -139,15 +139,15 @@ void SaveLoadMenu(Point* p, Colours* scheme){
 					loadgps_workingDataSet();
 				}
 				
-				WriteFilledRectangle(XRES/4, 0, 3*XRES/4, YRES/4-1, WHITE);
+				WriteFilledRectangle(XRES/4, 0, XRES-1, YRES/4-1, WHITE);
 				if(set == 0){
-					Text(XRES/4+1, 10, BLACK, WHITE, "GPS Loaded", 0);
+					Text(XRES/3-45, 10, BLACK, WHITE, "GPS Loaded", 0);
 				}else{
 					char tmpStr[strlen(str)+8];//Double check this
 					strcpy(tmpStr,str);
 					strcpy(tmpStr+strlen(str), " Loaded");
 
-					Text(XRES/4+1, 10, BLACK, WHITE, tmpStr, 0);
+					Text(XRES/3-45, 10, BLACK, WHITE, tmpStr, 0);
 				}
 
 				GetRelease();//Leave this at end
@@ -165,13 +165,13 @@ void SaveLoadMenu(Point* p, Colours* scheme){
 
 				WriteFilledRectangle(XRES/4, 0, XRES-1, YRES/4-1, WHITE);
 				if(set == 0){
-					Text(XRES/4+1, 10, BLACK, WHITE, "Cannot save to GPS", 0);
+					Text(XRES/3-45, 10, BLACK, WHITE, "Cannot save to GPS", 0);
 					}else{
 					char tmpStr[strlen(str)+26];//Double check this
 					strcpy(tmpStr, "Current DataSet saved to ");
 					strcpy(tmpStr+25,str);
 
-					Text(XRES/4+1, 10, BLACK, WHITE, tmpStr, 0);
+					Text(XRES/3-45, 10, BLACK, WHITE, tmpStr, 0);
 				}
 
 				GetRelease();//Leave this at end
