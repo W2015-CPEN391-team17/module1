@@ -44,7 +44,6 @@ void save_from_workingDataSet(int index) {
 
 void loadgps_workingDataSet(){
 	GPSPoint* screen_points;
-	save_points();
 
 	screen_points = convertGPSPoints(70);
 

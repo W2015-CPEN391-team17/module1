@@ -21,6 +21,7 @@ void initialize_components(void);
 void initialize_components(void);
 void initialize_colourScheme(void);
 void initialize_datasets(void);
+void initialize_demodata(void);
 void cleanup(void);
 
 // Data-independent drawing functions.
@@ -44,6 +45,7 @@ int main()
   initialize_components();
   initialize_colourScheme();
   initialize_datasets();
+  save_points();
   loadgps_workingDataSet();
   main_menu();
 
@@ -93,6 +95,15 @@ void initialize_datasets()
 	//TODO should copy data from SD card instead
 }
 
+void initialize_demodata()
+{
+	// set all data sets to demo data
+	int i;
+	for(i = 0; i < MAX_N_SETS; i++) {
+		localData.dataSets[i].size = 0;
+	}
+	//TODO should copy data from SD card instead
+}
 void cleanup(void)
 {
 	//Nothing yet
