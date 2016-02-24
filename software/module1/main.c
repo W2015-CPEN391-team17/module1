@@ -97,7 +97,11 @@ void initialize_demodata()
 {
 	// set all data sets to demo data
 	int set = 0;
-	save_demo_points(set);
+
+	for(set=0; set < 100; set++){
+		localData.dataSets[0].points[set].x = 600;
+		localData.dataSets[0].points[set].y = 600;
+	}
 }
 
 void cleanup(void)
