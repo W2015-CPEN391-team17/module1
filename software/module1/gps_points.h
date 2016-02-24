@@ -49,4 +49,4 @@ void erase_log(void);
 void query_log(void);
 void save_demo_points(void);
 
-#endif
+#endif // GPS_POINTS_H_
