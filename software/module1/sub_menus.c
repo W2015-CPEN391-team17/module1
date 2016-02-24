@@ -268,20 +268,26 @@ void SettingsMenu(Point* p, Colours* scheme){
 
 	WriteFilledRectangle(0, 0, XRES-1, MENU_TOP-1, BLACK);//Clear background
 
+	//Boolean
 	int settingsTouched = 0;
+	int buttonTouched = 0;// 0 == Menu just opened, 1 == Line, 2 == Text/Background
 	do{
 		//Redraw buttons/lines with new colours if the button pressed wasn't the settings button
 		if(!settingsTouched){
-			WriteFilledRectangle(XRES/2-100, 0, XRES/2+100, MENU_TOP/2 - BUFFER_BTW_BUTTONS,scheme->menuBackground);//Create buttons
-			WriteFilledRectangle(XRES/2-100, MENU_TOP/2, XRES/2+100, MENU_TOP - BUFFER_BTW_BUTTONS,scheme->menuBackground);
+			if(buttonTouched == 0 || buttonTouched == 2){
+				WriteFilledRectangle(XRES/2-100, 0, XRES/2+100, MENU_TOP/2 - BUFFER_BTW_BUTTONS,scheme->menuBackground);//Create buttons
+				WriteFilledRectangle(XRES/2-100, MENU_TOP/2, XRES/2+100, MENU_TOP - BUFFER_BTW_BUTTONS,scheme->menuBackground);
 
-			Text(XRES/2-100+10, (MENU_TOP/2 - BUFFER_BTW_BUTTONS)/2, scheme->text, scheme->menuBackground, "Text/background", 0);//Print text on buttons
-			Text(XRES/2-100+10, MENU_TOP/2 + 1, scheme->text, scheme->menuBackground, "Line Colour", 0);
+				Text(XRES/2-100+10, (MENU_TOP/2 - BUFFER_BTW_BUTTONS)/2, scheme->text, scheme->menuBackground, "Text/background", 0);//Print text on buttons
+				Text(XRES/2-100+10, MENU_TOP/2 + 1, scheme->text, scheme->menuBackground, "Line Colour", 0);
+			}
 
+			if(buttonTouched == 0 || buttonTouched == 1){
 			//Display example lines
-			WriteLine(XRES/2-100, MENU_TOP - BUFFER_BTW_BUTTONS-1, XRES/2+100, MENU_TOP/2-1, scheme->connectTheDotsLine);
-			WriteLine(XRES/2-100, MENU_TOP - BUFFER_BTW_BUTTONS, XRES/2+100, MENU_TOP/2, scheme->connectTheDotsLine);
-			WriteLine(XRES/2-100, MENU_TOP - BUFFER_BTW_BUTTONS+1, XRES/2+100, MENU_TOP/2+1, scheme->connectTheDotsLine);
+				WriteLine(XRES/2-100, MENU_TOP - BUFFER_BTW_BUTTONS-1, XRES/2+100, MENU_TOP/2-1, scheme->connectTheDotsLine);
+				WriteLine(XRES/2-100, MENU_TOP - BUFFER_BTW_BUTTONS, XRES/2+100, MENU_TOP/2, scheme->connectTheDotsLine);
+				WriteLine(XRES/2-100, MENU_TOP - BUFFER_BTW_BUTTONS+1, XRES/2+100, MENU_TOP/2+1, scheme->connectTheDotsLine);
+			}
 		}else{
 			settingsTouched = 0;
 		}
@@ -290,6 +296,7 @@ void SettingsMenu(Point* p, Colours* scheme){
 
 		//If the text/background colour button is pressed
 		if(p->x <= XRES/2+100 && p->x >= XRES/2-100 && p->y <= MENU_TOP/2-BUFFER_BTW_BUTTONS){
+			buttonTouched = 2;
 			do{
 				scheme->menuBackground = pairs[(scheme->pairNum + 1) % NPAIRS].background;
 				scheme->text = pairs[(scheme->pairNum + 1) % NPAIRS].text;
@@ -297,6 +304,7 @@ void SettingsMenu(Point* p, Colours* scheme){
 			}while(scheme->menuBackground == scheme->connectTheDotsLine);//Change the colour pair if the background was the same colour as the line
 			GetRelease();
 		}else if(p->x <= XRES/2+100 && p->x >= XRES/2-100 && p->y <= MENU_TOP-BUFFER_BTW_BUTTONS && p->y > MENU_TOP/2){ //If the line colour button was pressed
+			buttonTouched = 1;
 			do{
 				scheme->connectTheDotsLine = (scheme->connectTheDotsLine + 1) % NCOLOURS;
 			}while(scheme->connectTheDotsLine == WHITE || scheme->connectTheDotsLine == scheme->menuBackground);//Change the line colour if it is white or is the same colour as the background
