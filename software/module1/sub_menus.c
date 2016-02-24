@@ -270,13 +270,10 @@ void SettingsMenu(Point* p, Colours* scheme){
 				Text(SET_LEFT_ALIGN+10, (SET_TOP_YEND)/2, scheme->text, scheme->menuBackground, "Text/background", 0);//Print text on buttons
 				Text(SET_LEFT_ALIGN+10, SET_BOT_YSTART + 1, scheme->text, scheme->menuBackground, "Line Colour", 0);
 			}
-
-			if(buttonTouched == 0 || buttonTouched == 1){
-			//Display example lines
-				WriteLine(SET_LEFT_ALIGN, SET_BOT_YEND-1, SET_RIGHT, SET_BOT_YSTART-1, scheme->connectTheDotsLine);
-				WriteLine(SET_LEFT_ALIGN, SET_BOT_YEND, SET_RIGHT, SET_BOT_YSTART, scheme->connectTheDotsLine);
-				WriteLine(SET_LEFT_ALIGN, SET_BOT_YEND+1, SET_RIGHT, SET_BOT_YSTART, scheme->connectTheDotsLine);
-			}
+			//Display example line
+			WriteLine(SET_LEFT_ALIGN, SET_BOT_YEND-1, SET_RIGHT, SET_BOT_YSTART-1, scheme->connectTheDotsLine);
+			WriteLine(SET_LEFT_ALIGN, SET_BOT_YEND, SET_RIGHT, SET_BOT_YSTART, scheme->connectTheDotsLine);
+			WriteLine(SET_LEFT_ALIGN, SET_BOT_YEND+1, SET_RIGHT, SET_BOT_YSTART, scheme->connectTheDotsLine);
 		}else{
 			settingsTouched = 0;
 		}
