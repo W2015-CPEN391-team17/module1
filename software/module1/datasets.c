@@ -8,6 +8,7 @@
 #include "datasets.h"
 #include "gps_points.h"
 #include "sd_card.h"
+#include "graphics.h"
 
 /*
  * Copy the data from the slot with the given index in datasets
@@ -78,7 +79,7 @@ void loadgps_workingDataSet(){
  */
 void load_from_SD_to_dataSets() {
 	//TODO check return value of below call
-	Text(0,0,BLACK,WHITE,"Loading from SD Card...",0);
+	Text(10,10,BLACK,WHITE,"Loading from SD Card...",0);
 	sd_card_load(localData.dataSets, MAX_N_SETS, FILENAME);
 }
 
