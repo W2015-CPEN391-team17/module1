@@ -144,8 +144,6 @@ ELF := module1.elf
 # Paths to C, C++, and assembly source files.
 C_SRCS += OutGraphicsCharFont1.c
 C_SRCS += OutGraphicsCharFont2.c
-C_SRCS += bluetooth.c
-C_SRCS += fill.c
 C_SRCS += fonts.c
 C_SRCS += gps_points.c
 C_SRCS += graphics.c
