@@ -19,8 +19,6 @@
 
 typedef struct { float x, y; } GPSPoint;
 
-GPSPoint demo_points[100];
-
 GPSPoint* convertGPSPoints( int nPoints );
 void convertGPSReal( GPSPoint topLeft, GPSPoint topRight, GPSPoint points[], GPSPoint bottomRight, int nPoints);
 
