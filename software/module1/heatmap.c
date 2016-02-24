@@ -73,6 +73,11 @@ void connect_points(GPSPoint points[], int numPoints, Colours colourScheme)
 	for(i = 1; i < numPoints; i++) {
 		point_a = points[i-1];
 		point_b = points[i];
+
+		// draw circle around each point for testing
+		WriteCircle(point_a.x, point_a.y, 4, BLACK);
+		WriteCircle(point_b.x, point_b.y, 4, BLACK);
+
 		// draw a line from point_a to point_b
 		WriteLine((int)point_a.x, (int)point_a.y, (int)point_b.x, (int)point_b.y, colourScheme.connectTheDotsLine);
 	}
