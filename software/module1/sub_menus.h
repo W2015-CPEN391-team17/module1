@@ -12,7 +12,7 @@
 #include "graphics.h"
 
 #define NPAIRS 3 //Number of text/background colours
-#define INITPAIR 0 //Should stay 0
+#define INITPAIR 0 //Should stay 0 - is the initial text/background pair
 #define BUFFER_BTW_BUTTONS 50 //Amount of black pixels between buttons
 
 void initInterpret(int count[HEATMAP_H][HEATMAP_V], int nPoints);
