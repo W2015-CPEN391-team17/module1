@@ -15,6 +15,7 @@
 #include "gps_points.h"
 #include "graphics.h"
 #include "conversion.h"
+#include "datasets.h"
 
 /*
  * The GPS must be initialized before the user can read or write.
@@ -360,53 +361,256 @@ void query_log(void){
 	printf("%s", out);
 }
 
-void save_demo_points(void) {
+void save_demo_points(int set) {
 	int i = 0;
 	int xval = 0;
 	int yval = 0;
 
-	for( i = 0; i < 39; i++ ){
-		demo_points[i].x = xval;
-		demo_points[i].y = yval;
+	GPSPoint *dataset = localData.dataSets[set-1].points;
 
-		xval += 11;
-		yval += 11;
+	if( set == 1 ){
+		for( i = 0; i < 39; i++ ){
+			demo_points[i].x = xval;
+			demo_points[i].y = yval;
+
+			xval += 11;
+			yval += 11;
+		}
+
+		for( i = 39; i < 48; i++ ){
+			xval += 36;
+
+			demo_points[i].x = xval;
+			demo_points[i].y = yval;
+		}
+
+		for( i = 48; i < 60; i++ ){
+			demo_points[i].x = xval;
+			demo_points[i].y = yval;
+		}
+
+		for( i = 60; i < 70; i++ ){
+			xval -= 22;
+			yval -= 22;
+
+			demo_points[i].x = xval;
+			demo_points[i].y = yval;
+		}
+
+		for( i = 70; i < 79; i++ ){
+			yval -= 22;
+
+			demo_points[i].x = xval;
+			demo_points[i].y = yval;
+		}
+
+		for( i = 79; i < 100; i++ ){
+			demo_points[i].x = xval;
+			demo_points[i].y = yval;
+		}
+	}
+	else if( set == 2 ){
+		for( i = 0; i < 30; i++){
+			demo_points[i].x = 1;
+			demo_points[i].y = 1;
+		}
+
+		for( i = 30; i < 45; i++){
+			demo_points[i].x = 0;
+			demo_points[i].y = 75;
+		}
+
+		for( i = 45; i < 60; i++){
+			demo_points[i].x = 81;
+			demo_points[i].y = 0;
+		}
+
+		for( i = 60; i < 70; i++){
+			demo_points[i].x = 81;
+			demo_points[i].y = 75;
+		}
+
+		for( i = 70; i < 77; i++){
+			demo_points[i].x = 162;
+			demo_points[i].y = 0;
+		}
+
+		for( i = 77; i < 85; i++){
+			demo_points[i].x = 0;
+			demo_points[i].y = 150;
+		}
+
+		for( i = 85; i < 90; i++){
+			demo_points[i].x = 243;
+			demo_points[i].y = 0;
+		}
+
+		for( i = 90; i < 93; i++){
+			demo_points[i].x = 162;
+			demo_points[i].y = 75;
+		}
+
+		for( i = 93; i < 95; i++){
+			demo_points[i].x = 81;
+			demo_points[i].y = 150;
+		}
+
+		for( i = 95; i < 97; i++){
+			demo_points[i].x = 0;
+			demo_points[i].y = 225;
+		}
+
+		for( i = 97; i < 100; i++){
+			demo_points[i].x = 0;
+			demo_points[i].y = 300;
+		}
+	}
+	else if( set == 3 ){
+		for( i = 0; i < 100; i++){
+			demo_points[i].x = xval;
+			demo_points[i].y = yval;
+
+			xval += 7;
+		}
+	}
+	else if( set == 4 ){
+		for( i = 0; i < 100; i++){
+			demo_points[i].x = xval;
+			demo_points[i].y = yval;
+
+			xval += 7;
+			yval += 4;
+		}
+	}
+	else if( set == 4 ){
+		for( i = 0; i < 50; i++){
+			demo_points[i].x = xval;
+			demo_points[i].y = yval;
+
+			xval += 7;
+			yval += 8;
+		}
+		for( i = 50; i < 100; i++){
+			demo_points[i].x = xval;
+			demo_points[i].y = yval;
+
+			xval += 7;
+			yval -= 8;
+		}
+	}
+	else if( set == 5 ){
+		for( i = 0; i < 33; i++){
+			demo_points[i].x = 150;
+			demo_points[i].y = 150;
+		}
+
+		for( i = 33; i < 66; i++){
+			demo_points[i].x = 450;
+			demo_points[i].y = 250;
+		}
+
+		for( i = 66; i < 100; i++){
+			demo_points[i].x = 700;
+			demo_points[i].y = 420;
+		}
+	}
+	else if( set == 6 ){
+		for( i = 0; i < 33; i++){
+			demo_points[i].x = 1;
+			demo_points[i].y = 1;
+		}
+
+		for( i = 33; i < 66; i++){
+			demo_points[i].x = 80;
+			demo_points[i].y = 80;
+		}
+
+		for( i = 66; i < 100; i++){
+			demo_points[i].x = 160;
+			demo_points[i].y = 160;
+		}
+	}
+	else if( set == 7 ){
+		for( i = 0; i < 33; i++){
+			demo_points[i].x = 700;
+			demo_points[i].y = 150;
+		}
+
+		for( i = 33; i < 66; i++){
+			demo_points[i].x = 600;
+			demo_points[i].y = 150;
+		}
+
+		for( i = 66; i < 100; i++){
+			demo_points[i].x = 500;
+			demo_points[i].y = 150;
+		}
+	}
+	else if( set == 8 ){
+		for( i = 0; i < 33; i++){
+			demo_points[i].x = 700;
+			demo_points[i].y = 420;
+		}
+
+		for( i = 33; i < 66; i++){
+			demo_points[i].x = 420;
+			demo_points[i].y = 220;
+		}
+
+		for( i = 66; i < 100; i++){
+			demo_points[i].x = 1;
+			demo_points[i].y = 5;
+		}
+	}
+	else if( set == 9 ){
+		for( i = 0; i < 33; i++){
+			demo_points[i].x = 700;
+			demo_points[i].y = 420;
+		}
+
+		for( i = 33; i < 66; i++){
+			demo_points[i].x = 420;
+			demo_points[i].y = 420;
+		}
+
+		for( i = 66; i < 100; i++){
+			demo_points[i].x = 1;
+			demo_points[i].y = 420;
+		}
+	}
+	else if( set == 10 ){
+		for( i = 0; i < 50; i++){
+			demo_points[i].x = xval;
+			demo_points[i].y = yval;
+
+			xval += 8;
+		}
+
+		for( i = 50; i < 70; i++){
+			demo_points[i].x = xval;
+			demo_points[i].y = yval;
+
+			xval += 4;
+		}
+
+		for( i = 70; i < 80; i++){
+			demo_points[i].x = xval;
+			demo_points[i].y = yval;
+
+			xval += 2;
+		}
+
+		for( i = 80; i < 100; i++){
+			demo_points[i].x = xval;
+			demo_points[i].y = yval;
+		}
 	}
 
-	for( i = 39; i < 48; i++ ){
-		xval += 36;
-
-		demo_points[i].x = xval;
-		demo_points[i].y = yval;
+	int j;
+	for( j = 0; j < 100; j++ ){
+		dataset[j].x = demo_points[j].x;
+		dataset[j].y = demo_points[j].y;
 	}
 
-	for( i = 48; i < 60; i++ ){
-		demo_points[i].x = xval;
-		demo_points[i].y = yval;
-	}
-
-	for( i = 60; i < 70; i++ ){
-		xval -= 22;
-		yval -= 22;
-
-		demo_points[i].x = xval;
-		demo_points[i].y = yval;
-	}
-
-	for( i = 70; i < 79; i++ ){
-		yval -= 22;
-
-		demo_points[i].x = xval;
-		demo_points[i].y = yval;
-	}
-
-	for( i = 79; i < 100; i++ ){
-		demo_points[i].x = xval;
-		demo_points[i].y = yval;
-	}
-
-	for( i = 0; i < 100; i++ ) {
-		printf("x %d: %f  y %d: %f\n", i, demo_points[i].x,
-									   i, demo_points[i].y);
-	}
+	localData.dataSets[set-1].size = 100;
 }

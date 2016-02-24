@@ -49,6 +49,6 @@ void start_log(void);
 void stop_log(void);
 void erase_log(void);
 void query_log(void);
-void save_demo_points(void);
+void save_demo_points(int );
 
 #endif // GPS_POINTS_H_
