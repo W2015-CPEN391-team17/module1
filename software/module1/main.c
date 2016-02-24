@@ -167,12 +167,12 @@ void main_menu(void)
 
 			draw_field();
 		}else{
-			if(p.x < XRES / 3){
+			if(p.x < XRES / NMENUS){
 				//Save/Load touched
 				SaveLoadMenu(&p, &colourScheme);
 				showing_heatmap = FALSE;
 				GetRelease();
-			}else if(p.x < 2 * XRES / 3){
+			}else if(p.x < 2 * XRES / NMENUS){
 				//Interpret touched
 				InterpretMenu(&p, &colourScheme);
 				GetRelease();
