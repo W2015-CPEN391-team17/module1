@@ -138,7 +138,7 @@ void read_string(char *output){
  */
 void save_points(void){
 
-	printf("starting dump\n");
+	printf("Initiating dump\n");
 	int i, lat_count, lat_end, long_count, long_end, save_count;
 	int j = 200;
 	int k = 0;
@@ -646,10 +646,17 @@ void save_demo_points(int set) {
 			localData.dataSets[set].points[i].y = yval;
 
 			xval -= 3;
-			yval += 4;
+			yval += 6;
 		}
 
-		for( i = 420; i < 500; i++){
+		for( i = 420; i < 450; i++){
+			localData.dataSets[set].points[i].x = xval;
+			localData.dataSets[set].points[i].y = yval;
+
+			xval -= 3;
+		}
+
+		for( i = 450; i < 500; i++){
 			localData.dataSets[set].points[i].x = xval;
 			localData.dataSets[set].points[i].y = yval;
 		}

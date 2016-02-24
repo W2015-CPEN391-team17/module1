@@ -17,10 +17,9 @@
 
 // Meta stuff.
 void initialize_components(void);
-void initialize_components(void);
 void initialize_colourScheme(void);
 void initialize_datasets(void);
-void initialize_demodata(void);
+//void initialize_demodata(void);
 void cleanup(void);
 
 // Data-independent drawing functions.
@@ -44,9 +43,8 @@ int main()
   initialize_colourScheme();
   initialize_datasets();
   save_points();
-  //load_from_SD_to_dataSets();
   loadgps_workingDataSet();
-  initialize_demodata();
+  load_from_SD_to_dataSets();
   main_menu();
 
   // Should never reach this point, but here in case we implement an exit button.
@@ -94,13 +92,18 @@ void initialize_datasets()
 	//TODO should copy data from SD card instead
 }
 
-void initialize_demodata()
+/*void initialize_demodata()
 {
 	// set all data sets to demo data
 	int set = 0;
 	for(set = 0; set < MAX_N_SETS; set++){
 		save_demo_points(set);
 	}
+}*/
+
+void read_from_SD()
+{
+
 }
 
 void cleanup(void)
