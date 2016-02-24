@@ -9,17 +9,16 @@
 #include "graphics.h" //for XRES/YRES and MENU_TOP
 #include "gps_points.h"
 
-//#include <math.h>
+#include <math.h>
 
 /*
- *Assumes field is in line with lat/long. Converts global array (ugh) of gps_points to array of GPSPoint scaled to screen pixels.
- *CALLOCS points, CALLING FUNCTION MUST DEAL WITH free() IF NEEDED!!!!!
- *
+ * Assumes field is in line with lat/long. Converts global array of gps_points to array of GPSPoint scaled to screen pixels.
+ * Callocs the returned pointer. Calling function needs to deal with free()'ing
  */
 GPSPoint* convertGPSPoints( int nPoints ){
 	GPSPoint* points = calloc(nPoints, sizeof(GPSPoint));
 
-	double mX = (double) XRES / (TOPRIGHTLONG - TOPLEFTLONG);
+	double mX = (double) XRES / (TOPRIGHTLONG - TOPLEFTLONG); //Using two linear functions f(x) = mx + b so these are the m's
 	double mY = (double) MENU_TOP / (TOPRIGHTLAT - BOTRIGHTLAT);
 
 	int i;
@@ -27,6 +26,7 @@ GPSPoint* convertGPSPoints( int nPoints ){
 		points[i].x = mX * (gps_points[i].long_float - TOPLEFTLONG);
 		points[i].y = MENU_TOP - (mY * (gps_points[i].lat_float - BOTRIGHTLAT));
 
+		//Following if statements are for rounding
 		if(points[i].x > XRES && points[i].x < XRES + 1){
 			points[i].x = XRES;
 		}
@@ -41,6 +41,10 @@ GPSPoint* convertGPSPoints( int nPoints ){
 /*
  * Converts GPSpoints to points for graphics. Does NOT take care of ALL points outside of range. Only works for topRight in quadrant 4
  * relative to topLeft. Needs to be tested.
+ *
+ * NOT USED DUE TO REQUIRING EXACTLY 90 DEGREE ANGLE AT CORNERS OF FIELD, INCLUDED FOR FUTURE USE (in more realistic version)
+ *
+ * Just does the basic trig for a 2D rotation
  */
 void convertGPSReal( GPSPoint topLeft, GPSPoint topRight, GPSPoint points[], GPSPoint bottomLeft, int nPoints ){
 	double theta = -atan((topRight.y - topLeft.y)/(topRight.x - topLeft.x));
@@ -81,7 +85,6 @@ void convertGPSReal( GPSPoint topLeft, GPSPoint topRight, GPSPoint points[], GPS
 		}
 	}
 
-	/*This bit is for testing purposes. Should be changed to XRES/YRES/0 for final*/
 	topRight.x = mX * (topRight.x - topLeft.x);//should eval to XRES
 	topRight.y = mY * (topRight.y - bottomLeft.y);//should eval to YRES
 
