@@ -19,7 +19,7 @@
 void initialize_components(void);
 void initialize_colourScheme(void);
 void initialize_datasets(void);
-//void initialize_demodata(void);
+void initialize_demodata(void);
 void cleanup(void);
 
 // Data-independent drawing functions.
@@ -44,7 +44,8 @@ int main()
   initialize_datasets();
   save_points();
   loadgps_workingDataSet();
-  load_from_SD_to_dataSets();
+  initialize_demodata();
+  //load_from_SD_to_dataSets();
   main_menu();
 
   // Should never reach this point, but here in case we implement an exit button.
@@ -92,14 +93,14 @@ void initialize_datasets()
 	//TODO should copy data from SD card instead
 }
 
-/*void initialize_demodata()
+void initialize_demodata()
 {
 	// set all data sets to demo data
 	int set = 0;
 	for(set = 0; set < MAX_N_SETS; set++){
 		save_demo_points(set);
 	}
-}*/
+}
 
 void read_from_SD()
 {
@@ -145,21 +146,23 @@ void main_menu(void)
 	draw_field();
 	draw_menu();
 	Point p;
-	p.y = 0;
+	p = GetPress();
+	GetRelease();
 
+	int firstTime = TRUE;
 	int showing_heatmap = TRUE;
 	int outSubMenu = FALSE;
 	while(1)
 	{
 		if(p.y < MENU_TOP){
-			if(!outSubMenu){
+			if(!outSubMenu && !firstTime){
 				p = GetPress();
 				GetRelease();
 			}
 		}
 
 		if(p.y < MENU_TOP){
-			if(!outSubMenu){
+			if(!outSubMenu && !firstTime){
 				showing_heatmap = !showing_heatmap;
 			}else{
 				outSubMenu = FALSE;
@@ -173,6 +176,10 @@ void main_menu(void)
 
 			draw_field();
 		}else{
+			if(firstTime){
+				showing_heatmap = !showing_heatmap;
+			}
+
 			if(p.x < XRES / NMENUS){
 				//Save/Load touched
 				SaveLoadMenu(&p, &colourScheme);
@@ -189,6 +196,9 @@ void main_menu(void)
 				draw_menu();
 			}
 			outSubMenu = TRUE;
+		}
+		if(firstTime){
+			firstTime = FALSE;
 		}
 	}
 }
