@@ -10,7 +10,6 @@
 #include "colours.h"
 #include "graphics.h"
 #include "heatmap.h"
-#include "bluetooth.h"
 #include "gps_points.h"
 #include "sub_menus.h"
 #include "sd_card.h"
@@ -62,7 +61,6 @@ void initialize_components(void)
 {
 	init_gps();
 	Init_Touch();
-	init_btport();
 	clear_screen(WHITE);
 }
 
