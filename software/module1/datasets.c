@@ -14,14 +14,15 @@
  */
 void load_into_workingDataSet(int index) {
 	//for the slot with the given index
-	dataSet *copyFromSet = &localData.dataSets[index];
+	dataSet *copyFromSet = &(localData.dataSets[index]);
 
 	//copy the data
 	int size = copyFromSet->size;
 	localData.workingDataSet.size = size;
 	int i;
 	for(i = 0; i < size; i++) {
-		localData.workingDataSet.points[i] = copyFromSet->points[i];
+		localData.workingDataSet.points[i].x = copyFromSet->points[i].x;
+		localData.workingDataSet.points[i].y = copyFromSet->points[i].y;
 	}
 }
 
@@ -38,7 +39,8 @@ void save_from_workingDataSet(int index) {
 	copyToSet->size = size;
 	int i;
 	for(i = 0; i < size; i++) {
-		copyToSet->points[i] = localData.workingDataSet.points[i];
+		copyToSet->points[i].x = localData.workingDataSet.points[i].x;
+		copyToSet->points[i].y = localData.workingDataSet.points[i].y;
 	}
 }
 

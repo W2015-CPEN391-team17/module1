@@ -43,9 +43,9 @@ int main()
   initialize_components();
   initialize_colourScheme();
   initialize_datasets();
-  initialize_demodata();
   save_points();
   loadgps_workingDataSet();
+  initialize_demodata();
   main_menu();
 
   // Should never reach this point, but here in case we implement an exit button.
@@ -97,10 +97,8 @@ void initialize_demodata()
 {
 	// set all data sets to demo data
 	int set = 0;
-
-	for(set=0; set < 100; set++){
-		localData.dataSets[0].points[set].x = 600;
-		localData.dataSets[0].points[set].y = 600;
+	for(set = 0; set < MAX_N_SETS; set++){
+		save_demo_points(set);
 	}
 }
 

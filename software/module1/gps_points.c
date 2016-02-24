@@ -360,22 +360,17 @@ void query_log(void){
 }
 
 void save_demo_points(int set) {
+	int size = 100;
 	int i = 0;
 	int xval = 4;
 	int yval = 4;
 
+	localData.dataSets[set].size = size;
 
-	dataSet *copyToSet = &localData.dataSets[set];
-
-	for( i = 0; i < 100; i++ ){
-		demo_points[i].x = 160;
-		demo_points[i].y = 160;
-	}
-
-	//if( set == 0 ){
-		/*for( i = 0; i < 39; i++ ){
-			demo_points[i].x = xval;
-			demo_points[i].y = yval;
+	if( set == 0 ){
+		for( i = 0; i < 39; i++ ){
+			localData.dataSets[set].points[i].x = xval;
+			localData.dataSets[set].points[i].y = yval;
 
 			xval += 10;
 			yval += 10;
@@ -384,103 +379,103 @@ void save_demo_points(int set) {
 		for( i = 39; i < 48; i++ ){
 			xval += 35;
 
-			demo_points[i].x = xval;
-			demo_points[i].y = yval;
+			localData.dataSets[set].points[i].x = xval;
+			localData.dataSets[set].points[i].y = yval;
 		}
 
 		for( i = 48; i < 60; i++ ){
-			demo_points[i].x = xval;
-			demo_points[i].y = yval;
+			localData.dataSets[set].points[i].x = xval;
+			localData.dataSets[set].points[i].y = yval;
 		}
 
 		for( i = 60; i < 70; i++ ){
 			xval -= 20;
 			yval -= 20;
 
-			demo_points[i].x = xval;
-			demo_points[i].y = yval;
+			localData.dataSets[set].points[i].x = xval;
+			localData.dataSets[set].points[i].y = yval;
 		}
 
 		for( i = 70; i < 79; i++ ){
 			yval -= 20;
 
-			demo_points[i].x = xval;
-			demo_points[i].y = yval;
+			localData.dataSets[set].points[i].x = xval;
+			localData.dataSets[set].points[i].y = yval;
 		}
 
 		for( i = 79; i < 100; i++ ){
-			demo_points[i].x = xval;
-			demo_points[i].y = yval;
+			localData.dataSets[set].points[i].x = xval;
+			localData.dataSets[set].points[i].y = yval;
 		}
 	}
 	else if( set == 1 ){
 		for( i = 0; i < 30; i++){
-			demo_points[i].x = 4;
-			demo_points[i].y = 4;
+			localData.dataSets[set].points[i].x = 4;
+			localData.dataSets[set].points[i].y = 4;
 		}
 
 		for( i = 30; i < 45; i++){
-			demo_points[i].x = 4;
-			demo_points[i].y = 75;
+			localData.dataSets[set].points[i].x = 4;
+			localData.dataSets[set].points[i].y = 75;
 		}
 
 		for( i = 45; i < 60; i++){
-			demo_points[i].x = 81;
-			demo_points[i].y = 4;
+			localData.dataSets[set].points[i].x = 81;
+			localData.dataSets[set].points[i].y = 4;
 		}
 
 		for( i = 60; i < 70; i++){
-			demo_points[i].x = 81;
-			demo_points[i].y = 75;
+			localData.dataSets[set].points[i].x = 81;
+			localData.dataSets[set].points[i].y = 75;
 		}
 
 		for( i = 70; i < 77; i++){
-			demo_points[i].x = 162;
-			demo_points[i].y = 4;
+			localData.dataSets[set].points[i].x = 162;
+			localData.dataSets[set].points[i].y = 4;
 		}
 
 		for( i = 77; i < 85; i++){
-			demo_points[i].x = 4;
-			demo_points[i].y = 150;
+			localData.dataSets[set].points[i].x = 4;
+			localData.dataSets[set].points[i].y = 150;
 		}
 
 		for( i = 85; i < 90; i++){
-			demo_points[i].x = 243;
-			demo_points[i].y = 4;
+			localData.dataSets[set].points[i].x = 243;
+			localData.dataSets[set].points[i].y = 4;
 		}
 
 		for( i = 90; i < 93; i++){
-			demo_points[i].x = 162;
-			demo_points[i].y = 75;
+			localData.dataSets[set].points[i].x = 162;
+			localData.dataSets[set].points[i].y = 75;
 		}
 
 		for( i = 93; i < 95; i++){
-			demo_points[i].x = 81;
-			demo_points[i].y = 150;
+			localData.dataSets[set].points[i].x = 81;
+			localData.dataSets[set].points[i].y = 150;
 		}
 
 		for( i = 95; i < 97; i++){
-			demo_points[i].x = 4;
-			demo_points[i].y = 225;
+			localData.dataSets[set].points[i].x = 4;
+			localData.dataSets[set].points[i].y = 225;
 		}
 
 		for( i = 97; i < 100; i++){
-			demo_points[i].x = 4;
-			demo_points[i].y = 300;
+			localData.dataSets[set].points[i].x = 4;
+			localData.dataSets[set].points[i].y = 300;
 		}
 	}
 	else if( set == 2 ){
 		for( i = 0; i < 100; i++){
-			demo_points[i].x = xval;
-			demo_points[i].y = yval;
+			localData.dataSets[set].points[i].x = xval;
+			localData.dataSets[set].points[i].y = yval;
 
 			xval += 7;
 		}
 	}
 	else if( set == 3 ){
 		for( i = 0; i < 100; i++){
-			demo_points[i].x = xval;
-			demo_points[i].y = yval;
+			localData.dataSets[set].points[i].x = xval;
+			localData.dataSets[set].points[i].y = yval;
 
 			xval += 7;
 			yval += 4;
@@ -488,15 +483,15 @@ void save_demo_points(int set) {
 	}
 	else if( set == 4 ){
 		for( i = 0; i < 50; i++){
-			demo_points[i].x = xval;
-			demo_points[i].y = yval;
+			localData.dataSets[set].points[i].x = xval;
+			localData.dataSets[set].points[i].y = yval;
 
 			xval += 7;
 			yval += 8;
 		}
 		for( i = 50; i < 100; i++){
-			demo_points[i].x = xval;
-			demo_points[i].y = yval;
+			localData.dataSets[set].points[i].x = xval;
+			localData.dataSets[set].points[i].y = yval;
 
 			xval += 7;
 			yval -= 8;
@@ -504,99 +499,159 @@ void save_demo_points(int set) {
 	}
 	else if( set == 5 ){
 		for( i = 0; i < 33; i++){
-			demo_points[i].x = 150;
-			demo_points[i].y = 150;
+			localData.dataSets[set].points[i].x = 150;
+			localData.dataSets[set].points[i].y = 150;
 		}
 
 		for( i = 33; i < 66; i++){
-			demo_points[i].x = 450;
-			demo_points[i].y = 250;
+			localData.dataSets[set].points[i].x = 450;
+			localData.dataSets[set].points[i].y = 250;
 		}
 
 		for( i = 66; i < 100; i++){
-			demo_points[i].x = 700;
-			demo_points[i].y = 420;
+			localData.dataSets[set].points[i].x = 700;
+			localData.dataSets[set].points[i].y = 420;
 		}
 	}
 	else if( set == 6 ){
 		for( i = 0; i < 33; i++){
-			demo_points[i].x = 1;
-			demo_points[i].y = 1;
+			localData.dataSets[set].points[i].x = 1;
+			localData.dataSets[set].points[i].y = 1;
 		}
 
 		for( i = 33; i < 66; i++){
-			demo_points[i].x = 80;
-			demo_points[i].y = 80;
+			localData.dataSets[set].points[i].x = 80;
+			localData.dataSets[set].points[i].y = 80;
 		}
 
 		for( i = 66; i < 100; i++){
-			demo_points[i].x = 160;
-			demo_points[i].y = 160;
+			localData.dataSets[set].points[i].x = 160;
+			localData.dataSets[set].points[i].y = 160;
 		}
 	}
 	else if( set == 7 ){
 		for( i = 0; i < 33; i++){
-			demo_points[i].x = 700;
-			demo_points[i].y = 150;
+			localData.dataSets[set].points[i].x = 700;
+			localData.dataSets[set].points[i].y = 150;
 		}
 
 		for( i = 33; i < 66; i++){
-			demo_points[i].x = 600;
-			demo_points[i].y = 150;
+			localData.dataSets[set].points[i].x = 600;
+			localData.dataSets[set].points[i].y = 150;
 		}
 
 		for( i = 66; i < 100; i++){
-			demo_points[i].x = 500;
-			demo_points[i].y = 150;
+			localData.dataSets[set].points[i].x = 500;
+			localData.dataSets[set].points[i].y = 150;
 		}
 	}
 	else if( set == 8 ){
 		for( i = 0; i < 33; i++){
-			demo_points[i].x = 700;
-			demo_points[i].y = 420;
+			localData.dataSets[set].points[i].x = 700;
+			localData.dataSets[set].points[i].y = 420;
 		}
 
 		for( i = 33; i < 66; i++){
-			demo_points[i].x = 420;
-			demo_points[i].y = 220;
+			localData.dataSets[set].points[i].x = 420;
+			localData.dataSets[set].points[i].y = 220;
 		}
 
 		for( i = 66; i < 100; i++){
-			demo_points[i].x = 1;
-			demo_points[i].y = 5;
+			localData.dataSets[set].points[i].x = 1;
+			localData.dataSets[set].points[i].y = 5;
 		}
 	}
 	else if( set == 9 ){
-		for( i = 0; i < 50; i++){
-			demo_points[i].x = xval;
-			demo_points[i].y = yval;
+		localData.dataSets[set].size = 500;
 
-			xval += 8;
+		for( i = 0; i < 50; i++){
+			localData.dataSets[set].points[i].x = xval;
+			localData.dataSets[set].points[i].y = yval;
+
+			xval += 7;
+			yval += 8;
 		}
 
-		for( i = 50; i < 70; i++){
-			demo_points[i].x = xval;
-			demo_points[i].y = yval;
+		for( i = 50; i < 100; i++){
+			localData.dataSets[set].points[i].x = xval;
+			localData.dataSets[set].points[i].y = yval;
+
+			xval += 7;
+			yval -= 5;
+		}
+
+		for( i = 100; i < 130; i++){
+			localData.dataSets[set].points[i].x = xval;
+			localData.dataSets[set].points[i].y = yval;
+
+			xval -= 2;
+			yval += 3;
+		}
+
+		for( i = 130; i < 160; i++){
+			localData.dataSets[set].points[i].x = xval;
+			localData.dataSets[set].points[i].y = yval;
+
+			xval -= 5;
+			yval -= 5;
+		}
+
+		for( i = 160; i < 200; i++){
+			localData.dataSets[set].points[i].x = xval;
+			localData.dataSets[set].points[i].y = yval;
 
 			xval += 4;
+			yval += 5;
 		}
 
-		for( i = 70; i < 80; i++){
-			demo_points[i].x = xval;
-			demo_points[i].y = yval;
+		for( i = 200; i < 210; i++){
+			localData.dataSets[set].points[i].x = xval;
+			localData.dataSets[set].points[i].y = yval;
 
-			xval += 2;
+			xval -= 10;
 		}
 
-		for( i = 80; i < 100; i++){
-			demo_points[i].x = xval;
-			demo_points[i].y = yval;
-		}
-	}*/
+		for( i = 210; i < 220; i++){
+			localData.dataSets[set].points[i].x = xval;
+			localData.dataSets[set].points[i].y = yval;
 
-	copyToSet->size = 100;
-	int j;
-	for(j = 0; j < 100; j++) {
-		copyToSet->points[j] = demo_points[j];
+			yval -= 10;
+		}
+
+		for( i = 220; i < 230; i++){
+			localData.dataSets[set].points[i].x = xval;
+			localData.dataSets[set].points[i].y = yval;
+
+			xval += 10;
+		}
+
+		for( i = 230; i < 240; i++){
+			localData.dataSets[set].points[i].x = xval;
+			localData.dataSets[set].points[i].y = yval;
+
+			yval += 10;
+		}
+
+		for( i = 240; i < 400; i++){
+			localData.dataSets[set].points[i].x = xval;
+			localData.dataSets[set].points[i].y = yval;
+
+			xval -= 2;
+			yval -= 1;
+		}
+
+		for( i = 400; i < 420; i++){
+			localData.dataSets[set].points[i].x = xval;
+			localData.dataSets[set].points[i].y = yval;
+
+			xval -= 3;
+			yval += 4;
+		}
+
+		for( i = 420; i < 500; i++){
+			localData.dataSets[set].points[i].x = xval;
+			localData.dataSets[set].points[i].y = yval;
+		}
 	}
+
 }
