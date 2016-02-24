@@ -183,7 +183,6 @@ void save_points(void){
 	for(log_count = 0; log_count < 9; log_count++){
 
 		strcpy(cur_string, (const char *)gps_log[log_count].string);
-		printf("%s", cur_string);
 
 		lat_count = 24;
 		long_count = 33;
@@ -231,7 +230,6 @@ void save_points(void){
 			break;
 
 		strcpy(cur_string, (const char *)gps_log[log_count].string);
-		printf("%s", cur_string);
 
 		lat_count = 25;
 		long_count = 34;
@@ -363,22 +361,28 @@ void query_log(void){
 
 void save_demo_points(int set) {
 	int i = 0;
-	int xval = 1;
-	int yval = 1;
+	int xval = 4;
+	int yval = 4;
 
-	GPSPoint *dataset = localData.dataSets[set].points;
 
-	if( set == 0 ){
-		for( i = 0; i < 39; i++ ){
+	dataSet *copyToSet = &localData.dataSets[set];
+
+	for( i = 0; i < 100; i++ ){
+		demo_points[i].x = 160;
+		demo_points[i].y = 160;
+	}
+
+	//if( set == 0 ){
+		/*for( i = 0; i < 39; i++ ){
 			demo_points[i].x = xval;
 			demo_points[i].y = yval;
 
-			xval += 11;
-			yval += 11;
+			xval += 10;
+			yval += 10;
 		}
 
 		for( i = 39; i < 48; i++ ){
-			xval += 36;
+			xval += 35;
 
 			demo_points[i].x = xval;
 			demo_points[i].y = yval;
@@ -390,15 +394,15 @@ void save_demo_points(int set) {
 		}
 
 		for( i = 60; i < 70; i++ ){
-			xval -= 22;
-			yval -= 22;
+			xval -= 20;
+			yval -= 20;
 
 			demo_points[i].x = xval;
 			demo_points[i].y = yval;
 		}
 
 		for( i = 70; i < 79; i++ ){
-			yval -= 22;
+			yval -= 20;
 
 			demo_points[i].x = xval;
 			demo_points[i].y = yval;
@@ -411,18 +415,18 @@ void save_demo_points(int set) {
 	}
 	else if( set == 1 ){
 		for( i = 0; i < 30; i++){
-			demo_points[i].x = 1;
-			demo_points[i].y = 1;
+			demo_points[i].x = 4;
+			demo_points[i].y = 4;
 		}
 
 		for( i = 30; i < 45; i++){
-			demo_points[i].x = 0;
+			demo_points[i].x = 4;
 			demo_points[i].y = 75;
 		}
 
 		for( i = 45; i < 60; i++){
 			demo_points[i].x = 81;
-			demo_points[i].y = 0;
+			demo_points[i].y = 4;
 		}
 
 		for( i = 60; i < 70; i++){
@@ -432,17 +436,17 @@ void save_demo_points(int set) {
 
 		for( i = 70; i < 77; i++){
 			demo_points[i].x = 162;
-			demo_points[i].y = 0;
+			demo_points[i].y = 4;
 		}
 
 		for( i = 77; i < 85; i++){
-			demo_points[i].x = 0;
+			demo_points[i].x = 4;
 			demo_points[i].y = 150;
 		}
 
 		for( i = 85; i < 90; i++){
 			demo_points[i].x = 243;
-			demo_points[i].y = 0;
+			demo_points[i].y = 4;
 		}
 
 		for( i = 90; i < 93; i++){
@@ -456,12 +460,12 @@ void save_demo_points(int set) {
 		}
 
 		for( i = 95; i < 97; i++){
-			demo_points[i].x = 0;
+			demo_points[i].x = 4;
 			demo_points[i].y = 225;
 		}
 
 		for( i = 97; i < 100; i++){
-			demo_points[i].x = 0;
+			demo_points[i].x = 4;
 			demo_points[i].y = 300;
 		}
 	}
@@ -588,13 +592,11 @@ void save_demo_points(int set) {
 			demo_points[i].x = xval;
 			demo_points[i].y = yval;
 		}
-	}
+	}*/
 
+	copyToSet->size = 100;
 	int j;
-	for( j = 0; j < 100; j++ ){
-		dataset[j].x = demo_points[j].x;
-		dataset[j].y = demo_points[j].y;
+	for(j = 0; j < 100; j++) {
+		copyToSet->points[j] = demo_points[j];
 	}
-
-	localData.dataSets[set-1].size = 100;
 }
