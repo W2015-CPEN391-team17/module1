@@ -5,6 +5,7 @@
  */
 
 #include "heatmap.h"
+#include <math.h>
 
 void draw_heatmap(GPSPoint points[], int numPoints, Colours colourScheme)
 {
@@ -49,7 +50,7 @@ void draw_heatmap(GPSPoint points[], int numPoints, Colours colourScheme)
 	int colours[HEATMAP_H][HEATMAP_V];
 	for (y = 0; y < HEATMAP_V; y++) {
 		for (x = 0; x < HEATMAP_H; x++) {
-			shade = ((count[x][y] - min_count) * (HM_SHADES - 1))/(max_count - min_count);
+			shade = ceil(((count[x][y] - min_count) * (HM_SHADES - 1))/(max_count - min_count));
 			colours[x][y] = colourScheme.shades[shade];
 		}
 	}
