@@ -57,26 +57,26 @@ void SaveLoadMenu(Point* p, Colours* scheme){
 
 	//If the background is WHITE then just draw boarders in black for buttons
 	if(scheme->menuBackground == WHITE){
-		Rectangle(XRES/5, YRES/4, 100 + XRES/5, 5*BUFFER_BTW_BUTTONS/4 + YRES/4, BLACK);
-		Rectangle(4*XRES/5 - 100, YRES/4,  4*XRES/5, 5*BUFFER_BTW_BUTTONS/4 + YRES/4, BLACK);
-		Rectangle(XRES/5, 5*BUFFER_BTW_BUTTONS/4 + YRES/4 + BUFFER_BTW_BUTTONS, 100 + XRES/5, 50 + YRES/4 + 5*BUFFER_BTW_BUTTONS/4 + BUFFER_BTW_BUTTONS, BLACK);
-		Rectangle(4*XRES/5-100, 5*BUFFER_BTW_BUTTONS/4 + YRES/4 + BUFFER_BTW_BUTTONS, 4*XRES/5, 50 + YRES/4 + 5*BUFFER_BTW_BUTTONS/4 + BUFFER_BTW_BUTTONS, BLACK);
+		Rectangle(SL_LEFT_BOX_XSTART, SL_TOPBOX_YSTART, SL_LEFT_BOX_XEND, SL_TOPBOC_YEND, BLACK);
+		Rectangle(SL_RIGHT_BOX_XSTART, SL_TOPBOX_YSTART, SL_RIGHT_BOX_XEND, SL_TOPBOC_YEND, BLACK);
+		Rectangle(SL_LEFT_BOX_XSTART, SL_LOWBOX_YSTART, SL_LEFT_BOX_XEND, SL_LOWBOX_YEND, BLACK);
+		Rectangle(SL_RIGHT_BOX_XSTART, SL_LOWBOX_YSTART, SL_RIGHT_BOX_XEND, SL_LOWBOX_YEND, BLACK);
 	}else{ //Else use scheme to determine button colour
-		WriteFilledRectangle(XRES/5, YRES/4, 100 + XRES/5, 5*BUFFER_BTW_BUTTONS/4 + YRES/4, scheme->menuBackground);
-		WriteFilledRectangle(4*XRES/5 - 100, YRES/4,  4*XRES/5, 5*BUFFER_BTW_BUTTONS/4 + YRES/4, scheme->menuBackground);
-		WriteFilledRectangle(XRES/5, 5*BUFFER_BTW_BUTTONS/4 + YRES/4 + BUFFER_BTW_BUTTONS, 100 + XRES/5, 50 + YRES/4 + 5*BUFFER_BTW_BUTTONS/4 + BUFFER_BTW_BUTTONS, scheme->menuBackground);
-		WriteFilledRectangle(4*XRES/5-100, 5*BUFFER_BTW_BUTTONS/4 + YRES/4 + BUFFER_BTW_BUTTONS, 4*XRES/5, 50 + YRES/4 + 5*BUFFER_BTW_BUTTONS/4 + BUFFER_BTW_BUTTONS, scheme->menuBackground);
+		WriteFilledRectangle(SL_LEFT_BOX_XSTART, SL_TOPBOX_YSTART, SL_LEFT_BOX_XEND, SL_TOPBOC_YEND, scheme->menuBackground);
+		WriteFilledRectangle(SL_RIGHT_BOX_XSTART, SL_TOPBOX_YSTART,  SL_RIGHT_BOX_XEND, SL_TOPBOC_YEND, scheme->menuBackground);
+		WriteFilledRectangle(SL_LEFT_BOX_XSTART, SL_LOWBOX_YSTART, SL_LEFT_BOX_XEND, SL_LOWBOX_YEND, scheme->menuBackground);
+		WriteFilledRectangle(SL_RIGHT_BOX_XSTART, SL_LOWBOX_YSTART, SL_RIGHT_BOX_XEND, SL_LOWBOX_YEND, scheme->menuBackground);
 	}
 
 	//Draw text in buttons explaining them
-	Text((XRES/5 + (5*BUFFER_BTW_BUTTONS/4) + XRES/5)/2, (YRES/4 + 5*BUFFER_BTW_BUTTONS/4 + YRES/4)/2-5, scheme->text, scheme->menuBackground, "<", 0);
-	Text((4*XRES/5 + 4*XRES/5 - (5*BUFFER_BTW_BUTTONS/4))/2, (YRES/4 + 5*BUFFER_BTW_BUTTONS/4 + YRES/4)/2-5, scheme->text, scheme->menuBackground, ">", 0);
-	Text(XRES/5 + 10, 5*BUFFER_BTW_BUTTONS/4 + YRES/4 + BUFFER_BTW_BUTTONS + 10, scheme->text, scheme->menuBackground, "Load", 0);
-	Text(4*XRES/5-100 + 10, 5*BUFFER_BTW_BUTTONS/4 + YRES/4 + BUFFER_BTW_BUTTONS + 10, scheme->text, scheme->menuBackground, "Save", 0);
+	Text((SL_LEFT_BOX_XSTART + SL_LEFT_BOX_XEND)/2-19, (SL_TOPBOX_YSTART + SL_TOPBOC_YEND)/2-5, scheme->text, scheme->menuBackground, "<", 0);
+	Text((SL_RIGHT_BOX_XSTART + SL_RIGHT_BOX_XEND)/2+19, (SL_TOPBOX_YSTART + SL_TOPBOC_YEND)/2-5, scheme->text, scheme->menuBackground, ">", 0);
+	Text(SL_LEFT_BOX_XSTART + 10, SL_LOWBOX_YSTART + 10, scheme->text, scheme->menuBackground, "Load", 0);
+	Text(SL_RIGHT_BOX_XSTART + 10, SL_LOWBOX_YSTART + 10, scheme->text, scheme->menuBackground, "Save", 0);
 
 	int set = 0;//0 == GPS, else dataSet = set - 1.
 	char* str = "DataSet   ";
-	Text(XRES/2-25, (YRES/2 + BUFFER_BTW_BUTTONS)/2, scheme->text, scheme->menuBackground, "GPS", 0);
+	Text(XRES/2-25, (YRES/2 + 50)/2, scheme->text, scheme->menuBackground, "GPS", 0);
 
 	//boolean
 	int buttonTouched = 0;
@@ -87,11 +87,11 @@ void SaveLoadMenu(Point* p, Colours* scheme){
 
 		*p = GetPress();
 
-		if(p->y > YRES/4 && p->y < 5*BUFFER_BTW_BUTTONS/4 + YRES/4){
+		if(p->y > SL_TOPBOX_YSTART && p->y < SL_TOPBOC_YEND){
 			//if decrement button touched, decrement set, display such has been done to user
-			if(p->x > XRES/5 && p->x < 100 + XRES/5){
+			if(p->x > SL_LEFT_BOX_XSTART && p->x < SL_LEFT_BOX_XEND){
 				buttonTouched = 1;
-				WriteFilledRectangle(100 + XRES/5 + 1, YRES/4, 4*XRES/5 - 100 - 1, 5*BUFFER_BTW_BUTTONS/4 + YRES/4, WHITE);
+				WriteFilledRectangle(SL_LEFT_BOX_XEND + 1, SL_TOPBOX_YSTART, SL_RIGHT_BOX_XSTART - 1, SL_TOPBOC_YEND, WHITE);
 
 				if(set == 0){
 					set = MAX_N_SETS;//wrap-around
@@ -100,7 +100,7 @@ void SaveLoadMenu(Point* p, Colours* scheme){
 				}
 
 				if(set == 0){
-					Text(XRES/2-25, (YRES/2 + BUFFER_BTW_BUTTONS)/2, scheme->text, scheme->menuBackground, "GPS", 0);
+					Text(XRES/2-25, (YRES/2 + 50)/2, scheme->text, scheme->menuBackground, "GPS", 0);
 				}else{
 					str[8] = (char)(set / 10) + '0';
 					str[9] = (char)(set % 10) + '0';
@@ -109,14 +109,14 @@ void SaveLoadMenu(Point* p, Colours* scheme){
 						str[9] = '\0';
 					}
 
-					Text(XRES/2-45, (YRES/2 + BUFFER_BTW_BUTTONS)/2, scheme->text, scheme->menuBackground, str, 0);
+					Text(XRES/2-45, (YRES/2 + 50)/2, scheme->text, scheme->menuBackground, str, 0);
 				}
 
 				GetRelease();
-			}else if(p->x > 4*XRES/5 - 100 && p->x < 4*XRES/5){
+			}else if(p->x > SL_RIGHT_BOX_XSTART && p->x < SL_RIGHT_BOX_XEND){
 				//if increment button touched, increment set, display such has been done to user
 				buttonTouched = 1;
-				WriteFilledRectangle(100 + XRES/5 + 1, YRES/4, 4*XRES/5 - 100 - 1, 5*BUFFER_BTW_BUTTONS/4 + YRES/4, WHITE);
+				WriteFilledRectangle(SL_LEFT_BOX_XEND + 1, SL_TOPBOX_YSTART, SL_RIGHT_BOX_XSTART - 1, SL_TOPBOC_YEND, WHITE);
 
 				if(set == MAX_N_SETS){
 					set = 0;//wrap-around
@@ -125,7 +125,7 @@ void SaveLoadMenu(Point* p, Colours* scheme){
 				}
 
 				if(set == 0){
-					Text(XRES/2-25, (YRES/2 + BUFFER_BTW_BUTTONS)/2, scheme->text, scheme->menuBackground, "GPS", 0);
+					Text(XRES/2-25, (YRES/2 + 50)/2, scheme->text, scheme->menuBackground, "GPS", 0);
 				}else{
 					str[8] = (char)(set / 10) + '0';
 					str[9] = (char)(set % 10) + '0';
@@ -134,14 +134,14 @@ void SaveLoadMenu(Point* p, Colours* scheme){
 						str[9] = '\0';
 					}
 
-					Text(XRES/2-45, (YRES/2 + BUFFER_BTW_BUTTONS)/2, scheme->text, scheme->menuBackground, str, 0);
+					Text(XRES/2-45, (YRES/2 + 50)/2, scheme->text, scheme->menuBackground, str, 0);
 				}
 
 				GetRelease();
 			}
-		}else if(p->y < 50 + YRES/4 + 5*BUFFER_BTW_BUTTONS/4 + BUFFER_BTW_BUTTONS && p->y > 5*BUFFER_BTW_BUTTONS/4 + YRES/4 + BUFFER_BTW_BUTTONS){
+		}else if(p->y < SL_LOWBOX_YEND && p->y > SL_LOWBOX_YSTART){
 			//If load button touched, do following
-			if(p->x > XRES/5 && p->x < 100 + XRES/5){
+			if(p->x > SL_LEFT_BOX_XSTART && p->x < SL_LEFT_BOX_XEND){
 				buttonTouched = 1;
 
 				if (set != 0) {
@@ -152,7 +152,7 @@ void SaveLoadMenu(Point* p, Colours* scheme){
 				}
 
 				return;
-			}else if(p->x > 4*XRES/5-100 && p->x < 4*XRES/5){
+			}else if(p->x > SL_RIGHT_BOX_XSTART && p->x < SL_RIGHT_BOX_XEND){
 				//If save button touched, do following
 				buttonTouched = 1;
 		
@@ -161,7 +161,7 @@ void SaveLoadMenu(Point* p, Colours* scheme){
 					save_from_workingDataSet(set+1);
 				}
 
-				WriteFilledRectangle(XRES/4, 0, XRES-1, YRES/4-1, WHITE);
+				WriteFilledRectangle(SL_LEFT_BOX_XSTART, 0, XRES-1, SL_TOPBOX_YSTART-1, WHITE);
 				if(set == 0){
 					Text(XRES/3-45, 10, BLACK, WHITE, "Cannot save to GPS", 0);
 					}else{
@@ -176,7 +176,7 @@ void SaveLoadMenu(Point* p, Colours* scheme){
 			}
 		}
 
-	}while(buttonTouched || (p->y > MENU_TOP && p->x < XRES/3)); //Do this while a button in the submenu has been touched or the Save/Load menu button has been touched
+	}while(buttonTouched || (p->y > MENU_TOP && p->x < XRES/NMENUS)); //Do this while a button in the submenu has been touched or the Save/Load menu button has been touched
 }
 
 /*
@@ -195,7 +195,7 @@ void InterpretMenu(Point* p, Colours* scheme){
 		str[17] = '\0';
 	}
 
-	Text(XRES/5, 10, scheme->text, scheme->menuBackground, str, 0);
+	Text(I_LEFT_ALIGN, I_TOP_ALIGN, scheme->text, scheme->menuBackground, str, 0);
 
 	str = "Time on Left:   %";
 
@@ -208,7 +208,7 @@ void InterpretMenu(Point* p, Colours* scheme){
 		str[16] = '\0';
 	}
 
-	Text(XRES/5, 210, scheme->text, scheme->menuBackground, str, 0);
+	Text(I_LEFT_ALIGN, I_BOT_ALIGN, scheme->text, scheme->menuBackground, str, 0);
 
 	str = "Time Forward:   %";
 
@@ -221,7 +221,7 @@ void InterpretMenu(Point* p, Colours* scheme){
 		str[16] = '\0';
 	}
 
-	Text(3*XRES/5, 10, scheme->text, scheme->menuBackground, str, 0);
+	Text(I_RIGHT_ALIGN, I_TOP_ALIGN, scheme->text, scheme->menuBackground, str, 0);
 
 	str = "Time Back:   %";
 
@@ -234,11 +234,11 @@ void InterpretMenu(Point* p, Colours* scheme){
 		str[13] = '\0';
 	}
 
-	Text(3*XRES/5, 210, scheme->text, scheme->menuBackground, str, 0);
+	Text(I_RIGHT_ALIGN, I_BOT_ALIGN, scheme->text, scheme->menuBackground, str, 0);
 
 	do{
 		*p = GetPress();
-	}while(p->x > XRES/3 && p->x < 2*XRES/3 && p->y > MENU_TOP);
+	}while(p->x > XRES/NMENUS && p->x < 2*XRES/NMENUS && p->y > MENU_TOP);
 }
 
 /*
@@ -262,43 +262,45 @@ void SettingsMenu(Point* p, Colours* scheme){
 	int buttonTouched = 0;// 0 == Menu just opened, 1 == Line, 2 == Text/Background
 	do{
 		//Redraw buttons/lines with new colours if the button pressed wasn't the settings button
-		if (!settingsTouched){
-			if (buttonTouched == 0 || buttonTouched == 2){
-				WriteFilledRectangle(XRES/2-100, 0, XRES/2+100, MENU_TOP/2 - BUFFER_BTW_BUTTONS,scheme->menuBackground);//Create buttons
-				WriteFilledRectangle(XRES/2-100, MENU_TOP/2, XRES/2+100, MENU_TOP - BUFFER_BTW_BUTTONS,scheme->menuBackground);
+		if(!settingsTouched){
+			if(buttonTouched == 0 || buttonTouched == 2){
+				WriteFilledRectangle(SET_LEFT_ALIGN, 0, SET_RIGHT, SET_TOP_YEND,scheme->menuBackground);//Create buttons
+				WriteFilledRectangle(SET_LEFT_ALIGN, SET_BOT_YSTART, SET_RIGHT, SET_BOT_YEND,scheme->menuBackground);
 
-				Text(XRES/2-100+10, (MENU_TOP/2 - BUFFER_BTW_BUTTONS)/2, scheme->text, scheme->menuBackground, "Text/background", 0);//Print text on buttons
-				Text(XRES/2-100+10, MENU_TOP/2 + 1, scheme->text, scheme->menuBackground, "Line Colour", 0);
+				Text(SET_LEFT_ALIGN+10, (SET_TOP_YEND)/2, scheme->text, scheme->menuBackground, "Text/background", 0);//Print text on buttons
+				Text(SET_LEFT_ALIGN+10, SET_BOT_YSTART + 1, scheme->text, scheme->menuBackground, "Line Colour", 0);
 			}
 
+			if(buttonTouched == 0 || buttonTouched == 1){
 			//Display example lines
-			WriteLine(XRES/2-100, MENU_TOP - BUFFER_BTW_BUTTONS-1, XRES/2+100, MENU_TOP/2-1, scheme->connectTheDotsLine);
-			WriteLine(XRES/2-100, MENU_TOP - BUFFER_BTW_BUTTONS, XRES/2+100, MENU_TOP/2, scheme->connectTheDotsLine);
-			WriteLine(XRES/2-100, MENU_TOP - BUFFER_BTW_BUTTONS+1, XRES/2+100, MENU_TOP/2+1, scheme->connectTheDotsLine);
-		} else {
+				WriteLine(SET_LEFT_ALIGN, SET_BOT_YEND-1, SET_RIGHT, SET_BOT_YSTART-1, scheme->connectTheDotsLine);
+				WriteLine(SET_LEFT_ALIGN, SET_BOT_YEND, SET_RIGHT, SET_BOT_YSTART, scheme->connectTheDotsLine);
+				WriteLine(SET_LEFT_ALIGN, SET_BOT_YEND+1, SET_RIGHT, SET_BOT_YSTART, scheme->connectTheDotsLine);
+			}
+		}else{
 			settingsTouched = 0;
 		}
 
 		*p = GetPress();
 
 		//If the text/background colour button is pressed
-		if (p->x <= XRES/2+100 && p->x >= XRES/2-100 && p->y <= MENU_TOP/2-BUFFER_BTW_BUTTONS){
+		if(p->x <= SET_RIGHT && p->x >= SET_LEFT_ALIGN && p->y <= SET_TOP_YEND){
 			buttonTouched = 2;
-			do {
+			do{
 				scheme->menuBackground = pairs[(scheme->pairNum + 1) % NPAIRS].background;
 				scheme->text = pairs[(scheme->pairNum + 1) % NPAIRS].text;
 				scheme->pairNum = (scheme->pairNum + 1) % NPAIRS;
-			} while (scheme->menuBackground == scheme->connectTheDotsLine);//Change the colour pair if the background was the same colour as the line
+			}while(scheme->menuBackground == scheme->connectTheDotsLine);//Change the colour pair if the background was the same colour as the line
 			GetRelease();
-		} else if (p->x <= XRES/2+100 && p->x >= XRES/2-100 && p->y <= MENU_TOP-BUFFER_BTW_BUTTONS && p->y > MENU_TOP/2){ //If the line colour button was pressed
+		}else if(p->x <= SET_RIGHT && p->x >= SET_LEFT_ALIGN && p->y <= SET_BOT_YEND && p->y > SET_BOT_YSTART){ //If the line colour button was pressed
 			buttonTouched = 1;
-			do {
+			do{
 				scheme->connectTheDotsLine = (scheme->connectTheDotsLine + 1) % NCOLOURS;
-			} while (scheme->connectTheDotsLine == WHITE || scheme->connectTheDotsLine == scheme->menuBackground);//Change the line colour if it is white or is the same colour as the background
+			}while(scheme->connectTheDotsLine == WHITE || scheme->connectTheDotsLine == scheme->menuBackground);//Change the line colour if it is white or is the same colour as the background
 			GetRelease();
-		} else if (!(p->x >= 2 * XRES / 3 && p->y >= MENU_TOP)){//If touched outside of this menu's buttons and not the settings button itself break out of menu
+		}else if(!(p->x >= 2 * XRES / NMENUS && p->y >= MENU_TOP)){//If touched outside of this menu's buttons and not the settings button itself break out of menu
 			break;
-		} else {//Else the settings button was touched
+		}else{//Else the settings button was touched
 			settingsTouched = 1;
 		}
 	}while(1); //Do this while in settings menu
