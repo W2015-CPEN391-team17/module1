@@ -98,7 +98,7 @@ void initialize_demodata()
 {
 	// set all data sets to demo data
 	int set;
-	for( set = 1; set < MAX_N_SETS; set++){
+	for( set = 0; set < MAX_N_SETS; set++){
 		save_demo_points(set);
 	}
 }
