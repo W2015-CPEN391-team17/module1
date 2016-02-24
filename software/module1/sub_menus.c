@@ -150,19 +150,9 @@ void SaveLoadMenu(Point* p, Colours* scheme){
 				} else {
 					loadgps_workingDataSet();
 				}
-				
-				WriteFilledRectangle(XRES/4, 0, XRES-1, YRES/4-1, WHITE);
-				if(set == 0){
-					Text(XRES/3-45, 10, BLACK, WHITE, "GPS Loaded", 0);
-				}else{
-					char tmpStr[strlen(str)+8];
-					strcpy(tmpStr,str);
-					strcpy(tmpStr+strlen(str), " Loaded");
-
-					Text(XRES/3-45, 10, BLACK, WHITE, tmpStr, 0);
-				}
 
 				GetRelease();
+				return;
 			}else if(p->x > 4*XRES/5-100 && p->x < 4*XRES/5){
 				//If save button touched, do following
 				buttonTouched = 1;
@@ -273,8 +263,8 @@ void SettingsMenu(Point* p, Colours* scheme){
 	int buttonTouched = 0;// 0 == Menu just opened, 1 == Line, 2 == Text/Background
 	do{
 		//Redraw buttons/lines with new colours if the button pressed wasn't the settings button
-		if(!settingsTouched){
-			if(buttonTouched == 0 || buttonTouched == 2){
+		if (!settingsTouched){
+			if (buttonTouched == 0 || buttonTouched == 2){
 				WriteFilledRectangle(XRES/2-100, 0, XRES/2+100, MENU_TOP/2 - BUFFER_BTW_BUTTONS,scheme->menuBackground);//Create buttons
 				WriteFilledRectangle(XRES/2-100, MENU_TOP/2, XRES/2+100, MENU_TOP - BUFFER_BTW_BUTTONS,scheme->menuBackground);
 
@@ -282,36 +272,34 @@ void SettingsMenu(Point* p, Colours* scheme){
 				Text(XRES/2-100+10, MENU_TOP/2 + 1, scheme->text, scheme->menuBackground, "Line Colour", 0);
 			}
 
-			if(buttonTouched == 0 || buttonTouched == 1){
 			//Display example lines
-				WriteLine(XRES/2-100, MENU_TOP - BUFFER_BTW_BUTTONS-1, XRES/2+100, MENU_TOP/2-1, scheme->connectTheDotsLine);
-				WriteLine(XRES/2-100, MENU_TOP - BUFFER_BTW_BUTTONS, XRES/2+100, MENU_TOP/2, scheme->connectTheDotsLine);
-				WriteLine(XRES/2-100, MENU_TOP - BUFFER_BTW_BUTTONS+1, XRES/2+100, MENU_TOP/2+1, scheme->connectTheDotsLine);
-			}
-		}else{
+			WriteLine(XRES/2-100, MENU_TOP - BUFFER_BTW_BUTTONS-1, XRES/2+100, MENU_TOP/2-1, scheme->connectTheDotsLine);
+			WriteLine(XRES/2-100, MENU_TOP - BUFFER_BTW_BUTTONS, XRES/2+100, MENU_TOP/2, scheme->connectTheDotsLine);
+			WriteLine(XRES/2-100, MENU_TOP - BUFFER_BTW_BUTTONS+1, XRES/2+100, MENU_TOP/2+1, scheme->connectTheDotsLine);
+		} else {
 			settingsTouched = 0;
 		}
 
 		*p = GetPress();
 
 		//If the text/background colour button is pressed
-		if(p->x <= XRES/2+100 && p->x >= XRES/2-100 && p->y <= MENU_TOP/2-BUFFER_BTW_BUTTONS){
+		if (p->x <= XRES/2+100 && p->x >= XRES/2-100 && p->y <= MENU_TOP/2-BUFFER_BTW_BUTTONS){
 			buttonTouched = 2;
-			do{
+			do {
 				scheme->menuBackground = pairs[(scheme->pairNum + 1) % NPAIRS].background;
 				scheme->text = pairs[(scheme->pairNum + 1) % NPAIRS].text;
 				scheme->pairNum = (scheme->pairNum + 1) % NPAIRS;
-			}while(scheme->menuBackground == scheme->connectTheDotsLine);//Change the colour pair if the background was the same colour as the line
+			} while (scheme->menuBackground == scheme->connectTheDotsLine);//Change the colour pair if the background was the same colour as the line
 			GetRelease();
-		}else if(p->x <= XRES/2+100 && p->x >= XRES/2-100 && p->y <= MENU_TOP-BUFFER_BTW_BUTTONS && p->y > MENU_TOP/2){ //If the line colour button was pressed
+		} else if (p->x <= XRES/2+100 && p->x >= XRES/2-100 && p->y <= MENU_TOP-BUFFER_BTW_BUTTONS && p->y > MENU_TOP/2){ //If the line colour button was pressed
 			buttonTouched = 1;
-			do{
+			do {
 				scheme->connectTheDotsLine = (scheme->connectTheDotsLine + 1) % NCOLOURS;
-			}while(scheme->connectTheDotsLine == WHITE || scheme->connectTheDotsLine == scheme->menuBackground);//Change the line colour if it is white or is the same colour as the background
+			} while (scheme->connectTheDotsLine == WHITE || scheme->connectTheDotsLine == scheme->menuBackground);//Change the line colour if it is white or is the same colour as the background
 			GetRelease();
-		}else if(!(p->x >= 2 * XRES / 3 && p->y >= MENU_TOP)){//If touched outside of this menu's buttons and not the settings button itself break out of menu
+		} else if (!(p->x >= 2 * XRES / 3 && p->y >= MENU_TOP)){//If touched outside of this menu's buttons and not the settings button itself break out of menu
 			break;
-		}else{//Else the settings button was touched
+		} else {//Else the settings button was touched
 			settingsTouched = 1;
 		}
 	}while(1); //Do this while in settings menu

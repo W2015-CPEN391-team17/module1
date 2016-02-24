@@ -26,7 +26,6 @@ void cleanup(void);
 // Data-independent drawing functions.
 void draw_field(void);
 void draw_menu(void);
-void write_demo_screen(void);
 
 // Main menu function
 void main_menu(void);
@@ -44,7 +43,6 @@ int main()
   initialize_components();
   initialize_colourScheme();
   initialize_datasets();
-  initialize_demodata();
   save_points();
   loadgps_workingDataSet();
   main_menu();
