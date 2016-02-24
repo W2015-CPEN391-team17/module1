@@ -44,6 +44,7 @@ int main()
   initialize_components();
   initialize_colourScheme();
   initialize_datasets();
+  initialize_demodata();
   save_points();
   loadgps_workingDataSet();
   main_menu();
@@ -96,11 +97,10 @@ void initialize_datasets()
 void initialize_demodata()
 {
 	// set all data sets to demo data
-	int i;
-	for(i = 0; i < MAX_N_SETS; i++) {
-		localData.dataSets[i].size = 0;
+	int set;
+	for( set = 1; set < MAX_N_SETS; set++){
+		save_demo_points(set);
 	}
-	//TODO should copy data from SD card instead
 }
 void cleanup(void)
 {
