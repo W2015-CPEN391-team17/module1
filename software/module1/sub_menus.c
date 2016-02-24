@@ -146,7 +146,7 @@ void SaveLoadMenu(Point* p, Colours* scheme){
 
 				if (set != 0) {
 					//GPS is set 0 so we add 1 to get the correct index
-					load_into_workingDataSet(set+1);
+					load_into_workingDataSet(set-1);
 				} else {
 					loadgps_workingDataSet();
 				}
@@ -158,7 +158,7 @@ void SaveLoadMenu(Point* p, Colours* scheme){
 		
 				if (set != 0) { // check set number since cannot save to GPS
 					//GPS is set 0 so we add 1 to get the correct index
-					save_from_workingDataSet(set+1);
+					save_from_workingDataSet(set-1);
 				}
 
 				WriteFilledRectangle(SL_LEFT_BOX_XSTART, 0, XRES-1, SL_TOPBOX_YSTART-1, WHITE);
