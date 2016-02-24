@@ -186,7 +186,7 @@ void InterpretMenu(Point* p, Colours* scheme){
 	WriteFilledRectangle(0, 0, XRES-1, MENU_TOP-1, scheme->menuBackground);
 
 	char* str = "Time on Right:   %";
-	str[15] = (char)(100 * percentageRight / 10 + '0');
+	str[15] = (char)((int)(100 * percentageRight) / 10 + '0');
 	str[16] = (char)((int)(100 * percentageRight) % 10 + '0');
 
 	if(str[15] == '0'){
@@ -199,7 +199,7 @@ void InterpretMenu(Point* p, Colours* scheme){
 
 	str = "Time on Left:   %";
 
-	str[14] = (char)(100 * percentageLeft / 10 + '0');
+	str[14] = (char)((int)(100 * percentageLeft) / 10 + '0');
 	str[15] = (char)((int)(100 * percentageLeft) % 10 + '0');
 
 	if(str[14] == '0'){
@@ -212,7 +212,7 @@ void InterpretMenu(Point* p, Colours* scheme){
 
 	str = "Time Forward:   %";
 
-	str[14] = (char)(100 * percentageForward / 10 + '0');
+	str[14] = (char)((int)(100 * percentageForward) / 10 + '0');
 	str[15] = (char)((int)(100 * percentageForward) % 10 + '0');
 
 	if(str[14] == '0'){
@@ -225,7 +225,7 @@ void InterpretMenu(Point* p, Colours* scheme){
 
 	str = "Time Back:   %";
 
-	str[11] = (char)(100 * percentageBack / 10 + '0');
+	str[11] = (char)((int)(100 * percentageBack) / 10 + '0');
 	str[12] = (char)((int)(100 * percentageBack) % 10 + '0');
 
 	if(str[11] == '0'){
