@@ -7,6 +7,7 @@
 
 #include "datasets.h"
 #include "gps_points.h"
+#include "sd_card.h"
 
 /*
  * Copy the data from the slot with the given index in datasets
@@ -42,6 +43,9 @@ void save_from_workingDataSet(int index) {
 		copyToSet->points[i].x = localData.workingDataSet.points[i].x;
 		copyToSet->points[i].y = localData.workingDataSet.points[i].y;
 	}
+
+	//TODO test this
+	save_to_SD_from_dataSets();
 }
 
 /*
@@ -64,4 +68,20 @@ void loadgps_workingDataSet(){
 	free(screen_points); // free the calloc'd address space from convertGPSPoints
 
 	localData.workingDataSet.size = 70;
+}
+
+/*
+ * Load SD card contents to localData.dataSets
+ */
+void load_from_SD_to_dataSets() {
+	//TODO check return value of below call
+	sd_card_load(localData.dataSets, MAX_N_POINTS, FILENAME);
+}
+
+/*
+ * Save localData.dataSets to file FILENAME on SD card
+ */
+void save_to_SD_from_dataSets() {
+	//TODO check return value of below call
+	sd_card_save(localData.dataSets, MAX_N_POINTS, FILENAME);
 }

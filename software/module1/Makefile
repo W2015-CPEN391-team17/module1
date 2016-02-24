@@ -154,6 +154,9 @@ C_SRCS += sub_menus.c
 C_SRCS += sd_card.c
 C_SRCS += heatmap.c
 C_SRCS += datasets.c
+C_SRCS += cJSON.c
+C_SRCS += fill.c
+C_SRCS += unused.c
 CXX_SRCS :=
 ASM_SRCS :=
 

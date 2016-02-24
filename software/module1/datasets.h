@@ -48,4 +48,14 @@ void save_from_workingDataSet(int index);
  */
 void loadgps_workingDataSet(void);
 
+/*
+ * Load data from FILENAME on SD card to localData.dataSets
+ */
+void load_from_SD_to_dataSets(void);
+
+/*
+ * Save localData.dataSets to file FILENAME on SD card
+ */
+void save_to_SD_from_dataSets(void);
+
 #endif /* DATASETS_H_ */

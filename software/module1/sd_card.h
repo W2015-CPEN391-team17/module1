@@ -4,6 +4,8 @@
 #include "datasets.h"
 #include "cJSON.h"
 
+#define FILENAME "data.txt"
+
 // An array of dataSets are represented in JSON with this schema:
 //[
 // {
