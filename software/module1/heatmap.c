@@ -11,7 +11,7 @@
 void draw_heatmap(GPSPoint points[], int numPoints, Colours colourScheme)
 {
 	//Initialize 2D array representing points
-	int count[HEATMAP_H][HEATMAP_V] = {0};
+	int count[HEATMAP_H][HEATMAP_V] = {{0}};
 
 	//Check where points land
 	int i;

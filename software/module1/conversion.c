@@ -10,6 +10,7 @@
 #include "gps_points.h"
 
 #include <math.h>
+#include <stdlib.h>
 
 /*
  * Assumes field is in line with lat/long. Converts global array of gps_points to array of GPSPoint scaled to screen pixels.

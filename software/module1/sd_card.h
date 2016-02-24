@@ -1,57 +1,43 @@
 #ifndef SD_CARD_H_
 #define SD_CARD_H_
 
-#include "conversion.h"
+#include "datasets.h"
+#include "cJSON.h"
 
-#define GPSPOINTSET_POINTSMAXLEN 1024
-
-typedef struct {
-	int tag;  // name of struct (used for ID purposes)
-	int points_len;  // number of GPSPoints in points
-	GPSPoint points[GPSPOINTSET_POINTSMAXLEN];
-} GPSPointSet;
-
-// GPSPoints that are read and written to the SD card are represented
-// by this schema:
+// An array of dataSets are represented in JSON with this schema:
+//[
+// {
+//	"size": <double>,
+//	"gpspoints": [
+//	              {
+//					"x": <double>,
+//					"y": <double>
+//	              }
+//	]
+// }
+//]!
 //
-// x0,y0;x1,y1;x2,y2;
-//
-// If you have an array [ { 1.0, 2.0 }, { 3.0, 4.0 }, { 5.0, 6.0 } ]
-// it would be represented as:
-//
-// 1.0,2.0;3.0,4.0;5.0,6.0;
-//
-// The precision of floats in the schema is unspecified.
+// The '!' is a sentinel value denoting the end of useful information.
 
-// Print file contents of a file corresponding to a given filename.
-void sd_card_print_contents(char *filename);
+// The parameter `out[]` contains the string representation of the
+// JSON data including the '!' sentinel value.
+void sd_card_cJSON_stringify(dataSet in[], int in_len, char out[]);
 
-// Attempt to write a GPSPoint value to the SD card.
-// Will overwrite data on the SD card.
-void sd_card_write_point(GPSPoint point, char *filename);
+// The parameter `data[]` contains the string representation of the
+// JSON data including the '!' sentinel value.
+void sd_card_cJSON_parse(char data[], dataSet out[]);
 
-// Attempt to write an array of GPSPoint values to the SD card.
-// The parameter `len` is the length of the points array.
-// Will overwrite data on the SD card.
-void sd_card_write_points(GPSPoint points[], unsigned long len, char *filename);
+// Save dataSet dsets[] to the SD card.
+// Return 0 on success, return -1 on error writing to the SD card,
+// return -2 if the SD card could not be opened, return -3 if manual
+// disconnection of the SD card was necessary, otherwise return a
+// non-zero value.
+int sd_card_save(dataSet dsets[], int dsets_len, char *filename);
 
-
-// GPSPointSets that are read and written to the SD card are represented
-// by this schema:
-//
-// {[tag0:x0,y0;x1,y1;][tag1:x2,y2;]}
-//
-// If set 0 contains point 0 "1.0,2.0;" and point 1 "3.0,4.0;' and set
-// 1 contains point 2 "5.0,6.0;", it would be represented as:
-//
-// "{[0:1.0,2.0;3.0,4.0;][1:5.0,6.0;]}"
-//
-// The precision of floats in the schema is unspecified.
-
-// Attempt to write multiple GPSPointSets to the SD card.
-// The parameter `len` is the number of GPSPoints in sets[].
-// Will overwrite data on the SD card.
-// Precondition: len < GPSPOINTSET_POINTSMAXLEN
-void sd_card_write_GPSPointSets(GPSPointSet sets[], unsigned long len, char *filename);
+// Load dataSet from the SD card to dataSet out[].
+// Return 0 on success, return -2 if SD card could not be opened,
+// return -3 if manual disconnection of the SD card was necessary,
+// otherwise return a non-zero value.
+int sd_card_load(dataSet out[], int out_len, char *filename);
 
 #endif /* SD_CARD_H_ */

@@ -2,31 +2,102 @@
 #include <stdlib.h>
 #include <Altera_UP_SD_Card_Avalon_Interface.h>
 #include <string.h>
-#include <assert.h>
 #include "sd_card.h"
+#include "datasets.h"
 #include "conversion.h"
+#include "cJSON.h"
 
-void sd_card_print_contents(char *filename)
+#define JSON_DATA_MAX_LEN 2048
+// Use ASCII char '!' to delimit the end of useful data in a file
+#define SD_SENTINEL 33
+
+void sd_card_cJSON_stringify(dataSet in[], int in_len, char out[])
+{
+	// Convert GPSPoint and dataSet structs into JSON string data
+	cJSON *root;
+	root = cJSON_CreateArray();
+	if (in != NULL) {
+		int i;
+		for (i = 0; i < in_len; i++) {
+			// Convert dataSet into JSON string data
+			cJSON *temp_dataset, *temp_gpspoints;
+			cJSON_AddItemToArray(root, temp_dataset = cJSON_CreateObject());
+			cJSON_AddNumberToObject(temp_dataset, "size", in[i].size);
+			cJSON_AddItemToObject(temp_dataset, "gpspoints", temp_gpspoints = cJSON_CreateArray());
+			// Convert gpspoints into JSON string data
+			int j;
+			for (j = 0; j < in[i].size; j++) {
+				cJSON *temp_gpspoint;
+				cJSON_AddItemToArray(temp_gpspoints, temp_gpspoint = cJSON_CreateObject());
+				cJSON_AddItemToObject(temp_gpspoint, "x", cJSON_CreateNumber(in[i].points[j].x));
+				cJSON_AddItemToObject(temp_gpspoint, "y", cJSON_CreateNumber(in[i].points[j].y));
+			}
+		}
+	}
+	// Copy JSON string representation to out[]
+	strcat(out, cJSON_Print(root));
+	// Append the sentinel to the end of out
+	char sentinel[1] = "";
+	sentinel[0] = (char)(SD_SENTINEL);
+	strcat(out, sentinel);
+
+	// Cleanup cJSON data
+	cJSON_Delete(root);
+}
+
+void sd_card_cJSON_parse(char data[], dataSet out[])
+{
+	// Convert JSON string data back into GPSPoint and dataSet structs
+	int success = 0;  // set to 0 on successful conversion; otherwise set to 1
+	dataSet new_set;  // dataSet retrieved from JSON string data
+
+	cJSON *in_root = cJSON_Parse(data);
+	int dataSet_index = 0;
+	cJSON *in_dataSet = cJSON_GetArrayItem(in_root, dataSet_index);
+	while (in_dataSet != NULL) {
+		new_set.size = cJSON_GetObjectItem(in_dataSet, "size")->valuedouble;
+		cJSON *gpspoints = cJSON_GetObjectItem(in_dataSet, "gpspoints");
+		if (gpspoints != NULL) {
+			// Read each gpspoint
+			int gpspoint_index = 0;
+			cJSON *gpspoint = cJSON_GetArrayItem(gpspoints, gpspoint_index);
+			while (gpspoint != NULL) {
+				GPSPoint new_pt;
+				new_pt.x = cJSON_GetObjectItem(gpspoint, "x")->valuedouble;
+				new_pt.y = cJSON_GetObjectItem(gpspoint, "y")->valuedouble;
+				new_set.points[gpspoint_index] = new_pt;
+				gpspoint_index++;
+				gpspoint = cJSON_GetArrayItem(gpspoints, gpspoint_index);
+			}
+			cJSON_Delete(gpspoint);
+		}
+		else {
+			success = 1;
+		}
+		out[dataSet_index] = new_set;
+		cJSON_Delete(gpspoints);
+		dataSet_index++;
+		in_dataSet = cJSON_GetArrayItem(in_root, dataSet_index);
+	}
+	cJSON_Delete(in_dataSet);
+	// For some reason cJSON_Delete(in_root) causes the program
+	// to freeze; this is commented out for now.
+	//cJSON_Delete(in_root);
+}
+
+int sd_card_save(dataSet dsets[], int dsets_len, char *filename)
 {
 	alt_up_sd_card_dev *device_reference = NULL;
 	int connected = 0;
 
-	printf("Opening SDCard\n");
 	if((device_reference = alt_up_sd_card_open_dev("/dev/Altera_UP_SD_Card_Avalon_Interface_0")) == NULL)
 	{
-		printf("SDCard Open FAILED\n");
-		return;
+		return -2;
 	}
-	else {
-		printf("SDCard Open PASSED\n");
-	}
-
 	if (device_reference != NULL ) {
 		while (1) {
 			if ((connected == 0) && (alt_up_sd_card_is_Present())){
-				printf("Card connected.\n");
 				if (alt_up_sd_card_is_FAT16()) {
-					printf("FAT16 file system detected.\n");
 					short int file_handle;
 					if (alt_up_sd_card_is_Present() && alt_up_sd_card_is_FAT16()) {
 						file_handle = alt_up_sd_card_fopen(filename, false);
@@ -44,345 +115,110 @@ void sd_card_print_contents(char *filename)
 							break;
 						}
 						default: {
-							printf("File Opened\n");
+							// Convert dsets[] into JSON string
+							char json_data[JSON_DATA_MAX_LEN] = "";
+							sd_card_cJSON_stringify(dsets, dsets_len, json_data);
+
+							// Write the buffer to the SD card
+							int i;
+							for (i = 0; json_data[i] != '\0'; i++) {
+								if (alt_up_sd_card_write(file_handle, (unsigned char)json_data[i]) == false) {
+									printf("Error writing to file...\n");
+									alt_up_sd_card_fclose(file_handle);
+									return -1;
+								}
+							}
+
+							if (alt_up_sd_card_fclose(file_handle) == false) {
+								printf("WARNING: alt_up_sd_card_fclose was unsuccessful\n");
+							}
+							return 0;
+						}
+						}
+					}
+				}
+				connected = 1;
+				printf("Please disconnect the SD card.\n");
+			}
+			else if((connected == 1) && (alt_up_sd_card_is_Present() == false)){
+				printf("Card disconnected.\n");
+				return -3;
+			}
+		}
+	}
+	else {
+		printf("Can't open device\n");
+	}
+	// Should not get to this point
+	return 1;
+}
+
+int sd_card_load(dataSet out[], int out_len, char *filename)
+{
+	alt_up_sd_card_dev *device_reference = NULL;
+	int connected = 0;
+
+	if((device_reference = alt_up_sd_card_open_dev("/dev/Altera_UP_SD_Card_Avalon_Interface_0")) == NULL)
+	{
+		return -2;
+	}
+
+	if (device_reference != NULL ) {
+		while (1) {
+			if ((connected == 0) && (alt_up_sd_card_is_Present())){
+				if (alt_up_sd_card_is_FAT16()) {
+					short int file_handle;
+					if (alt_up_sd_card_is_Present() && alt_up_sd_card_is_FAT16()) {
+						file_handle = alt_up_sd_card_fopen(filename, false);
+						if (file_handle == -1) {
+							// File most likely does not exist, so attempt to create it
+							file_handle = alt_up_sd_card_fopen(filename, true);
+						}
+						switch (file_handle) {
+						case -1: {
+							printf("File NOT Opened (file_handle is -1)\n");
+							break;
+						}
+						case -2: {
+							printf("File NOT Opened (file_handle is -2)\n");
+							break;
+						}
+						default: {
+							char json_data[JSON_DATA_MAX_LEN] = "";
+							// Read data from the SD card into json_data
 							short int read = alt_up_sd_card_read(file_handle);
-							while (!(read < 0)) {
-								printf("%c", (char)read);
+							while (!(read < 0) && read != SD_SENTINEL) {
+								char temp[2];
+								temp[0] = (char)read;
+								temp[1] = '\0';
+								strcat(json_data, temp);
 								read = alt_up_sd_card_read(file_handle);
 							}
-							printf("\n");
-							printf("Closing file\n");
+
+							// Generate dataset array from json_data
+							// and assign it to out[]
+							sd_card_cJSON_parse(json_data, out);
+
 							if (alt_up_sd_card_fclose(file_handle) == false) {
 								printf("WARNING: alt_up_sd_card_fclose was unsuccessful\n");
 							}
-							printf("Exiting sd_card_print_contents().\n");
-							return;
+							return 0;
 						}
 						}
 					}
-				}
-				else {
-					printf("Unknown file system.\n");
 				}
 				connected = 1;
 				printf("Please disconnect the SD card.\n");
 			}
 			else if((connected == 1) && (alt_up_sd_card_is_Present() == false)){
 				printf("Card disconnected.\n");
-				printf("Exiting sd_card_print_contents().\n");
-				return;
+				return -3;
 			}
 		}
 	}
 	else {
 		printf("Can't open device\n");
 	}
-}
-
-#define BUF_SIZE 100	// This should be able to fit a single-precision float
-
-void sd_card_write_point(GPSPoint point, char *filename) {
-	alt_up_sd_card_dev *device_reference = NULL;
-	int connected = 0;
-
-	printf("Opening SDCard\n");
-	if((device_reference = alt_up_sd_card_open_dev("/dev/Altera_UP_SD_Card_Avalon_Interface_0")) == NULL)
-	{
-		printf("SDCard Open FAILED\n");
-		return;
-	}
-	else {
-		printf("SDCard Open PASSED\n");
-	}
-
-	if (device_reference != NULL ) {
-		while (1) {
-			if ((connected == 0) && (alt_up_sd_card_is_Present())){
-				printf("Card connected.\n");
-				if (alt_up_sd_card_is_FAT16()) {
-					printf("FAT16 file system detected.\n");
-					short int file_handle;
-					if (alt_up_sd_card_is_Present() && alt_up_sd_card_is_FAT16()) {
-						file_handle = alt_up_sd_card_fopen(filename, false);
-						if (file_handle == -1) {
-							// File most likely does not exist, so attempt to create it
-							file_handle = alt_up_sd_card_fopen(filename, true);
-						}
-						switch (file_handle) {
-						case -1: {
-							printf("File NOT Opened (file_handle is -1)\n");
-							break;
-						}
-						case -2: {
-							printf("File NOT Opened (file_handle is -2)\n");
-							break;
-						}
-						default: {
-							printf("File Opened\n");
-
-							// Convert GPSPoint floats to strings
-							char x[BUF_SIZE] = "X";
-							char y[BUF_SIZE] = "Y";
-							snprintf(x, BUF_SIZE, "%f", point.x);
-							snprintf(y, BUF_SIZE, "%f", point.y);
-
-							// write to the SD card
-							while (1) {
-								int i;
-								for (i = 0; x[i] != '\0'; i++) {
-									if (alt_up_sd_card_write(file_handle, x[i]) == false) {
-										printf("Error writing to file...\n");
-										alt_up_sd_card_fclose(file_handle);
-										return;
-									}
-								}
-								if (alt_up_sd_card_write(file_handle, ',') == false) {
-									printf("Error writing to file...\n");
-									alt_up_sd_card_fclose(file_handle);
-									return;
-								}
-								for (i = 0; y[i] != '\0'; i++) {
-									if (alt_up_sd_card_write(file_handle, y[i]) == false) {
-										printf("Error writing to file...\n");
-										alt_up_sd_card_fclose(file_handle);
-										return;
-									}
-								}
-								if (alt_up_sd_card_write(file_handle, ';') == false) {
-									printf("Error writing to file...\n");
-									alt_up_sd_card_fclose(file_handle);
-									return;
-								}
-
-								printf("Successfully wrote to the SD card\n");
-								break;
-							}
-							if (alt_up_sd_card_fclose(file_handle) == false) {
-								printf("WARNING: alt_up_sd_card_fclose was unsuccessful\n");
-							}
-							printf("Exiting sd_card_write_points()\n");
-							return;
-						}
-						}
-					}
-				}
-				else {
-					printf("Unknown file system.\n");
-				}
-				connected = 1;
-				printf("Please disconnect the SD card.\n");
-			}
-			else if((connected == 1) && (alt_up_sd_card_is_Present() == false)){
-				printf("Card disconnected.\n");
-				printf("Exiting sd_card_write_points()\n");
-				return;
-			}
-		}
-	}
-	else {
-		printf("Can't open device\n");
-	}
-}
-
-#define WRITESTRLEN 2048
-
-void sd_card_write_points(GPSPoint points[], unsigned long len, char *filename)
-{
-	alt_up_sd_card_dev *device_reference = NULL;
-	int connected = 0;
-
-	printf("Opening SDCard\n");
-	if((device_reference = alt_up_sd_card_open_dev("/dev/Altera_UP_SD_Card_Avalon_Interface_0")) == NULL)
-	{
-		printf("SDCard Open FAILED\n");
-		return;
-	}
-	else {
-		printf("SDCard Open PASSED\n");
-	}
-
-	if (device_reference != NULL ) {
-		while (1) {
-			if ((connected == 0) && (alt_up_sd_card_is_Present())){
-				printf("Card connected.\n");
-				if (alt_up_sd_card_is_FAT16()) {
-					printf("FAT16 file system detected.\n");
-					short int file_handle;
-					if (alt_up_sd_card_is_Present() && alt_up_sd_card_is_FAT16()) {
-						file_handle = alt_up_sd_card_fopen(filename, false);
-						if (file_handle == -1) {
-							// File most likely does not exist, so attempt to create it
-							file_handle = alt_up_sd_card_fopen(filename, true);
-						}
-						switch (file_handle) {
-						case -1: {
-							printf("File NOT Opened (file_handle is -1)\n");
-							break;
-						}
-						case -2: {
-							printf("File NOT Opened (file_handle is -2)\n");
-							break;
-						}
-						default: {
-							printf("File Opened\n");
-
-							// write to a write_str buffer
-							char write_str[WRITESTRLEN] = "";
-							int i;
-							for (i = 0; i < len; i++) {
-								char x_buf[BUF_SIZE];
-								snprintf(x_buf, BUF_SIZE, "%f", points[i].x);
-								strcat(write_str, x_buf);
-
-								strcat(write_str, ",");
-
-								char y_buf[BUF_SIZE];
-								snprintf(y_buf, BUF_SIZE, "%f", points[i].y);
-								strcat(write_str, y_buf);
-
-								strcat(write_str, ";");
-							}
-							// write the buffer to the SD card
-							for (i = 0; write_str[i] != '\0'; i++) {
-								if (alt_up_sd_card_write(file_handle, write_str[i]) == false) {
-									printf("Error writing to file...\n");
-									alt_up_sd_card_fclose(file_handle);
-									return;
-								}
-							}
-
-							printf("Successfully wrote to the SD card\n");
-
-							if (alt_up_sd_card_fclose(file_handle) == false) {
-								printf("WARNING: alt_up_sd_card_fclose was unsuccessful\n");
-							}
-							printf("Exiting sd_card_write_points()\n");
-							return;
-						}
-						}
-					}
-				}
-				else {
-					printf("Unknown file system.\n");
-				}
-				connected = 1;
-				printf("Please disconnect the SD card.\n");
-			}
-			else if((connected == 1) && (alt_up_sd_card_is_Present() == false)){
-				printf("Card disconnected.\n");
-				printf("Exiting sd_card_write_points()\n");
-				return;
-			}
-		}
-	}
-	else {
-		printf("Can't open device\n");
-	}
-}
-
-void sd_card_write_GPSPointSets(GPSPointSet sets[], unsigned long len, char *filename)
-{
-	assert(len < GPSPOINTSET_POINTSMAXLEN);
-
-	alt_up_sd_card_dev *device_reference = NULL;
-	int connected = 0;
-
-	printf("Opening SDCard\n");
-	if((device_reference = alt_up_sd_card_open_dev("/dev/Altera_UP_SD_Card_Avalon_Interface_0")) == NULL)
-	{
-		printf("SDCard Open FAILED\n");
-		return;
-	}
-	else {
-		printf("SDCard Open PASSED\n");
-	}
-
-	if (device_reference != NULL ) {
-		while (1) {
-			if ((connected == 0) && (alt_up_sd_card_is_Present())){
-				printf("Card connected.\n");
-				if (alt_up_sd_card_is_FAT16()) {
-					printf("FAT16 file system detected.\n");
-					short int file_handle;
-					if (alt_up_sd_card_is_Present() && alt_up_sd_card_is_FAT16()) {
-						file_handle = alt_up_sd_card_fopen(filename, false);
-						if (file_handle == -1) {
-							// File most likely does not exist, so attempt to create it
-							file_handle = alt_up_sd_card_fopen(filename, true);
-						}
-						switch (file_handle) {
-						case -1: {
-							printf("File NOT Opened (file_handle is -1)\n");
-							break;
-						}
-						case -2: {
-							printf("File NOT Opened (file_handle is -2)\n");
-							break;
-						}
-						default: {
-							printf("File Opened\n");
-
-							// write to a write_str buffer
-							char write_str[WRITESTRLEN] = "";
-							strcat(write_str, "{");
-							int i;
-							for (i = 0; i < len; i++) {
-								strcat(write_str, "[");
-								char temp_tag[BUF_SIZE];
-								snprintf(temp_tag, BUF_SIZE, "%d", sets[i].tag);
-								strcat(write_str, temp_tag);
-								strcat(write_str, ":");
-								int j;
-								for (j = 0; j < sets[i].points_len; j++) {
-									char x_buf[BUF_SIZE];
-									snprintf(x_buf, BUF_SIZE, "%f", sets[i].points[j].x);
-									strcat(write_str, x_buf);
-
-									strcat(write_str, ",");
-
-									char y_buf[BUF_SIZE];
-									snprintf(y_buf, BUF_SIZE, "%f", sets[i].points[j].y);
-									strcat(write_str, y_buf);
-
-									strcat(write_str, ";");
-								}
-								strcat(write_str, "]");
-							}
-							strcat(write_str, "}");
-							// write the buffer to the SD card
-							for (i = 0; write_str[i] != '\0'; i++) {
-								if (alt_up_sd_card_write(file_handle, write_str[i]) == false) {
-									printf("Error writing to file...\n");
-									alt_up_sd_card_fclose(file_handle);
-									return;
-								}
-							}
-
-							printf("Successfully wrote to the SD card\n");
-
-							if (alt_up_sd_card_fclose(file_handle) == false) {
-								printf("WARNING: alt_up_sd_card_fclose was unsuccessful\n");
-							}
-							printf("Exiting sd_card_write_points()\n");
-							return;
-						}
-						}
-					}
-				}
-				else {
-					printf("Unknown file system.\n");
-				}
-				connected = 1;
-				printf("Please disconnect the SD card.\n");
-			}
-			else if((connected == 1) && (alt_up_sd_card_is_Present() == false)){
-				printf("Card disconnected.\n");
-				printf("Exiting sd_card_write_points()\n");
-				return;
-			}
-		}
-	}
-	else {
-		printf("Can't open device\n");
-	}
+	// Should not get to this point
+	return 1;
 }

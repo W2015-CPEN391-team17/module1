@@ -10,6 +10,7 @@
 #include "touchScreen.h"
 #include "datasets.h"
 #include <string.h>
+#include <stdio.h>
 
 //Struct for background/text colour pairs - only a limited selection are available to the user
 typedef struct{
