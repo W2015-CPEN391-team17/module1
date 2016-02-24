@@ -8,6 +8,7 @@
 #ifndef CONVERSION_H_
 #define CONVERSION_H_
 
+//Co-ordinates for corners
 #define TOPRIGHTLAT (float) 49.268000
 #define TOPRIGHTLONG (float) -123.248000
 #define TOPLEFTLAT (float) 49.268000
