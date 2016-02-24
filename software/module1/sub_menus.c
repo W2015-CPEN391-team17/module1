@@ -151,7 +151,6 @@ void SaveLoadMenu(Point* p, Colours* scheme){
 					loadgps_workingDataSet();
 				}
 
-				GetRelease();
 				return;
 			}else if(p->x > 4*XRES/5-100 && p->x < 4*XRES/5){
 				//If save button touched, do following
