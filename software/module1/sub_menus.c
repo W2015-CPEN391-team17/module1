@@ -150,19 +150,9 @@ void SaveLoadMenu(Point* p, Colours* scheme){
 				} else {
 					loadgps_workingDataSet();
 				}
-				
-				WriteFilledRectangle(XRES/4, 0, XRES-1, YRES/4-1, WHITE);
-				if(set == 0){
-					Text(XRES/3-45, 10, BLACK, WHITE, "GPS Loaded", 0);
-				}else{
-					char tmpStr[strlen(str)+8];
-					strcpy(tmpStr,str);
-					strcpy(tmpStr+strlen(str), " Loaded");
-
-					Text(XRES/3-45, 10, BLACK, WHITE, tmpStr, 0);
-				}
 
 				GetRelease();
+				return;
 			}else if(p->x > 4*XRES/5-100 && p->x < 4*XRES/5){
 				//If save button touched, do following
 				buttonTouched = 1;
