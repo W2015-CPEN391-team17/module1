@@ -58,7 +58,7 @@ void draw_heatmap(GPSPoint points[], int numPoints, Colours colourScheme)
 	int h, v;
 	for (v = 0; v < HEATMAP_V; v++) {
 		for (h = 0; h < HEATMAP_H; h++) {
-			WriteFilledRectangle(h * (XRES-1)/HEATMAP_H, v * MENU_TOP/HEATMAP_V, (h + 1) * (XRES-1)/HEATMAP_H, (v + 1) * MENU_TOP/HEATMAP_V, colours[h][v]);
+			WriteFilledRectangle(h * (XRES-1)/HEATMAP_H, v * (MENU_TOP-1)/HEATMAP_V, (h + 1) * (XRES-1)/HEATMAP_H, (v + 1) * (MENU_TOP-1)/HEATMAP_V, colours[h][v]);
 		}
 	}
 }

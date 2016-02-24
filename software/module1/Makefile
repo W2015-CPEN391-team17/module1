@@ -155,6 +155,7 @@ C_SRCS += touchScreen.c
 C_SRCS += sub_menus.c
 C_SRCS += sd_card.c
 C_SRCS += heatmap.c
+C_SRCS += datasets.c
 CXX_SRCS :=
 ASM_SRCS :=
 

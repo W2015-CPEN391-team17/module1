@@ -42,6 +42,10 @@ void save_from_workingDataSet(int index) {
 	}
 }
 
+/*
+ * On start up, copy the data from the GPS to the workingDataSet
+ * to display the GPS data immediately
+ */
 void loadgps_workingDataSet(){
 	GPSPoint* screen_points;
 
@@ -51,10 +55,13 @@ void loadgps_workingDataSet(){
 
 	int j;
 	for( j = 0; j < 70; j++ ){
-		workingDataPoints[j] = screen_points[j];
+		workingDataPoints[j].x = screen_points[j].x;
+		workingDataPoints[j].y = screen_points[j].y;
 		printf("x %d: %f  y %d: %f\n", j, workingDataPoints[j].x,
 									   j, workingDataPoints[j].y);
 	}
+
+	free(screen_points);
 
 	localData.workingDataSet.size = 70;
 }

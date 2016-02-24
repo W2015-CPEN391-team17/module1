@@ -48,13 +48,13 @@ void SaveLoadMenu(Point* p, Colours* scheme){
 	WriteFilledRectangle(0, 0, XRES-1, MENU_TOP-1, WHITE);
 
 	if(scheme->menuBackground == WHITE){
-		Rectangle(XRES/5, YRES/4, (5*BUFFER_BTW_BUTTONS/4) + XRES/5, 5*BUFFER_BTW_BUTTONS/4 + YRES/4, BLACK);
-		Rectangle(4*XRES/5 - (5*BUFFER_BTW_BUTTONS/4), YRES/4,  4*XRES/5, 5*BUFFER_BTW_BUTTONS/4 + YRES/4, BLACK);
+		Rectangle(XRES/5, YRES/4, 100 + XRES/5, 5*BUFFER_BTW_BUTTONS/4 + YRES/4, BLACK);
+		Rectangle(4*XRES/5 - 100, YRES/4,  4*XRES/5, 5*BUFFER_BTW_BUTTONS/4 + YRES/4, BLACK);
 		Rectangle(XRES/5, 5*BUFFER_BTW_BUTTONS/4 + YRES/4 + BUFFER_BTW_BUTTONS, 100 + XRES/5, 50 + YRES/4 + 5*BUFFER_BTW_BUTTONS/4 + BUFFER_BTW_BUTTONS, BLACK);
 		Rectangle(4*XRES/5-100, 5*BUFFER_BTW_BUTTONS/4 + YRES/4 + BUFFER_BTW_BUTTONS, 4*XRES/5, 50 + YRES/4 + 5*BUFFER_BTW_BUTTONS/4 + BUFFER_BTW_BUTTONS, BLACK);
 	}else{
-		WriteFilledRectangle(XRES/5, YRES/4, (5*BUFFER_BTW_BUTTONS/4) + XRES/5, 5*BUFFER_BTW_BUTTONS/4 + YRES/4, scheme->menuBackground);
-		WriteFilledRectangle(4*XRES/5 - (5*BUFFER_BTW_BUTTONS/4), YRES/4,  4*XRES/5, 5*BUFFER_BTW_BUTTONS/4 + YRES/4, scheme->menuBackground);
+		WriteFilledRectangle(XRES/5, YRES/4, 100 + XRES/5, 5*BUFFER_BTW_BUTTONS/4 + YRES/4, scheme->menuBackground);
+		WriteFilledRectangle(4*XRES/5 - 100, YRES/4,  4*XRES/5, 5*BUFFER_BTW_BUTTONS/4 + YRES/4, scheme->menuBackground);
 		WriteFilledRectangle(XRES/5, 5*BUFFER_BTW_BUTTONS/4 + YRES/4 + BUFFER_BTW_BUTTONS, 100 + XRES/5, 50 + YRES/4 + 5*BUFFER_BTW_BUTTONS/4 + BUFFER_BTW_BUTTONS, scheme->menuBackground);
 		WriteFilledRectangle(4*XRES/5-100, 5*BUFFER_BTW_BUTTONS/4 + YRES/4 + BUFFER_BTW_BUTTONS, 4*XRES/5, 50 + YRES/4 + 5*BUFFER_BTW_BUTTONS/4 + BUFFER_BTW_BUTTONS, scheme->menuBackground);
 	}
@@ -77,9 +77,9 @@ void SaveLoadMenu(Point* p, Colours* scheme){
 		*p = GetPress();
 
 		if(p->y > YRES/4 && p->y < 5*BUFFER_BTW_BUTTONS/4 + YRES/4){
-			if(p->x > XRES/5 && p->x < (5*BUFFER_BTW_BUTTONS/4) + XRES/5){
+			if(p->x > XRES/5 && p->x < 100 + XRES/5){
 				buttonTouched = 1;
-				WriteFilledRectangle((5*BUFFER_BTW_BUTTONS/4) + XRES/5 + 1, YRES/4, 4*XRES/5 - (5*BUFFER_BTW_BUTTONS/4) - 1, 5*BUFFER_BTW_BUTTONS/4 + YRES/4, WHITE);
+				WriteFilledRectangle(100 + XRES/5 + 1, YRES/4, 4*XRES/5 - 100 - 1, 5*BUFFER_BTW_BUTTONS/4 + YRES/4, WHITE);
 
 				if(set == 0){
 					set = MAX_N_SETS;
@@ -101,9 +101,9 @@ void SaveLoadMenu(Point* p, Colours* scheme){
 				}
 
 				GetRelease();
-			}else if(p->x > 4*XRES/5 - (5*BUFFER_BTW_BUTTONS/4) && p->x < 4*XRES/5){
+			}else if(p->x > 4*XRES/5 - 100 && p->x < 4*XRES/5){
 				buttonTouched = 1;
-				WriteFilledRectangle((5*BUFFER_BTW_BUTTONS/4) + XRES/5 + 1, YRES/4, 4*XRES/5 - (5*BUFFER_BTW_BUTTONS/4) - 1, 5*BUFFER_BTW_BUTTONS/4 + YRES/4, WHITE);
+				WriteFilledRectangle(100 + XRES/5 + 1, YRES/4, 4*XRES/5 - 100 - 1, 5*BUFFER_BTW_BUTTONS/4 + YRES/4, WHITE);
 
 				if(set == MAX_N_SETS){
 					set = 0;
