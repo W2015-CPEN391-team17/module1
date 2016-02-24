@@ -5,6 +5,7 @@
  */
 
 #include "heatmap.h"
+#include "graphics.h"
 #include <math.h>
 
 void draw_heatmap(GPSPoint points[], int numPoints, Colours colourScheme)
@@ -70,14 +71,16 @@ void connect_points(GPSPoint points[], int numPoints, Colours colourScheme)
 
 	GPSPoint point_a;
 	GPSPoint point_b;
+	if (numPoints > 0) {
+		WriteCircle(points[0].x, points[0].y, POINT_CIRCLE_RADIUS, colourScheme.connectTheDotsLine);
+	}
 	int i;
 	for(i = 1; i < numPoints; i++) {
 		point_a = points[i-1];
 		point_b = points[i];
 
 		// draw circle around each point for testing
-		WriteCircle(point_a.x, point_a.y, 4, BLACK);
-		WriteCircle(point_b.x, point_b.y, 4, BLACK);
+		WriteCircle(point_b.x, point_b.y, POINT_CIRCLE_RADIUS, colourScheme.connectTheDotsLine);
 
 		// draw a line from point_a to point_b
 		WriteLine((int)point_a.x, (int)point_a.y, (int)point_b.x, (int)point_b.y, colourScheme.connectTheDotsLine);
