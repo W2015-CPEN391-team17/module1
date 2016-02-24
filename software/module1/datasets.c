@@ -42,6 +42,10 @@ void save_from_workingDataSet(int index) {
 	}
 }
 
+/*
+ * On start up, copy the data from the GPS to the workingDataSet
+ * to display the GPS data immediately
+ */
 void loadgps_workingDataSet(){
 	GPSPoint* screen_points;
 
