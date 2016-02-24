@@ -26,7 +26,6 @@ void cleanup(void);
 // Data-independent drawing functions.
 void draw_field(void);
 void draw_menu(void);
-void write_demo_screen(void);
 
 // Main menu function
 void main_menu(void);
