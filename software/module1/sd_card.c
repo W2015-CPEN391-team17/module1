@@ -7,7 +7,6 @@
 #include "conversion.h"
 #include "cJSON.h"
 
-#define JSON_DATA_MAX_LEN 2048
 // Use ASCII char '!' to delimit the end of useful data in a file
 #define SD_SENTINEL 33
 
@@ -15,8 +14,16 @@ void sd_card_cJSON_stringify(dataSet in[], int in_len, char out[])
 {
 	// Convert GPSPoint and dataSet structs into JSON string data
 	cJSON *root;
+
+	//DEBUG
+	printf("in sd_card_cJSON_stringify\n");
+
 	root = cJSON_CreateArray();
 	if (in != NULL) {
+
+		//DEBUG
+		printf("beginning for-loop: Convert dataSet into JSON string data\n");
+
 		int i;
 		for (i = 0; i < in_len; i++) {
 			// Convert dataSet into JSON string data
@@ -25,6 +32,10 @@ void sd_card_cJSON_stringify(dataSet in[], int in_len, char out[])
 			cJSON_AddNumberToObject(temp_dataset, "size", in[i].size);
 			cJSON_AddItemToObject(temp_dataset, "gpspoints", temp_gpspoints = cJSON_CreateArray());
 			// Convert gpspoints into JSON string data
+
+			// DEBUG
+			printf("beginning for-loop: Convert gpspoints into JSON string data\n");
+
 			int j;
 			for (j = 0; j < in[i].size; j++) {
 				cJSON *temp_gpspoint;
@@ -33,16 +44,37 @@ void sd_card_cJSON_stringify(dataSet in[], int in_len, char out[])
 				cJSON_AddItemToObject(temp_gpspoint, "y", cJSON_CreateNumber(in[i].points[j].y));
 			}
 		}
+		// DEBUG
+		printf("finished for loops\n");
 	}
+	//DEBUG
+	printf("Copy JSON string representation to out[]\n");
+
 	// Copy JSON string representation to out[]
 	strcat(out, cJSON_Print(root));
+
+	//DEBUG
+	printf("Append the sentinel to the end of out\n");
+
 	// Append the sentinel to the end of out
 	char sentinel[1] = "";
 	sentinel[0] = (char)(SD_SENTINEL);
+
+	//DEBUG
+	printf("sentinel[0]: %c\n", sentinel[0]);
+
 	strcat(out, sentinel);
 
+	//DEBUG
+	//printf("out[]: %s\n", out);
+
+	//DEBUG
+	printf("exiting sd_card_cJSON_stringify\n");
+
 	// Cleanup cJSON data
-	cJSON_Delete(root);
+	// For some reason cJSON_Delete(in_root) causes the program
+	// to freeze; this is commented out for now.
+	//cJSON_Delete(in_root);
 }
 
 void sd_card_cJSON_parse(char data[], dataSet out[])
@@ -116,10 +148,18 @@ int sd_card_save(dataSet dsets[], int dsets_len, char *filename)
 						}
 						default: {
 							// Convert dsets[] into JSON string
+
+							//DEBUG
+							printf("Converting into string\n");
+
 							char json_data[JSON_DATA_MAX_LEN] = "";
 							sd_card_cJSON_stringify(dsets, dsets_len, json_data);
 
 							// Write the buffer to the SD card
+
+							//DEBUG
+							printf("Writing buffer to sd card\n");
+
 							int i;
 							for (i = 0; json_data[i] != '\0'; i++) {
 								if (alt_up_sd_card_write(file_handle, (unsigned char)json_data[i]) == false) {

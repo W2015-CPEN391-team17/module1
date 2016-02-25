@@ -46,6 +46,9 @@ void save_from_workingDataSet(int index) {
 
 	//TODO test this
 	save_to_SD_from_dataSets();
+
+	// DEBUG
+	printf("exiting from save_from_workingDataSet\n");
 }
 
 /*
@@ -75,7 +78,7 @@ void loadgps_workingDataSet(){
  */
 void load_from_SD_to_dataSets() {
 	//TODO check return value of below call
-	sd_card_load(localData.dataSets, MAX_N_POINTS, FILENAME);
+	sd_card_load(localData.dataSets, MAX_N_SETS, FILENAME);
 }
 
 /*
@@ -83,5 +86,18 @@ void load_from_SD_to_dataSets() {
  */
 void save_to_SD_from_dataSets() {
 	//TODO check return value of below call
-	sd_card_save(localData.dataSets, MAX_N_POINTS, FILENAME);
+
+	// DEBUG
+	printf("entering save_to_SD_from_dataSets\n");
+
+	sd_card_save(localData.dataSets, MAX_N_SETS, FILENAME);
+
+	// DEBUG
+	printf("finished sd_card_save\n");
+
+	char teststr[JSON_DATA_MAX_LEN] = "";
+	sd_card_cJSON_stringify(localData.dataSets, MAX_N_SETS, teststr);
+
+	// DEBUG
+	printf("exiting from save_to_SD_from_dataSets\n");
 }

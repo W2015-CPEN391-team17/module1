@@ -5,6 +5,7 @@
 #include "cJSON.h"
 
 #define FILENAME "data.txt"
+#define JSON_DATA_MAX_LEN ((100)*(MAX_N_SETS)*(MAX_N_POINTS))
 
 // An array of dataSets are represented in JSON with this schema:
 //[
