@@ -78,6 +78,7 @@ void loadgps_workingDataSet(){
  */
 void load_from_SD_to_dataSets() {
 	//TODO check return value of below call
+	Text(0,0,BLACK,WHITE,"Loading from SD Card...",0);
 	sd_card_load(localData.dataSets, MAX_N_SETS, FILENAME);
 }
 
