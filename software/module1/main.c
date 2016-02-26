@@ -42,6 +42,7 @@ int main()
   initialize_components();
   initialize_colourScheme();
   initialize_datasets();
+
   save_points();
   loadgps_workingDataSet();
   initialize_demodata();

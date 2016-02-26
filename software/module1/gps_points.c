@@ -171,6 +171,7 @@ void save_points(void){
 	for(log_count = 1; log_count < 20; log_count++){
 		read_string(gps_log[log_count].string);
 
+
 		// draws circles while extracting logs from GPS (for UI)
 		j = (n + j + 1) % 500;
 		n = (n + k*j) % 350;
@@ -184,7 +185,7 @@ void save_points(void){
 	for(log_count = 0; log_count < 9; log_count++){
 
 		strcpy(cur_string, (const char *)gps_log[log_count].string);
-
+		printf("%s\n", cur_string);
 		lat_count = 24;
 		long_count = 33;
 		lat_end = 32;
@@ -217,6 +218,7 @@ void save_points(void){
 			gps_points[place].long_float = FloatToLongitudeConversion(gps_points[place].long_swapped);
 			gps_points[place].lat_float = FloatToLatitudeConversion(gps_points[place].lat_swapped);
 
+			printf("latitude %d: %f, longitude %d: %f\n", place, gps_points[place].lat_float, place, gps_points[place].long_float);
 			place++;
 			lat_count += 27;
 			long_count += 27;
@@ -231,6 +233,7 @@ void save_points(void){
 			break;
 
 		strcpy(cur_string, (const char *)gps_log[log_count].string);
+		printf("%s\n", cur_string);
 
 		lat_count = 25;
 		long_count = 34;
@@ -263,6 +266,8 @@ void save_points(void){
 
 			gps_points[place].long_float = FloatToLongitudeConversion(gps_points[place].long_swapped);
 			gps_points[place].lat_float = FloatToLatitudeConversion(gps_points[place].lat_swapped);
+
+			printf("latitude %d: %f, longitude %d: %f\n", place, gps_points[place].lat_float, place, gps_points[place].long_float);
 
 			place++;
 			lat_count += 27;
